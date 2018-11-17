@@ -4,12 +4,12 @@ require_once __DIR__ . '/../Populate.php';
 
 class Bestellung {
     private $id;
-    private $email;
+    private $kunde_id;
     private $date;
 
     public static function checkEmail($email) {
         $db = Db::instantiate();
-        $result = $db->query('SELECT id FROM kunde where deleted_at is null and email like "%' . $email . '%";');
+        $result = $db->query('SELECT id FROM kunde where deleted_at is null and email like "' . $email . '";');
         if (!$result || $result->num_rows == 0) {
             return false;
         } else {
@@ -17,11 +17,9 @@ class Bestellung {
         }
     }
 
-
-
-    public static function add(Bestellung $rechnung) {
+    public static function create($kunde_id) {
         $db = Db::instantiate();
-        $result = $db->query('INSERT INTO rechnung (kunde_id,datum) VALUES ("' . $rechnung->getClientId() . '", now())');
+        $result = $db->query('INSERT INTO bestellung (kunde_id,datum) VALUES ("' . $kunde_id . '", now())');
         Db::checkConnection($result);
         $last_id = $db->insert_id;
         return $last_id;
@@ -29,14 +27,14 @@ class Bestellung {
 
     public static function find($id) {
         $db = Db::instantiate();
-        $result = $db->query('SELECT * FROM rechnung WHERE deleted_at is null and id=' . $id);
+        $result = $db->query('SELECT * FROM bestellung WHERE deleted_at is null and id=' . $id);
         //if the result is empty the $result will be an object with numrows == 0 but if its an invalid statement like "nummer="
         if (!$result || $result->num_rows == 0) {
             return false;
         } else {
-            $rechnungArr = $result->fetch_assoc();
-            $rechnung = populate::populateRechnung($rechnungArr);
-            return $rechnung;
+            $bestellungArr = $result->fetch_assoc();
+            $bestellung = populate::populateBestellung($bestellungArr);
+            return $bestellung;
         }
     }
 
@@ -185,16 +183,17 @@ class Bestellung {
     /**
      * @return mixed
      */
-    public function getEmail() {
-        return $this->email;
+    public function getKundeId() {
+        return $this->kunde_id;
     }
 
     /**
-     * @param mixed $email
+     * @param mixed $kunde_id
      */
-    public function setEmail($email) {
-        $this->email = $email;
+    public function setKundeId($kunde_id) {
+        $this->kunde_id = $kunde_id;
     }
+
 
     /**
      * @return mixed

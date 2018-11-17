@@ -10,7 +10,10 @@ class Bestellartikel {
     private $nummer;
     private $name;
     private $kg_price;
-    private $verfuegbar;
+    private $verfuegbar; // Bool if available
+    private $verfuegbarGewicht;
+    private $stueckbestellung;
+    private $stueckgewicht;
 
 
     public static function all() {
@@ -19,14 +22,8 @@ class Bestellartikel {
         $result = $db->query('SELECT ba.*, ba.id bestell_artikel_id, a.*, a.id artikel_id FROM bestell_artikel ba left join artikel a on ba.artikel_id=a.id where a.deleted_at is null and ba.deleted_at is null');
         while ($artikel = $result->fetch_object()) {
 //            var_dump($artikel);
-            $params = [
-                'ba_id' => $artikel->bestell_artikel_id,
-                'artikel_id' => $artikel->artikel_id,
-                'kg_price' => $artikel->kg_price,
-                'name' => $artikel->name,
-                'nummer' => $artikel->nummer,
-                'gewicht' => $artikel->gewicht,
-                'verfuegbar' => $artikel->verfuegbar ];
+            $params = ['ba_id' => $artikel->bestell_artikel_id, 'artikel_id' => $artikel->artikel_id, 'kg_price' => $artikel->kg_price, 'name' => $artikel->name, 'nummer' => $artikel->nummer, 'gewicht' => $artikel->gewicht, 'verfuegbar' => $artikel->verfuegbar
+            ,'stueckbestellung' => $artikel->stueckbestellung];
             $artikelObj[] = Populate::populateArtikel($params);
         }
         return $artikelObj;
@@ -43,14 +40,8 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1');
         } else {
             while ($artikel = $result->fetch_object()) {
 //            var_dump($artikel);
-                $params = [
-                    'ba_id' => $artikel->bestell_artikel_id,
-                    'artikel_id' => $artikel->artikel_id,
-                    'kg_price' => $artikel->kg_price,
-                    'name' => $artikel->name,
-                    'nummer' => $artikel->nummer,
-                    'gewicht' => $artikel->gewicht,
-                    'verfuegbar' => $artikel->verfuegbar ];
+                $params = ['ba_id' => $artikel->bestell_artikel_id, 'artikel_id' => $artikel->artikel_id, 'kg_price' => $artikel->kg_price, 'name' => $artikel->name, 'nummer' => $artikel->nummer, 'gewicht' => $artikel->gewicht, 'verfuegbar' => $artikel->verfuegbar,
+                    'stueckbestellung' => $artikel->stueckbestellung];
                 $artikelObj[] = Populate::populateArtikel($params);
             }
         }
@@ -59,15 +50,29 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1');
 
     public static function checkAndRefresh() {
         $db = Db::instantiate();
-        $result = $db->query('SELECT a.* FROM artikel a
+
+        // Get the missing ones
+        $toInsertResult = $db->query('SELECT a.* FROM artikel a
 LEFT OUTER JOIN bestell_artikel ba ON a.id = ba.artikel_id
 WHERE ba.id IS NULL and a.deleted_at is null ;');
         $last_id = false;
-        while ($artikelArr = $result->fetch_assoc()) {
-            $result2 = $db->query('INSERT INTO bestell_artikel set artikel_id= ' . $artikelArr['id'] . ';');
+        while ($addArtikelArr = $toInsertResult->fetch_assoc()) {
+            var_dump($addArtikelArr);
+            // Adding the missing artikel into bestell_artikel
+            $result2 = $db->query('INSERT INTO bestell_artikel set artikel_id= ' . $addArtikelArr['id'] . ';');
             Db::checkConnection($result2);
             $last_id = $db->insert_id;
         }
+
+        // Get the deleted Articles
+        $toDeleteResult = $db->query('SELECT a.*, ba.id ba_id FROM artikel a
+JOIN bestell_artikel ba ON a.id = ba.artikel_id
+WHERE a.deleted_at is not null ;');
+
+        while ($delArtikelArr = $toDeleteResult->fetch_assoc()) {
+            self::del($delArtikelArr['ba_id']);
+        }
+
         return $last_id;
     }
 
@@ -77,10 +82,23 @@ WHERE ba.id IS NULL and a.deleted_at is null ;');
         Db::checkConnection($sql);
     }
 
-    public static function check($id, $value) {
+    public static function checkAvailable($id, $value) {
         $db = Db::instantiate();
         $sql = $db->query('UPDATE bestell_artikel SET verfuegbar=' . $value . ' WHERE id=' . $id);
         Db::checkConnection($sql);
+    }
+
+    public static function checkPiece($id, $value) {
+        $db = Db::instantiate();
+        $sql = $db->query('UPDATE bestell_artikel SET stueckbestellung=' . $value . ' WHERE id=' . $id);
+        Db::checkConnection($sql);
+    }
+
+    public static function getDefaultWeight($id) {
+        $db = Db::instantiate();
+        $result = $db->query('SELECT a.stueck_gewicht FROM artikel a left join bestell_artikel ba on 
+ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba.artikel_id =' . $id);
+        return $result->fetch_assoc()['stueck_gewicht'];
     }
 
 
@@ -261,7 +279,47 @@ WHERE ba.id IS NULL and a.deleted_at is null ;');
         $this->verfuegbar = $verfuegbar;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getVerfuegbarGewicht() {
+        return $this->verfuegbarGewicht;
+    }
 
+    /**
+     * @param mixed $verfuegbarGewicht
+     */
+    public function setVerfuegbarGewicht($verfuegbarGewicht) {
+        $this->verfuegbarGewicht = $verfuegbarGewicht;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStueckbestellung() {
+        return $this->stueckbestellung;
+    }
+
+    /**
+     * @param mixed $stueckbestellung
+     */
+    public function setStueckbestellung($stueckbestellung) {
+        $this->stueckbestellung = $stueckbestellung;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStueckgewicht() {
+        return $this->stueckgewicht;
+    }
+
+    /**
+     * @param mixed $stueckgewicht
+     */
+    public function setStueckgewicht($stueckgewicht) {
+        $this->stueckgewicht = $stueckgewicht;
+    }
 
 
 }

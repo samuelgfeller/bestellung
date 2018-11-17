@@ -767,10 +767,6 @@ input[type="checkbox"]:checked + label:before {
     border: 0.5px solid #ccc;
 }
 
-.weightText {
-    width: 60px;
-}
-
 #dateAllHistory {
     list-style-type: none;
     color: black;
@@ -785,3 +781,155 @@ input[type="checkbox"]:checked + label:before {
     height: 50px;
 }
 
+
+/* Bestellung */
+
+.weightText {
+    width: 60px;
+}
+.amountNumber {
+    width: 40px;
+}
+
+#outputWeight{
+    text-align: left;
+}
+#timesTd{
+    width:10px;
+}
+
+#bestellForm{
+    width:100%;
+}
+
+/*#bestellForm input[type=submit]{*/
+    /*padding:15px;*/
+    /*width:200px;*/
+    /*float: right;*/
+    /*display: block;*/
+    /*margin: 2% 5% 0 0;*/
+    /*border-radius: 40px;*/
+    /*background: #a87bb7;*/
+    /*color: white;*/
+/*}*/
+/*#bestellForm input[type=submit]:hover{*/
+    /*box-shadow: 0 0 15px #ccc;*/
+    /*!*background: ;*!*/
+/*}*/
+
+
+#bestellForm input[type=submit]{
+    /*position: absolute;*/
+    /*top: 50%;*/
+    /*left: 50%;*/
+    /*transform: translate(-50%, -50%);*/
+    float: right;
+    margin: 2% 5% 0 0;
+    width: 200px;
+    height: 60px;
+    text-align: center;
+    /*line-height: 60px;*/
+    color: #fff;
+    font-size: 24px;
+    text-decoration: none;
+    font-family: sans-serif;
+    box-sizing: border-box;
+    background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+    background-size: 400%;
+    border-radius: 30px;
+    z-index: 1;
+}
+#bestellForm input[type=submit]:hover:hover {
+    animation: animate 5s linear infinite;
+}
+@keyframes animate {
+    0% {
+        background-position: 0%;
+    }
+    100% {
+        background-position: 400%;
+    }
+}
+#bestellForm input[type=submit]:hover:before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    z-index: -1;
+    background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+    background-size: 400%;
+    border-radius: 40px;
+    opacity: 0;
+    transition: 0.5s;
+}
+#bestellForm input[type=submit]:hover:before {
+    filter: blur(20px);
+    opacity:1;
+    animation: animate 5s linear infinite;
+}
+
+.artikelTablePadding td{
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
+form .artikelTable{
+    padding-top:6px;
+    padding-bottom:6px;
+}
+
+
+.weightCheckTd,.amountCheckTd{
+    width:50px;
+
+}
+
+.ck-button {
+    border-radius:10px;
+    border:0px solid #D0D0D0;
+    overflow:auto;
+    background-color:red;
+    text-align: center;
+    width:18px;
+    margin:auto;
+}
+:root {
+    --lightShadow:#e6e6e6;
+}
+.leftCheckBox{
+    border-radius:9px 9px 9px 9px;
+    /*box-shadow: 0 0 6px var(--lightShadow),0 0 0px,0 0 9px var(--lightShadow);*/
+    /*z-index: 99;*/
+}
+.rightCheckBox{
+    border-radius:9px 9px 9px 9px;
+    /*box-shadow: 0 0 6px var(--lightShadow),0 0 0px,0 0 9px var(--lightShadow);*/
+    /*z-index: -1;*/
+}
+
+.ck-button:hover {
+    background:red;
+}
+
+.ck-button label {
+}
+
+.ck-button label span {
+    text-align:center;
+    padding:9px 0px;
+    display:block;
+    cursor: pointer;
+}
+
+.ck-button label input {
+    position:absolute;
+    top:-20px;
+}
+
+.ck-button input:checked + span {
+    background-color: mediumseagreen;
+
+    color:#fff;
+}

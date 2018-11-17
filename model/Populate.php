@@ -49,30 +49,30 @@ class Populate {
         $artikel->setKgPrice($data['kg_price'] ?? null);
         $artikel->setGewicht($data['gewicht'] ?? null);
         $artikel->setVerfuegbar($data['verfuegbar'] ?? null);
+        $artikel->setStueckbestellung($data['stueckbestellung'] ?? null);
         return $artikel;
     }
 
     /**
      * @param $data
-     * @return Bestellosition
+     * @return Bestellposition
      */
-    public static function populatePosition($data) {
-        $position = new Bestellosition();
+    public static function populateBestellPosition($data) {
+        $position = new Bestellposition();
         $position->setId($data['id'] ?? null);
-        $position->setWeight($data['weight'] ?? null);
-        $position->setPrice($data['price'] ?? null);
-        $position->setRechnungId($data['rechnung_id'] ?? null);
-        $position->setArtikelId($data['artikel_id'] ?? null);
+        $position->setBestellungId($data['bId'] ?? null);
+        $position->setBestellArtikelId($data['baId'] ?? null);
+        $position->setAnzahlPaeckchen($data['pAmount'] ?? null);
+        $position->setGewicht($data['singleWeight'] ?? null);
+        $position->setKommentar($data['kommentar'] ?? null);
         return $position;
     }
 
-    public static function populateRechnung($data) {
-        $rechnung = new Bestellung();
-        $rechnung->setId($data['id'] ?? null);
-        $rechnung->setDatum($data['datum'] ?? null);
-        $rechnung->setClientId($data['kunde_id'] ?? null);
-        $rechnung->setBezahlt($data['bezahlt'] ?? null);
-        $rechnung->setKommentar($data['kommentar'] ?? null);
-        return $rechnung;
+    public static function populateBestellung($data) {
+        $bestellung = new Bestellung();
+        $bestellung->setId($data['id'] ?? null);
+        $bestellung->setKundeId($data['datum'] ?? null);
+        $bestellung->setDate($data['kunde_id'] ?? null);
+        return $bestellung;
     }
 }
