@@ -6,8 +6,11 @@
     <title>Masesselin</title>
     <base href="<?php echo baseurl('/', true) ?>">
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
     <!--   <link rel="stylesheet" type="text/css" href="style.css">-->
     <script src="jquery-3.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </head>
 <body>

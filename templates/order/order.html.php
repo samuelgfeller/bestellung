@@ -14,7 +14,7 @@
             <th align="right">Anzahl Päckchen</th>
             <th></th>
             <th>Gewicht pro Päckchen oder Anzahl Stücke</th>
-            <th>Sonderheiten</th>
+            <th>Besonderheiten</th>
             <th>Gesamtgewicht (g)</th>
 
         </tr>
@@ -29,14 +29,14 @@
             <td><?= $artikel->getName() ?></td>
             <td><?= $artikel->getKgPrice() ?></td>
             <td id="availableWeight<?= $baId ?>" class="availableWeight"><span><?= $artikel->getVerfuegbarGewicht(); ?></span> kg</td>
-            <td class="amountNumber"><input id="pAmount<?= $baId ?>" class="comment" type="number" value="0" min="0"
+            <td class="amountNumber"><input id="pAmount<?= $baId ?>" class="comment" type="number" placeholder="0" min="0"
                                             onchange="calcWeight(<?= $baId.','.$artikel->getStueckbestellung() ?>)"
                                             max="15" name="pAmount[]"></td>
             <td id="timesTd<?= $baId ?>">&times;</td>
-            <td style="width:200px;"><input class="comment weightText" id="weightInput<?= $baId ?>" type="number"
-                                            value="0" onchange="calcWeight(<?= $baId.','.$artikel->getStueckbestellung() ?>)"
+            <td style="width:250px;"><input class="comment weightText" id="weightInput<?= $baId ?>" type="number"
+                                            placeholder="0" onchange="calcWeight(<?= $baId.','.$artikel->getStueckbestellung() ?>)"
                                             name="singleWeight[]">
-                <?php echo $artikel->getStueckbestellung() == 1 ? 'Stk. (ca. '.$artikel->getStueckgewicht().'g) / g.' : 'g.'; ?>
+                <?php echo $artikel->getStueckbestellung() == 1 ? 'g. / Stk. à ca. '.$artikel->getStueckgewicht().'g.' : 'g.'; ?>
             </td>
             <td><input class="comment" type="text" value="<?= '' ?>" name="kommentar[]"></td>
             <td id="outputWeight<?= $baId ?>"></td>
@@ -48,17 +48,24 @@
     <input type="submit" value="Bestellen">
 </form>
 
-<!-- The Modal @todo set price  -->
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
 
-<div id="myModal" class="modal artikel-modal">
-    <div class="modal-content artikel-modal-content">
-        <div class="modal-header">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Artikel anpassen/hinzufügen</h2>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <p>Some text in the modal.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+            </div>
         </div>
-        <div class="modal-body artikel-modal-body">
-            Loading...
-        </div>
+
     </div>
 </div>
 <?php

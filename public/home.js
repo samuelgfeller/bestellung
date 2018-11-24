@@ -44,51 +44,75 @@ $(document).ready(function () {
 });
 
 function calcWeight(id, stueck) {
+    // Available weight as text
     var aWeightTxt = $('#availableWeight' + id).text();
+    // available weight parsed as float
     var aWeight = parseFloat(aWeightTxt, 10);
-    var singleWeight = parseInt($('#weightInput' + id).val());
+    // Amount packages
     var pAnzahl =  $('#pAmount' + id).val();
+    // Weight or amount pieces in package
+    var singleWeight = parseInt($('#weightInput' + id).val());
     var wantedWeight = pAnzahl * singleWeight;
+    var maxAmount = 15;
+    var minWeight = 50;
+
     console.log('singleWeigth: ' + singleWeight);
     // Check if value is between authorised values
 
-    if (stueck === 1 && singleWeight <= 15) {
-        var stueckGewicht = 500;
-        $.ajax({
-            url: 'order/checkDefaultWeight',
-            type: 'post',
-            async:false,
-            data: {'id':id}
-        }).done(function (output){
-            stueckGewicht = parseInt(output);
-        }).fail(function (output) {
-            alert('Fehler bitte melden Sie sich bei Nicolas');
-        });
+    if (pAnzahl && singleWeight) {
+        if (stueck === 1 && singleWeight <= maxAmount) {
+            var stueckGewicht = 500;
+            $.ajax({
+                url: 'order/checkDefaultWeight',
+                type: 'post',
+                async: false,
+                data: {'id': id}
+            }).done(function (output) {
+                if (output){
+                    stueckGewicht = parseInt(output);
+                }else{
+                    stueckGewicht = 500;
+                }
+            }).fail(function (output) {
+                alert('Fehler bitte melden Sie sich bei Nicolas');
+            });
 
-        var totalWantedWeight = wantedWeight * stueckGewicht / 1000;
-        if (aWeight - totalWantedWeight >= 0){
-            $('#outputWeight' + id).html(pAnzahl * singleWeight +' Stk. von '+ stueckGewicht + 'g. = <b>'+totalWantedWeight*1000+'g.</b>');
-        }else {
-            alert('Bitte einen Betrag der unter dem verfügbaren Gewicht ist eingeben. Stückgewicht ist: '+stueckGewicht);
-            console.log(totalWantedWeight);
-            cleanOrder(id);
+            var totalWantedWeight = wantedWeight * stueckGewicht / 1000;
+            if (aWeight - totalWantedWeight >= 0) {
+                $('#outputWeight' + id).html(pAnzahl * singleWeight + ' Stk. von ' + stueckGewicht + 'g. = <b>' + totalWantedWeight * 1000 + 'g.</b>');
+            } else {
+                $('.modal-header h4').text('Es wurde zu viel eingegeben');
+                $('.modal-body p').html('Bitte einen Betrag unter dem verfügbaren Gewicht eingeben <br><b>' +
+                    + pAnzahl +'</b> Päckchen <b>&times; ('+ singleWeight+ ' Stücke von '+stueckGewicht+'g)</b> gibt <b>'+totalWantedWeight+'kg</b>. Verfügbar sind: <b>'+aWeight+'kg.</b>');
+                $('#myModal').modal('toggle');
+                console.log(totalWantedWeight);
+                cleanOrder(id);
+            }
         }
-    }
-    // Between 50 and 1000 (weight) or below 15 (piece)
-    else if ((singleWeight >= 50 && singleWeight <= 1000) || singleWeight==0) {
-        if ((aWeight - (wantedWeight / 1000)).toFixed(3) >= 0) {
-            $('#outputWeight' + id).text(wantedWeight + 'g.');
+        else if ((singleWeight >= minWeight) || singleWeight == 0) {
+            if ((aWeight - (wantedWeight / 1000)).toFixed(3) >= 0) {
+                $('#outputWeight' + id).text(wantedWeight + 'g.');
+            } else {
+                $('.modal-header h4').text('Es wurde zu viel eingegeben');
+                $('.modal-body p').html('Bitte einen Betrag unter dem verfügbaren Gewicht eingeben <br><b>' +
+                    + pAnzahl +' &times; '+ singleWeight+ 'g</b> gibt <b>'+wantedWeight/1000+'kg</b>. Verfügbar sind: <b>'+aWeight+'kg.</b>');
+                $('#myModal').modal('toggle');
+                cleanOrder(id);
+            }
         } else {
-            alert('Bitte einen Betrag unter dem verfügbaren Gewicht eingeben');
-            cleanOrder(id);
-        }
-    } else{
-        if (stueck === 1){
-            alert('Bitte einen Wert zwischen 1 und 15 für die Anzahl Stücke oder zwischen 50 und 1000 für das Gewicht eingeben.');
-            cleanOrder(id);
-        }else{
-            alert('Bitte einen Wert zwischen 50 und 1000 für das Gewicht eingeben.');
-            cleanOrder(id);
+            if (stueck === 1) {
+                $('.modal-header h4').text('Ein ungültiger Wert wurde eingegeben');
+                $('.modal-body p').html('Geben Sie bitte einen Wert zwischen <b>1 und '+maxAmount+'</b> ein wenn Sie mit der Anzahl Stücke pro Päckchen bestellen möchten' +
+                    'und sonst einen Wert welcher grösser ist als <b>'+minWeight+'</b>');
+                $('#myModal').modal('toggle');
+                cleanOrder(id);
+            } else {
+                $('.modal-header h4').text('Ein ungültiger Wert wurde eingegeben');
+                $('.modal-body p').html('Für diesen Artikel kann nur mit dem Gewicht bestellt werden. Geben Sie dafür bitte einen Wert ein welcher grösser als <b>' +
+                    minWeight+'</b> ist.');
+                $('#myModal').modal('toggle');
+                cleanOrder(id);
+            }
         }
     }
     console.log((aWeight - (wantedWeight / 1000)).toFixed(3) + ' - ' + (wantedWeight / 1000));
