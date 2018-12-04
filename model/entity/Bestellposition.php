@@ -17,20 +17,22 @@ class Bestellposition {
      */
     public static function add(Bestellposition $position) {
         $db = Db::instantiate();
-        $result = $db->query('INSERT INTO `bestell_position` (bestellung_id,bestell_artikel_id,anzahl_paeckchen,gewicht,kommentar) 
-VALUES ("' . $position->getBestellungId() . '", "' . $position->getBestellArtikelId() . '", ' . $position->getAnzahlPaeckchen() . ', ' . $position->getGewicht() . ', "' . $position->getKommentar() . '")');
-        Db::checkConnection($result);
+        $query = 'INSERT INTO `bestell_position` (bestellung_id,bestell_artikel_id,anzahl_paeckchen,gewicht,kommentar) 
+VALUES (' . $position->getBestellungId() . ', ' . $position->getBestellArtikelId() . ', ' . $position->getAnzahlPaeckchen() . ', ' . $position->getGewicht() . ', "' . $position->getKommentar() . '")';
+        $result = $db->query($query);
+        Db::checkConnection($result,$query);
         $last_id = $db->insert_id;
         return $last_id;
     }
 
     public static function del($id) {
         $db = Db::instantiate();
-        $sql = $db->query('UPDATE `position` SET deleted_at=now() WHERE id=' . $id);
-        Db::checkConnection($sql);
+        $query = 'UPDATE `position` SET deleted_at=now() WHERE id=' . $id;
+        $sql = $db->query($query);
+        Db::checkConnection($sql,$query);
     }
 
-    public static function getTotalOrderedWeightForBa($bestellArtikelId, $lastdate) {
+    public static function getTotalOrderedWeightForBa($bestellArtikelId, $nextDate) {
         $db = Db::instantiate();
 
         // Get the sum
@@ -38,8 +40,7 @@ VALUES ("' . $position->getBestellungId() . '", "' . $position->getBestellArtike
         left join bestellung b on bp.bestellung_id=b.id
         left join bestell_artikel ba on ba.id = bp.bestell_artikel_id 
         where b.deleted_at is null and ba.deleted_at is null and bp.deleted_at is null 
-        and ba.id = ' . $bestellArtikelId . ' and b.datum > "' . date('Y-m-d', $lastdate) . '";';
-
+        and ba.id = ' . $bestellArtikelId . ' and b.ziel_datum = "' . $nextDate . '";';
         $result = $db->query($query);
         if (!$result || $result->num_rows == 0) {
             return false;
@@ -52,6 +53,30 @@ VALUES ("' . $position->getBestellungId() . '", "' . $position->getBestellArtike
 //                return $result->fetch_assoc();
         }
     }
+
+    public static function getIfAlreadyOrdered($client_id, $date) {
+        $db = Db::instantiate();
+        $query = 'SELECT bp.* FROM bestell_position bp
+left join bestellung b on bp.bestellung_id = b.id 
+where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_id . ' and b.ziel_datum="' . $date . '";';
+//        var_dump($query);
+        $result = $db->query($query);
+        if (!$result || $result->num_rows == 0) {
+            return false;
+        }
+        $positionObj = null;
+        while ($position = $result->fetch_object()) {
+            $params = [ 'id' => $position->id,
+                'ba_id' => $position->bestell_artikel_id,
+                'bId' => $position->bestellung_id,
+                'pAmount' => $position->anzahl_paeckchen,
+                'singleWeight' => $position->gewicht,
+                'kommentar' => $position->kommentar,];
+            $positionObj[] = Populate::populateBestellPosition($params);
+        }
+        return $positionObj;
+    }
+
 
     public static function getLastDate() {
         $db = Db::instantiate();

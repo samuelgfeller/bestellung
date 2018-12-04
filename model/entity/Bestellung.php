@@ -17,10 +17,12 @@ class Bestellung {
         }
     }
 
-    public static function create($kunde_id) {
+    public static function create($kunde_id, $targetDate) {
+//        var_dump($targetDate);
         $db = Db::instantiate();
-        $result = $db->query('INSERT INTO bestellung (kunde_id,datum) VALUES ("' . $kunde_id . '", now())');
-        Db::checkConnection($result);
+        $query = 'INSERT INTO bestellung (kunde_id,datum,ziel_datum) VALUES ("' . $kunde_id . '", now(),"' . $targetDate . '")';
+        $result = $db->query($query);
+        Db::checkConnection($result,$query);
         $last_id = $db->insert_id;
         return $last_id;
     }
@@ -97,10 +99,12 @@ class Bestellung {
 
     public static function del($id) {
         $db = Db::instantiate();
-        $sql1 = $db->query('UPDATE `position` SET deleted_at=now() WHERE rechnung_id=' . $id);
-        $sql2 = $db->query('UPDATE rechnung SET deleted_at=now() WHERE id=' . $id);
-        Db::checkConnection($sql1);
-        Db::checkConnection($sql2);
+        $query1 = 'UPDATE `bestell_position` SET deleted_at=now() WHERE bestellung_id=' . $id;
+        $query2 = 'UPDATE bestellung SET deleted_at=now() WHERE id=' . $id;
+        $sql1 = $db->query($query1);
+        $sql2 = $db->query($query2);
+        Db::checkConnection($sql1,$query1);
+        Db::checkConnection($sql2,$query2);
     }
 
     /**
@@ -110,14 +114,16 @@ class Bestellung {
      */
     public static function check($id, $value) {
         $db = Db::instantiate();
-        $sql = $db->query('UPDATE rechnung SET bezahlt=' . $value . ' WHERE id=' . $id);
-        Db::checkConnection($sql);
+        $query ='UPDATE rechnung SET bezahlt=' . $value . ' WHERE id=' . $id;
+        $sql = $db->query($query);
+        Db::checkConnection($sql,$query);
     }
 
     public static function updComment($id, $value) {
         $db = Db::instantiate();
-        $sql = $db->query('UPDATE rechnung SET kommentar="' . $value . '" WHERE id=' . $id);
-        Db::checkConnection($sql);
+        $query = 'UPDATE rechnung SET kommentar="' . $value . '" WHERE id=' . $id;
+        $sql = $db->query($query);
+        Db::checkConnection($sql,$query);
     }
 
     /**
@@ -156,15 +162,6 @@ class Bestellung {
         }
     }
 
-    public static function checkIfExists($id) {
-        $db = Db::instantiate();
-        $result = $db->query('SELECT id FROM rechnung where deleted_at is null and id=' . $id . ';');
-        if (!$result || $result->num_rows == 0) {
-            return false;
-        } else {
-            return $result->fetch_assoc()['id'];
-        }
-    }
 
     /**
      * @return mixed

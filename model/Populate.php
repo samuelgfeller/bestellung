@@ -40,7 +40,7 @@ class Populate {
      * @param $data
      * @return Bestellartikel
      */
-    public static function populateArtikel($data) {
+    public static function populateBestellArtikel($data) {
         $artikel = new Bestellartikel();
         $artikel->setBestellArtikelId($data['ba_id'] ?? null);
         $artikel->setArtikelId($data['artikel_id'] ?? null);
@@ -50,6 +50,8 @@ class Populate {
         $artikel->setGewicht($data['gewicht'] ?? null);
         $artikel->setVerfuegbar($data['verfuegbar'] ?? null);
         $artikel->setStueckbestellung($data['stueckbestellung'] ?? null);
+        $artikel->setDatum($data['datum'] ?? null);
+        $artikel->setAvgWeight($data['avgWeight'] ?? null);
         return $artikel;
     }
 
@@ -61,7 +63,7 @@ class Populate {
         $position = new Bestellposition();
         $position->setId($data['id'] ?? null);
         $position->setBestellungId($data['bId'] ?? null);
-        $position->setBestellArtikelId($data['baId'] ?? null);
+        $position->setBestellArtikelId($data['ba_id'] ?? null);
         $position->setAnzahlPaeckchen($data['pAmount'] ?? null);
         $position->setGewicht($data['singleWeight'] ?? null);
         $position->setKommentar($data['kommentar'] ?? null);
@@ -74,5 +76,12 @@ class Populate {
         $bestellung->setKundeId($data['datum'] ?? null);
         $bestellung->setDate($data['kunde_id'] ?? null);
         return $bestellung;
+    }
+
+    public static function populateTermin($data) {
+        $termin = new Termin();
+        $termin->setId($data['id'] ?? null);
+        $termin->setDatum($data['datum'] ?? null);
+        return $termin;
     }
 }

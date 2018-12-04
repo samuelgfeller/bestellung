@@ -154,7 +154,7 @@ label {
     /*width:180px;*/
 }
 
-.btn {
+.ownBtn {
     min-width: 100px;
     background-color: whitesmoke;
     border: 1px solid black;
@@ -165,7 +165,7 @@ label {
     margin-left: 20px;
 }
 
-.btn:hover {
+.ownBtn:hover {
     background-color: dimgrey;
     box-shadow: 0 0 9px #ccc;
     color: white;
@@ -249,7 +249,7 @@ label {
 
 .search input {
     font-size: 1.3em;
-    width: 70%;
+    width: 60%;
     padding: 15px;
     border: 1px solid lightgray;
     border-radius: 5px;
@@ -701,11 +701,12 @@ input[type="checkbox"]:checked + label:before {
     margin-left: 25px;
 }
 
-#statBtn {
+.otherDateBtn {
     position: absolute;
-    top: 130px;
+    top: 40px;
     right: 35px;
     height: 50px;
+    border-radius: 5px;
 }
 
 
@@ -813,7 +814,7 @@ form .artikelTable{
 
 }
 
-.ck-button {
+.check-button {
     border-radius:10px;
     border:0px solid #D0D0D0;
     overflow:auto;
@@ -836,26 +837,26 @@ form .artikelTable{
     /*z-index: -1;*/
 }
 
-.ck-button:hover {
+.check-button:hover {
     background:red;
 }
 
-.ck-button label {
+.check-button label {
 }
 
-.ck-button label span {
+.check-button label span {
     text-align:center;
     padding:9px 0px;
     display:block;
     cursor: pointer;
 }
 
-.ck-button label input {
+.check-button label input {
     position:absolute;
     top:-20px;
 }
 
-.ck-button input:checked + span {
+.check-button input:checked + span {
     background-color: mediumseagreen;
 
     color:#fff;

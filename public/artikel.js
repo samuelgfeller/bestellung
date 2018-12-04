@@ -1,3 +1,9 @@
+$(document).ready(function () {
+    $('#changeArticleDateBtn').click(function () {
+        location.replace('/artikel');
+    });
+});
+
 function updWeight(id,value) {
     $.ajax({
         url: 'artikel/gewicht',
@@ -46,7 +52,14 @@ function checkUncheckPiece(id) {
             'id': id,
             'value':checked
         }
-    }).fail(function (output){
+    }).done(function (output){
+        if (output === 'false') {
+            $('#pieceBox' + id).prop('checked','');
+            if(confirm('Das Stückgewicht muss zuerst bei dem Artikel festgelegt werden. Wollen Sie auf die Seite der Artikel weitergeleitet werden?')){
+                location.replace('https://fleisch.masesselin.ch/artikel');
+            }
+        }
+        }).fail(function (output){
         alert('Fehler');
         console.log(output);
     });

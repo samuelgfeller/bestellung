@@ -123,8 +123,9 @@ class Client {
     public static function upd($client){
         $db = Db::instantiate();
         $values = Client::getQueryData($client);
-        $result = $db->query('UPDATE kunde SET ' . implode(",", $values). ' WHERE id='.$client->getId());
-        Db::checkConnection($result);
+        $query = 'UPDATE kunde SET ' . implode(",", $values). ' WHERE id='.$client->getId();
+        $result = $db->query($query);
+        Db::checkConnection($result,$query);
         return true;
     }
 
@@ -136,8 +137,9 @@ class Client {
     public static function add($client){
         $db = Db::instantiate();
         $values = Client::getQueryData($client);
-        $result = $db->query('INSERT INTO kunde SET ' . implode(",", $values));
-        Db::checkConnection($result);
+        $query = 'INSERT INTO kunde SET ' . implode(",", $values);
+        $result = $db->query();
+        Db::checkConnection($result,$query);
         $last_id = $db->insert_id;
         return $last_id;
     }
@@ -166,8 +168,9 @@ class Client {
      */
     public static function del($id) {
         $db = Db::instantiate();
-        $sql=$db->query('UPDATE kunde SET deleted_at=now() WHERE id='.$id);
-        Db::checkConnection($sql);
+        $query = 'UPDATE kunde SET deleted_at=now() WHERE id='.$id;
+        $sql=$db->query($query);
+        Db::checkConnection($sql,$query);
     }
 
     public static function findByName($vorname,$name) {

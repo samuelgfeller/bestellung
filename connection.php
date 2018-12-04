@@ -14,9 +14,10 @@
           }
           return self::$instance;
       }
-      public static function checkConnection($result){
+      public static function checkConnection($result,$query){
           if (!$result) {
-              echo'Error: ' . $result."<br>".self::$instance->error;
+              echo'Error: ' . $result."<br>".self::$instance->error.'<br>'.$query.'<br>';
+
           }
       }
   }
