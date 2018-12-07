@@ -39,4 +39,5 @@ require_once __DIR__."/../controller.php";
 //require_once __DIR__."/../templates/base.html.php";
 
 header("HTTP/1.0 404 Not Found");
-echo '404 Not Found';
+require_once __DIR__.'/../templates/pages/error.html.php';
+//echo '404 Not Found';

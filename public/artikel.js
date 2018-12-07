@@ -38,8 +38,13 @@ function checkUncheckAvailable(id) {
     });
 }
 
-function checkUncheckPiece(id) {
-    var checked = $('#pieceBox' + id).is(":checked");
+/**
+ * allow or disable stückbestellung
+ * @param artikel_id
+ * @param ba_id
+ */
+function checkUncheckPiece(artikel_id,ba_id) {
+    var checked = $('#pieceBox' + ba_id).is(":checked");
     if(checked){
         checked = 1;
     }else{
@@ -49,14 +54,14 @@ function checkUncheckPiece(id) {
         url: 'bestellArtikel/checkPiece',
         type: 'post',
         data: {
-            'id': id,
+            'artikel_id': artikel_id,
             'value':checked
         }
     }).done(function (output){
         if (output === 'false') {
-            $('#pieceBox' + id).prop('checked','');
+            $('#pieceBox' + ba_id).prop('checked','');
             if(confirm('Das Stückgewicht muss zuerst bei dem Artikel festgelegt werden. Wollen Sie auf die Seite der Artikel weitergeleitet werden?')){
-                location.replace('https://fleisch.masesselin.ch/artikel');
+                window.open('https://fleisch.masesselin.ch/artikel','_blank');
             }
         }
         }).fail(function (output){

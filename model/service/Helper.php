@@ -7,18 +7,28 @@
  */
 
 class Helper {
+
     /**
-     * If a word is in the
-     * @param array $myArray
-     * @param $word
-     * @return bool
+     * @param $data
+     * @return array
      */
-    public static function checkIfArticleCorresponds(array $orderedArr, $ba_id) {
-        foreach ($orderedArr as $position) {
-            if ($position->getBestellArtikelId() == $ba_id) {
-                return true;
+    public static function getImportColAndValues($data) {
+        $cols = [];
+        $values = [];
+        foreach ($data as $key => $value) {
+            if (!empty($value)) {
+                if (is_string($value)) {
+                    $values[] = '"' . $value . '"';
+                    $cols[] = $key;
+                } else if (is_bool($value) || is_int($value)) {
+                    $values[] = $value;
+                    $cols[] = $key;
+                }
             }
         }
-        return false;
+        return [
+            'cols' => $cols,
+            'values' => $values
+        ];
     }
 }

@@ -46,13 +46,18 @@ $(document).ready(function () {
         var id = $(value).attr('id');
         var value2 = parseFloat($('#' + id).text(), 10);
         // console.log(id, value2);
-        if (value2 > 0) {
+        if (value2 > 1) {
             $('#' + id).css({
                 'color': '#00b300',
                 'font-weight': 'bold',
             });
 
-        } else {
+        } else if (value2 <= 1 && value2 > 0) {
+            $('#' + id).css({
+                'color': 'orange',
+                'font-weight': 'bold',
+            });
+        }else {
             var idNum = id.match(/\d+/);
             $('#pAmount' + idNum + ',#weightInput' + idNum).prop('readonly', true).css({
                 'color': 'grey',
@@ -132,7 +137,7 @@ function calcWeight(id,stueck) {
                 cleanOrder(id);
             } else {
                 $('.modal-header h4').text('Ein ungültiger Wert wurde eingegeben');
-                $('.modal-body p').html('Für diesen Artikel kann nur mit dem Gewicht bestellt werden. Geben Sie dafür bitte einen Wert ein welcher grösser als <b>' +
+                $('.modal-body p').html('Für diesen Artikel ('+id+') kann nur mit dem Gewicht bestellt werden. Geben Sie dafür bitte einen Wert ein welcher grösser als <b>' +
                     minWeight + '</b> ist.');
                 $('#myModal').modal('toggle');
                 cleanOrder(id);

@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../connection.php';
 require_once __DIR__ . '/../Populate.php';
+require_once __DIR__ . '/../service/Helper.php';
 
 class Bestellposition {
     private $id;
@@ -16,11 +17,18 @@ class Bestellposition {
      * @return mixed
      */
     public static function add(Bestellposition $position) {
+        $data = ['bestellung_id' => $position->getBestellungId(),
+            'bestell_artikel_id' => $position->getBestellArtikelId(),
+            'anzahl_paeckchen' => $position->getAnzahlPaeckchen(),
+            'gewicht' => $position->getGewicht(),
+            'kommentar' => $position->getKommentar()];
+
+        $colval = Helper::getImportColAndValues($data);
         $db = Db::instantiate();
-        $query = 'INSERT INTO `bestell_position` (bestellung_id,bestell_artikel_id,anzahl_paeckchen,gewicht,kommentar) 
-VALUES (' . $position->getBestellungId() . ', ' . $position->getBestellArtikelId() . ', ' . $position->getAnzahlPaeckchen() . ', ' . $position->getGewicht() . ', "' . $position->getKommentar() . '")';
+        $query = 'INSERT INTO `bestell_position` (' . implode(',', $colval['cols']) . ') VALUES (' . implode(',', $colval['values']) . ')';
+
         $result = $db->query($query);
-        Db::checkConnection($result,$query);
+        Db::checkConnection($result, $query);
         $last_id = $db->insert_id;
         return $last_id;
     }
@@ -29,7 +37,7 @@ VALUES (' . $position->getBestellungId() . ', ' . $position->getBestellArtikelId
         $db = Db::instantiate();
         $query = 'UPDATE `position` SET deleted_at=now() WHERE id=' . $id;
         $sql = $db->query($query);
-        Db::checkConnection($sql,$query);
+        Db::checkConnection($sql, $query);
     }
 
     public static function getTotalOrderedWeightForBa($bestellArtikelId, $nextDate) {
@@ -66,7 +74,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
         }
         $positionObj = null;
         while ($position = $result->fetch_object()) {
-            $params = [ 'id' => $position->id,
+            $params = ['id' => $position->id,
                 'ba_id' => $position->bestell_artikel_id,
                 'bId' => $position->bestellung_id,
                 'pAmount' => $position->anzahl_paeckchen,
@@ -125,7 +133,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
      * @param mixed $id
      */
     public function setId($id) {
-        $this->id = $id;
+        $this->id = (int) $id;
     }
 
     /**
@@ -139,7 +147,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
      * @param mixed $bestellung_id
      */
     public function setBestellungId($bestellung_id) {
-        $this->bestellung_id = $bestellung_id;
+        $this->bestellung_id = (int) $bestellung_id;
     }
 
     /**
@@ -153,7 +161,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
      * @param mixed $bestell_artikel_id
      */
     public function setBestellArtikelId($bestell_artikel_id) {
-        $this->bestell_artikel_id = $bestell_artikel_id;
+        $this->bestell_artikel_id = (int) $bestell_artikel_id;
     }
 
     /**
@@ -167,7 +175,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
      * @param mixed $anzahl_paeckchen
      */
     public function setAnzahlPaeckchen($anzahl_paeckchen) {
-        $this->anzahl_paeckchen = $anzahl_paeckchen;
+        $this->anzahl_paeckchen = (int) $anzahl_paeckchen;
     }
 
     /**
@@ -181,7 +189,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
      * @param mixed $gewicht
      */
     public function setGewicht($gewicht) {
-        $this->gewicht = $gewicht;
+        $this->gewicht = (int) $gewicht;
     }
 
     /**
@@ -195,7 +203,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
      * @param mixed $kommentar
      */
     public function setKommentar($kommentar) {
-        $this->kommentar = $kommentar;
+        $this->kommentar = (string) $kommentar;
     }
 
 

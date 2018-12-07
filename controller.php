@@ -15,7 +15,6 @@ if ($path == '') {
     require __DIR__ . '/model/entity/Bestellung.php';
     require __DIR__ . '/model/entity/Client.php';
     require __DIR__ . '/model/entity/Termin.php';
-    require __DIR__ . '/model/service/Helper.php';
 
     if (!empty($_SESSION['client'])) {
         if ($_GET && $_GET['datum']) {
@@ -87,7 +86,9 @@ if ($path == '') {
 //                    var_dump('after: '.$totalOrderedWeight);
 //                    var_dump('calc: '.$artikel->getGewicht() .'-'. $totalOrderedWeight );
                     // Verfügbares Gewicht
-                    $artikel->setVerfuegbarGewicht(round($artikel->getGewicht() - ($totalOrderedWeight ?? 0), 2));
+/*                    highlight_string("<?php\n\$data =\n" . var_export($artikel, true) . ";\n?>");*/
+//                    var_dump($artikel->getGewicht() ?? 0);
+                    $artikel->setVerfuegbarGewicht(round(($artikel->getGewicht() ?? 0) - ($totalOrderedWeight ?? 0), 2));
                     if (!empty($artikel->getStueckbestellung())) {
                         $artikel->setStueckgewicht(Bestellartikel::getDefaultWeight($artikel->getBestellArtikelId()));
                     } else {
@@ -97,7 +98,7 @@ if ($path == '') {
                     $artikelUndBestellPositionen[$key]['bestell_artikel'] = $artikel;
                 }
             }
-//        var_dump($bestellArtikel);
+//        var_dump($artikelUndBestellPositionen);
             require __DIR__ . '/templates/order/order.html.php';
             exit;
         } else {
@@ -136,21 +137,25 @@ if ($path == 'success') {
     require_once __DIR__ . '/model/entity/Bestellposition.php';
     require_once __DIR__ . '/model/entity/Bestellartikel.php';
 
-    if ($_POST) {
-                $bestellungId = Bestellung::create($_SESSION['client'], $_POST['datum']);
+    if ($_POST && isset($_POST['pAmount'])) {
+        $bestellungId = Bestellung::create($_SESSION['client'], $_POST['datum']);
         $valuesArr = [];
         for ($i = 0, $iMax = count($_POST['pAmount']); $i < $iMax; $i++) {
             if (!empty($_POST['pAmount'][$i]) || !empty($_POST['kommentar'][$i])) {
-                $valuesArr[] = ['ba_id' => $_POST['ba_id'][$i], 'bId' => $bestellungId, 'pAmount' => $_POST['pAmount'][$i], 'singleWeight' => $_POST['singleWeight'][$i], 'kommentar' => $_POST['kommentar'][$i],];
+                $valuesArr[] = [
+                    'ba_id' => $_POST['ba_id'][$i], 'bId' => $bestellungId, 'pAmount' => $_POST['pAmount'][$i],
+                    'singleWeight' => $_POST['singleWeight'][$i], 'kommentar' => $_POST['kommentar'][$i],];
             }
         }
+
         foreach ($valuesArr as $values) {
             $bestellPosition = Populate::populateBestellPosition($values);
             Bestellposition::add($bestellPosition);
         }
 
-        if (!empty($_POST['bestellung_id'])){
-            Bestellung::del($_POST['bestellung_id']);
+        if ($minId = Bestellung::checkMultipleOrdersAndGetOlder($_SESSION['client'],$_POST['datum'])){
+            $minId ? Bestellung::del($minId) : Bestellung::del($_POST['bestellung_id']);
+
         }
 
         require_once __DIR__ . '/templates/success/success_bestellung.php';
@@ -174,5 +179,10 @@ if ($path == 'order/dates') {
         }
     }
     require_once __DIR__ . '/templates/order/dates.html.php';
+    exit;
+}
+
+if ($path == 'help') {
+    require_once __DIR__ . '/templates/pages/help.html.php';
     exit;
 }

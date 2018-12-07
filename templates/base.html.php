@@ -17,5 +17,5 @@
 <script type="text/javascript" src="main.js"></script>
 <script type="text/javascript" src="artikel.js"></script>
 <script type="text/javascript" src="home.js"></script>
-</body>
-</html>
+<!--</body>-->
+<!--</html>-->

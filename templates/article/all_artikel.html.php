@@ -1,3 +1,4 @@
+<!--@todo Passwort implementieren-->
 <h2 style="font-weight: normal; margin-left: 20px">Artikel für den <b><?= $datum ?></b></h2>
 <div class="search">
     <input type="text" id="searchInput" autocomplete="off" placeholder="Artikel suchen"
@@ -22,6 +23,7 @@
     foreach ($allArtikel as $artikel) {
         $baId = $artikel->getBestellArtikelId();
         $datum = $artikel->getDatum();
+        $gewicht = $artikel->getGewicht();
         ?>
         <tr id="bestell_artikel<?= $baId ?>">
             <td><?php echo $artikel->getNummer() ?></td>  <!--CHANGE JAVASCRIPT WHERE TABLE IS CREATED DYNAMICALY-->
@@ -34,10 +36,10 @@
                 <div class="check-button">
                     <label>
                         <input type="checkbox" id="pieceBox<?= $baId ?>" <?= $artikel->getStueckbestellung() == 1 ? 'checked' : '' ?>
-                               onclick="checkUncheckPiece(<?= $baId ?>)"><span></span>
+                               onclick="checkUncheckPiece(<?= $artikel->getArtikelId() ?>,<?= $baId ?>)"><span></span>
                     </label>
                 </div>
-            <td><input class="comment weightText" type="text" value="<?php echo $artikel->getGewicht(); ?>"
+            <td><input class="comment weightText" type="text" value="<?= $gewicht == 0.00 ? '' : $gewicht ?>"
                        placeholder="<?= $artikel->getAvgWeight() ?>" onkeyup="updWeight(<?= $baId ?>,this.value)"> kg
             </td>
         </tr>

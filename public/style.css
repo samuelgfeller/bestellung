@@ -1,5 +1,7 @@
 body {
     margin: 0;
+    /*background: #000;*/
+
 }
 
 * {
@@ -8,6 +10,18 @@ body {
 
 h1 {
     margin-left: 20px;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+    /*margin-top: 0;*/
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    color: #333;
+    margin-left: 2%;
 }
 
 @font-face {
@@ -102,8 +116,6 @@ li.nav a.nav:hover, .dropdown:hover .dropbtn {
     background: #b2180e;
     color: white;
 }
-
-
 
 /*FORM*/
 form {
@@ -370,32 +382,58 @@ label {
 }
 
 /*Home*/
-#homeContainer {
+.homeContainer {
     background: white;
 }
 
-#title {
+.homeContainer p{
+    margin-left: 5%;
+    margin-right: 5%;
+    line-height: 1.4em;
+}
+
+.homeContainer h3, .homeContainer h4{
+    font-weight: bold;
+}
+
+.helpLink{
+    /*text-decoration: underline;*/
+    font-weight:bold;
+    /*text-decoration: ;: ;*/
+    color: #3d3b48;
+}
+
+.helpImg{
+    width:100%;
+}
+
+.homeContainer a:hover{
+    color: darkgrey;
+
+}
+
+.title {
     text-align: center;
     font-size: 4em;
     font-family: 'DancingScript-Bold', sans-serif;
 }
 
-#homeImg {
+.homeImg {
     width: 100%;
     box-shadow: 0 0 30px #cccccc;
     margin: 0px 0 50px 0;
 }
 
-.emailLogin {
+.centeredInfo {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
-.emailLogin form {
+.centeredInfo form {
     width: 100%;;
 }
 
-.emailLogin input[type=text] {
+.centeredInfo input[type=text] {
     font-size: 1.3em;
     width: 30%;
     padding: 15px;
@@ -405,36 +443,36 @@ label {
     min-width: 300px;
 }
 
-.emailLogin input[type=text]:focus {
+.centeredInfo input[type=text]:focus {
     box-shadow: 0 0 16px lightgrey;
     border: 1px solid #cccccc;
 }
 
-.submitBtn {
+.centeredInfo button {
     font-size: 1.3em;
     width: 20%;
     padding: 15px;
     border: 1px solid lightgray;
     border-radius: 5px;
     background-color: white;
-    min-width:250px;
+    min-width: 250px;
 }
 
-.submitBtn:hover {
+.centeredInfo button:hover {
     background: whitesmoke;
     cursor: pointer;
     box-shadow: 0 0 10px #f2f2f2;
     color: #000;
 }
 
-.alert{
+.alert {
     padding: 20px;
     background-color: #f44336;
     color: white;
     display: none;
 }
 
-.alert a{
+.alert a {
     color: white;
 }
 
@@ -689,7 +727,7 @@ input[type="checkbox"]:checked + label:before {
 
 .comment {
     padding: 5px;
-    width: 80%;
+    width: 95%;
     border-radius: 2px;
     border: 0.5px solid #ccc;
 }
@@ -709,44 +747,44 @@ input[type="checkbox"]:checked + label:before {
     border-radius: 5px;
 }
 
-
 /* Bestellung */
 
 .weightText {
     width: 60px;
 }
+
 .amountNumber {
     width: 40px;
 }
 
-#outputWeight{
+#outputWeight {
     text-align: left;
 }
-#timesTd{
-    width:10px;
+
+#timesTd {
+    width: 10px;
 }
 
-#bestellForm{
-    width:100%;
+#bestellForm {
+    width: 100%;
 }
 
 /*#bestellForm input[type=submit]{*/
-    /*padding:15px;*/
-    /*width:200px;*/
-    /*float: right;*/
-    /*display: block;*/
-    /*margin: 2% 5% 0 0;*/
-    /*border-radius: 40px;*/
-    /*background: #a87bb7;*/
-    /*color: white;*/
+/*padding:15px;*/
+/*width:200px;*/
+/*float: right;*/
+/*display: block;*/
+/*margin: 2% 5% 0 0;*/
+/*border-radius: 40px;*/
+/*background: #a87bb7;*/
+/*color: white;*/
 /*}*/
 /*#bestellForm input[type=submit]:hover{*/
-    /*box-shadow: 0 0 15px #ccc;*/
-    /*!*background: ;*!*/
+/*box-shadow: 0 0 15px #ccc;*/
+/*!*background: ;*!*/
 /*}*/
 
-
-#bestellForm input[type=submit]{
+#bestellForm input[type=submit] {
     /*position: absolute;*/
     /*top: 50%;*/
     /*left: 50%;*/
@@ -767,9 +805,11 @@ input[type="checkbox"]:checked + label:before {
     border-radius: 30px;
     z-index: 1;
 }
+
 #bestellForm input[type=submit]:hover:hover {
     animation: animate 5s linear infinite;
 }
+
 @keyframes animate {
     0% {
         background-position: 0%;
@@ -778,6 +818,7 @@ input[type="checkbox"]:checked + label:before {
         background-position: 400%;
     }
 }
+
 #bestellForm input[type=submit]:hover:before {
     content: '';
     position: absolute;
@@ -792,72 +833,75 @@ input[type="checkbox"]:checked + label:before {
     opacity: 0;
     transition: 0.5s;
 }
+
 #bestellForm input[type=submit]:hover:before {
     filter: blur(20px);
-    opacity:1;
+    opacity: 1;
     animation: animate 5s linear infinite;
 }
 
-.artikelTablePadding td{
-    padding-top:10px;
-    padding-bottom:10px;
+.artikelTablePadding td {
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
-form .artikelTable{
-    padding-top:6px;
-    padding-bottom:6px;
+form .artikelTable {
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
-
-.weightCheckTd,.amountCheckTd{
-    width:50px;
+.weightCheckTd, .amountCheckTd {
+    width: 50px;
 
 }
 
 .check-button {
-    border-radius:10px;
-    border:0px solid #D0D0D0;
-    overflow:auto;
-    background-color:red;
+    border-radius: 10px;
+    border: 0px solid #D0D0D0;
+    overflow: auto;
+    background-color: red;
     text-align: center;
-    width:18px;
-    margin:auto;
+    width: 18px;
+    margin: auto;
 }
+
 :root {
-    --lightShadow:#e6e6e6;
+    --lightShadow: #e6e6e6;
 }
-.leftCheckBox{
-    border-radius:9px 9px 9px 9px;
+
+.leftCheckBox {
+    border-radius: 9px 9px 9px 9px;
     /*box-shadow: 0 0 6px var(--lightShadow),0 0 0px,0 0 9px var(--lightShadow);*/
     /*z-index: 99;*/
 }
-.rightCheckBox{
-    border-radius:9px 9px 9px 9px;
+
+.rightCheckBox {
+    border-radius: 9px 9px 9px 9px;
     /*box-shadow: 0 0 6px var(--lightShadow),0 0 0px,0 0 9px var(--lightShadow);*/
     /*z-index: -1;*/
 }
 
 .check-button:hover {
-    background:red;
+    background: red;
 }
 
 .check-button label {
 }
 
 .check-button label span {
-    text-align:center;
-    padding:9px 0px;
-    display:block;
+    text-align: center;
+    padding: 9px 0px;
+    display: block;
     cursor: pointer;
 }
 
 .check-button label input {
-    position:absolute;
-    top:-20px;
+    position: absolute;
+    top: -20px;
 }
 
 .check-button input:checked + span {
     background-color: mediumseagreen;
 
-    color:#fff;
+    color: #fff;
 }

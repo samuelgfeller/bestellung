@@ -16,8 +16,8 @@ if ($path == 'bestellArtikel/checkAvailable') {
 if ($path == 'bestellArtikel/checkPiece') {
     require_once 'model/entity/Bestellartikel.php';
 
-    if(Bestellartikel::checkPieceWeight($_POST['id'])){
-        Bestellartikel::checkPiece($_POST['id'], $_POST['value']);
+    if(Bestellartikel::checkPieceWeight($_POST['artikel_id'])){
+        Bestellartikel::checkPiece($_POST['artikel_id'], $_POST['value']);
     }else{
         echo 'false';
     }

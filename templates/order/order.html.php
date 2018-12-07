@@ -11,9 +11,9 @@
 </div><br>
 <form action="success" method="post" id="bestellForm" onkeypress="return event.keyCode != 13;">
 
-<!--    Set date outside the foreach loop -->
+    <!--    Set date outside the foreach loop -->
     <input type="hidden" name="datum" value="<?= $GETDateSQL ?>">
-<!--    set the order id -->
+    <!--    set the order id -->
     <input type="hidden" name="bestellung_id" value="<?= $bestellung_id ?>">
 
     <table class="items artikel" id="artikelTable">
@@ -42,7 +42,7 @@
                 $anzStk = null;
                 $gewicht = null;
                 $kommentar = null;
-                if ($position){
+                if ($position) {
                     $anzStk = $position->getAnzahlPaeckchen();
                     $gewicht = $position->getGewicht();
                     $kommentar = $position->getKommentar();
@@ -58,30 +58,37 @@
                         <span><?= $artikel->getVerfuegbarGewicht(); ?></span> kg
                     </td>
                     <td class="amountNumber"><input id="pAmount<?= $baId ?>" class="comment calcWeight" type="number"
-                                                    placeholder="0" min="0" value="<?= $anzStk ?>" data-baid="<?= $baId ?>"
+                                                    placeholder="0" min="0" value="<?= $anzStk ?>"
+                                                    data-baid="<?= $baId ?>"
                                                     max="15" name="pAmount[]"></td>
                     <td id="timesTd<?= $baId ?>">&times;</td>
                     <td style="width:250px;"><input class="comment weightText calcWeight" id="weightInput<?= $baId ?>"
-                                                    type="number" placeholder="0" value="<?= $gewicht ?>" data-baid="<?= $baId ?>"
+                                                    type="number" placeholder="0" value="<?= $gewicht ?>"
+                                                    data-baid="<?= $baId ?>"
                                                     name="singleWeight[]">
                         <?= $stk == 1 ? 'g. / Stk. à ca. ' . $artikel->getStueckgewicht() . 'g.' : 'g.'; ?>
+                        <!--                    Inserting the hidden info here because outide it affects the nth:child(even)-->
+                        <input type="hidden" name="ba_id[]" value="<?= $baId ?>">
+
                     </td>
                     <td><input class="comment" type="text" value="<?= $kommentar ?>" name="kommentar[]"></td>
                     <td id="outputWeight<?= $baId ?>">
-<!--                    Inserting the hidden info here because outide it affects the nth:child(even)-->
-                        <input type="hidden" name="ba_id[]" value="<?= $baId ?>">
                     </td>
                 </tr>
 
-                <div id="calcInfo<?= $baId ?>" class="calcInfoClass" data-baid="<?= $baId ?>" data-stk="<?= $stk ?>"></div>
+                <div id="calcInfo<?= $baId ?>" class="calcInfoClass" data-baid="<?= $baId ?>"
+                     data-stk="<?= $stk ?>"></div>
                 <?php
             }
         } else {
             echo '<h3><b style="color:red">Es sind keine Daten vorhanden für dieses Datum.</b></h3>';
         } ?>
     </table>
+    <a class="btn" href="help" style="margin-top:10px"><i class="glyphicon glyphicon-question-sign"></i> Anleitung</a>
+
     <input type="submit" value="Bestellen">
 </form>
+
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" role="dialog">
@@ -103,4 +110,3 @@
 
     </div>
 </div>
-<?php

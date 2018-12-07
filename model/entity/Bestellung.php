@@ -9,7 +9,8 @@ class Bestellung {
 
     public static function checkEmail($email) {
         $db = Db::instantiate();
-        $result = $db->query('SELECT id FROM kunde where deleted_at is null and email like "' . $email . '";');
+        $query = 'SELECT id FROM kunde where deleted_at is null and email COLLATE UTF8_GENERAL_CI like "' . $email . '";';
+        $result = $db->query($query);
         if (!$result || $result->num_rows == 0) {
             return false;
         } else {
@@ -22,7 +23,7 @@ class Bestellung {
         $db = Db::instantiate();
         $query = 'INSERT INTO bestellung (kunde_id,datum,ziel_datum) VALUES ("' . $kunde_id . '", now(),"' . $targetDate . '")';
         $result = $db->query($query);
-        Db::checkConnection($result,$query);
+        Db::checkConnection($result, $query);
         $last_id = $db->insert_id;
         return $last_id;
     }
@@ -103,8 +104,8 @@ class Bestellung {
         $query2 = 'UPDATE bestellung SET deleted_at=now() WHERE id=' . $id;
         $sql1 = $db->query($query1);
         $sql2 = $db->query($query2);
-        Db::checkConnection($sql1,$query1);
-        Db::checkConnection($sql2,$query2);
+        Db::checkConnection($sql1, $query1);
+        Db::checkConnection($sql2, $query2);
     }
 
     /**
@@ -114,16 +115,16 @@ class Bestellung {
      */
     public static function check($id, $value) {
         $db = Db::instantiate();
-        $query ='UPDATE rechnung SET bezahlt=' . $value . ' WHERE id=' . $id;
+        $query = 'UPDATE rechnung SET bezahlt=' . $value . ' WHERE id=' . $id;
         $sql = $db->query($query);
-        Db::checkConnection($sql,$query);
+        Db::checkConnection($sql, $query);
     }
 
     public static function updComment($id, $value) {
         $db = Db::instantiate();
         $query = 'UPDATE rechnung SET kommentar="' . $value . '" WHERE id=' . $id;
         $sql = $db->query($query);
-        Db::checkConnection($sql,$query);
+        Db::checkConnection($sql, $query);
     }
 
     /**
@@ -162,6 +163,31 @@ class Bestellung {
         }
     }
 
+    /**
+     * return true if there are multiple orders
+     *
+     * @param $kunde_id
+     * @param $datum
+     * @return bool|mixed
+     */
+    public static function checkMultipleOrdersAndGetOlder($kunde_id, $datum) {
+        $db = Db::instantiate();
+        $query = 'select id from bestellung where kunde_id=' . $kunde_id . ' and ziel_datum="' . $datum . '" and deleted_at is null;';
+        $result = $db->query($query);
+        if (!$result || $result->num_rows == 0) {
+            return false;
+        }
+        $ids=[];
+        while ($row = $result->fetch_assoc()) {
+            $ids[] = $row['id'];
+        }
+        if (count($ids) > 1) {
+            return min($ids);
+        }
+            return false;
+
+
+    }
 
     /**
      * @return mixed
