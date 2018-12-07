@@ -27,7 +27,7 @@ class Termin {
         return false;
     }
 
-    public static function getTextDates() {
+/*    public static function getTextDates() {
         $daten = [];
         $db = Db::instantiate();
         $result = $db->query('SELECT datum FROM termin WHERE deleted_at is null order by datum desc');
@@ -42,6 +42,24 @@ class Termin {
             }
             return false;
         }
+    }*/
+
+    public static function getYearsAndDates() {
+        $years = [];
+        $dates = [];
+        $db = Db::instantiate();
+        $result = $db->query('SELECT datum FROM termin WHERE deleted_at is null order by datum desc');
+        if (!$result || $result->num_rows == 0) {
+            return null;
+        }
+        while ($datumArr = $result->fetch_assoc()) {
+            $years[] = date('Y', strtotime($datumArr['datum']));
+            $dates[] = date('d.m.Y', strtotime($datumArr['datum']));
+        }
+        return [
+            'years' => $years,
+            'dates' => $dates,
+        ];
 
     }
 
@@ -49,7 +67,7 @@ class Termin {
      * @return array
      */
     public static function getNextDate(){
-        $dateArr = self::getTextDates();
+        $dateArr = self::getYearsAndDates()['dates'];
         $today = time();
         foreach ($dateArr as $key => $date) {
             $interval = $today - strtotime($date);

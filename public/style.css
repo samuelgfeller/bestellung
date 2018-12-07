@@ -29,6 +29,10 @@ h6 {
     src: url("fonts/DancingScript-Bold.ttf");
 }
 
+.content{
+    margin: 3%;
+}
+
 .menu {
     background-color: black;
 }
@@ -698,6 +702,11 @@ input[type="checkbox"]:checked + label:before {
     margin-left: 2%;
     font-size: 1.5em;
 }
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
 
 .billDetailTd:hover {
     cursor: pointer;
@@ -904,4 +913,42 @@ form .artikelTable {
     background-color: mediumseagreen;
 
     color: #fff;
+}
+
+/*Feedback*/
+.feedbackContainer{
+    margin:auto;
+    width:50%;
+
+}
+.feedbackContainer form{
+    width:100%;
+}
+.feedbackContainer form label{
+    display: block;
+    font-size:1.2em;
+    text-align: justify;
+    padding: 20px;
+    border: 0.5px solid #ccc;
+    border-radius:3px;
+}
+.feedbackContainer form textarea {
+    margin-top: 20px;
+    width: 100%;
+    font-size: 1.2em;
+
+    /*box-shadow: -8px 8px 16px 0 rgba(0, 0, 0, 0.01), 8px 8px 16px 0 rgba(0, 0, 0, 0.01);*/
+}
+.feedbackContainer form input[type=submit] {
+    float: right;
+    margin-left:20px;
+}
+
+.feedbackContainer button{
+    float: right;
+    margin-top: 8px;
+    font-size:100%;
+    border: 0.5px solid #ccc;
+    padding: 8px 13px;
+    border-radius: 3px;
 }

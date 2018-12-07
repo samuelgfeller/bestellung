@@ -118,7 +118,7 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
 
     public static function checkAndRefresh() {
         $db = Db::instantiate();
-        $dates = Termin::getTextDates();
+        $dates = Termin::getYearsAndDates()['dates'];
 
         $articleRes = $db->query('select * from artikel;');
         if ($articleRes || $articleRes->num_rows != 0) {

@@ -115,10 +115,13 @@ if ($path == 'artikel') {
     require __DIR__ . '/model/entity/Bestellartikel.php';
     require __DIR__ . '/model/entity/Termin.php';
 
-    $dates = Termin::getTextDates();
+    $datesYears = Termin::getYearsAndDates();
+    $dates = $datesYears['dates'];
+    $years = $datesYears['years'];
+
     Bestellartikel::checkAndRefresh();
 
-    // If a date is in the GET request, it shows the bills for this date
+    // If a dated is in the GET request, it shows the bills for this date
     if ($_GET && $_GET['datum']) {
         $datumGET = strtotime($_GET['datum']);
         $datum = date('d.m.Y', $datumGET);
@@ -128,7 +131,8 @@ if ($path == 'artikel') {
         exit;
     }
     //if not it only shows the dates
-    require_once __DIR__ . '/templates/article/dates.html.php';
+    $url = 'artikel';
+    require_once __DIR__ . '/templates/pages/dates.html.php';
     exit;
 }
 
@@ -157,28 +161,36 @@ if ($path == 'success') {
             $minId ? Bestellung::del($minId) : Bestellung::del($_POST['bestellung_id']);
 
         }
-
-        require_once __DIR__ . '/templates/success/success_bestellung.php';
+//        require_once __DIR__ . '/templates/success/success_bestellung.php';
+        require_once __DIR__ . '/templates/pages/feedback.html.php';
         exit;
     }
+    require_once __DIR__ . '/templates/success/success_bestellung.php';
+    exit;
 }
 
 if ($path == 'artikel/dates') {
     require __DIR__ . '/model/entity/Termin.php';
-    $dates = Termin::getTextDates();
-    require_once __DIR__ . '/templates/article/dates.html.php';
+    $datesYears = Termin::getYearsAndDates();
+    $dates = $datesYears['dates'];
+    $years = $datesYears['years'];
+    $url = 'artikel';
+    require_once __DIR__ . '/templates/pages/dates.html.php';
     exit;
 }
 
 if ($path == 'order/dates') {
     require __DIR__ . '/model/entity/Termin.php';
-    $dates = Termin::getTextDates();
+    $datesYears = Termin::getYearsAndDates();
+    $dates = $datesYears['dates'];
+    $years = $datesYears['years'];
     foreach ($dates as $key => $date) {
         if (strtotime($date) < time()) {
             unset($dates[$key]);
         }
     }
-    require_once __DIR__ . '/templates/order/dates.html.php';
+    $url = 'order';
+    require_once __DIR__ . '/templates/pages/dates.html.php';
     exit;
 }
 
@@ -186,3 +198,20 @@ if ($path == 'help') {
     require_once __DIR__ . '/templates/pages/help.html.php';
     exit;
 }
+
+if ($path == 'feedback') {
+    require_once __DIR__ . '/templates/pages/feedback.html.php';
+    exit;
+}
+
+if ($path == 'feedback/success') {
+    require __DIR__ . '/model/entity/Feedback.php';
+    if ($_POST && !empty($_POST['feedback'])) {
+
+        Feedback::add($_POST['feedback'],$_SESSION['client']);
+    }
+    // @todo change feedback / Make own button and redirect to specific success
+    require_once __DIR__ . '/templates/success/success_bestellung.php';
+    exit;
+}
+

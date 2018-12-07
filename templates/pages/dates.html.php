@@ -8,7 +8,7 @@
             <?php
             foreach ($dates as $date) {
             if (date('Y', strtotime($date)) === $year) { ?>
-                <a href="/artikel?datum=<?= $date ?>">
+                <a href="/<?= $url ?>?datum=<?= $date ?>">
                     <div class="dateBox">
                         <p class="dateText"><?php echo $date ?></p>
                     </div>
