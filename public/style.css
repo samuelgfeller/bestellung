@@ -396,8 +396,12 @@ label {
     line-height: 1.4em;
 }
 
-.homeContainer h3, .homeContainer h4{
+.homeContainer h2{
     font-weight: bold;
+
+}
+.homeContainer h3, .homeContainer h4{
+    margin-left:5%;
 }
 
 .helpLink{

@@ -16,7 +16,7 @@
     <!--    set the order id -->
     <input type="hidden" name="bestellung_id" value="<?= $bestellung_id ?>">
 
-    <table class="items artikel" id="artikelTable">
+    <table class="items artikel" id="bestellArtikelTable">
         <tr>
             <th>Name</th>
             <th>Kg Preis</th>

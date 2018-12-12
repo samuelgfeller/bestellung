@@ -13,10 +13,25 @@ $(document).ready(function () {
             } else {
                 $('.alert').show();
             }
-        }).fail(function (output) {
+        }).fail(function (output){
             alert('Fehler');
             console.log(output);
         });
+    });
+
+    $('#bestellForm').on('submit', function(e){
+        if ($('.warningMsg').length > 0){
+            e.preventDefault();
+            $('.modal-header h4').text('Es gibt noch Fehler');
+            $('.modal-body p').html('<b>Bitte überprüfen Sie ob es keine rote Meldungen gibt und beachten Sie diese.</b> <br><br> ' +
+                '<i>Wenn Sie x Anzahl Päckchen von einem Stück möchten, geben Sie bitte <b>1</b> bei der Anzahl Stücke ein. <br>' +
+                'Es kann durchaus vorkommen, dass eine Stückzahl nicht so logisch ist z.B. bei einer Harasse Äpfel muss man 1 Päckchen und ' +
+                '1 Stück pro Päckchen auswählen. Es wird eine Multiplikation durchgeführt und wenn Sie daher 1 Stück von etwas möchten muss bei beiden Felder ' +
+                '1 stehen.</i>' );
+            $('#myModal').modal('toggle');
+        }else{
+            // $('#bestellForm').submit();
+        }
     });
 
     $('#changeArticleDateBtn').click(function () {
@@ -108,11 +123,11 @@ function calcWeight(id,stueck) {
 
             var totalWantedWeight = wantedWeight * stueckGewicht / 1000;
             if (aWeight - totalWantedWeight >= 0) {
-                $('#outputWeight' + id).html(pAnzahl * singleWeight + ' Stk. von ' + stueckGewicht + 'g. = <b>' + totalWantedWeight * 1000 + 'g.</b>');
+                $('#outputWeight' + id).html(pAnzahl * singleWeight + ' Stk. à ' + stueckGewicht + 'g. = <b>' + totalWantedWeight * 1000 + 'g.</b>');
             } else {
                 $('.modal-header h4').text('Es wurde zu viel eingegeben');
                 $('.modal-body p').html('Bitte einen Betrag unter dem verfügbaren Gewicht eingeben <br><b>' +
-                    +pAnzahl + '</b> Päckchen <b>&times; ' + singleWeight + ' Stücke von ' + stueckGewicht + 'g</b> gibt <b>' + totalWantedWeight + 'kg</b>. Verfügbar sind: <b>' + aWeight + 'kg.</b>');
+                    +pAnzahl + '</b> Päckchen <b>&times; ' + singleWeight + ' Stücke à ' + stueckGewicht + 'g</b> gibt <b>' + totalWantedWeight + 'kg</b>. Verfügbar sind: <b>' + aWeight + 'kg.</b>');
                 $('#myModal').modal('toggle');
                 console.log(totalWantedWeight);
                 cleanOrder(id);
@@ -132,7 +147,7 @@ function calcWeight(id,stueck) {
             if (stueck === 1) {
                 $('.modal-header h4').text('Ein ungültiger Wert wurde eingegeben');
                 $('.modal-body p').html('Geben Sie bitte einen Wert zwischen <b>1 und ' + maxAmount + '</b> ein wenn Sie mit der Anzahl Stücke pro Päckchen bestellen möchten' +
-                    'und sonst einen Wert welcher grösser ist als <b>' + minWeight + '</b>');
+                    ' und sonst einen Wert welcher grösser ist als <b>' + minWeight + '</b>');
                 $('#myModal').modal('toggle');
                 cleanOrder(id);
             } else {
@@ -144,12 +159,31 @@ function calcWeight(id,stueck) {
             }
         }
     }
+    console.log('pAnzahl '+pAnzahl,'singleWeight '+singleWeight,'stueck '+stueck);
+
+    checkFilledInputs(stueck,id);
+
     // console.log((aWeight - (wantedWeight / 1000)).toFixed(3) + ' - ' + (wantedWeight / 1000));
 
 // });
 
 }
+function checkFilledInputs(stueck,id){
+    var pAnzahl = $('#pAmount' + id).val();
 
+    var singleWeight = parseInt($('#weightInput' + id).val());
+
+
+    if (pAnzahl && !singleWeight && stueck){
+        $('#outputWeight' + id).html('<b class="warningMsg" style="color: red;">Bitte Stückanzahl eingeben</b><br> + Tabulatortaste drücken');
+    }else if (pAnzahl && !singleWeight && !stueck){
+        $('#outputWeight' + id).html('<b class="warningMsg" style="color: red;">Bitte Gewicht eingeben</b><br> + Tabulatortaste drücken');
+    }else if(!pAnzahl && singleWeight){
+        $('#outputWeight' + id).html('<b class="warningMsg" style="color: red;">Bitte Anzahl Päckchen angeben</b><br> + Tabulatortaste drücken');
+    }else if(!pAnzahl && !singleWeight){
+        $('#outputWeight' + id).html('');
+    }
+}
 function updComment(id, value) {
     $.ajax({
         url: 'order/comment',
@@ -163,7 +197,7 @@ function updComment(id, value) {
 
 function cleanOrder(id) {
     $('#weightInput' + id).val(0).focus();
-    $('#weightInput' + id).focus();
+    // $('#weightInput' + id).focus();
     $('#outputWeight' + id).text('');
 
 }

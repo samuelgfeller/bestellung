@@ -8,7 +8,7 @@
         <br>
     </div>
     <div class="centeredInfo">
-            <input type="text" name="email" placeholder="E-Mail"><br><br>
+            <input type="text" name="email" placeholder="Ihr E-Mail"><br><br>
             <button class="submitBtn" id="submitEmail">Zur Bestellung</button>
     </div>
 

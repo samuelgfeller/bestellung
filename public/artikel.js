@@ -12,7 +12,8 @@ function updWeight(id,value) {
             'id': id,
             'value': value
         }
-
+    }).done(function (output) {
+// console.log(output);
     }).fail (function (output){
         alert('Fehler !');
     });

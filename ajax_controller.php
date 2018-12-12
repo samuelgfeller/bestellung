@@ -5,6 +5,7 @@ require_once __DIR__ . "/Local.php";
 
 if ($path == 'artikel/gewicht'){
     require_once 'model/entity/Bestellartikel.php';
+
     Bestellartikel::updWeight($_POST['id'], $_POST['value']);
     exit;
 }

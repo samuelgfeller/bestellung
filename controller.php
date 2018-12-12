@@ -37,7 +37,8 @@ if ($path == '') {
                 $artikelUndBestellPositionen = [];
                 foreach ($bestellArtikel as $key => $artikel) {
                     // Initialising array with default values
-                    $artikelUndBestellPositionen[$key] = ['already_ordered' => false, 'bestell_artikel' => false];
+                    $artikelUndBestellPositionen[$key] = ['already_ordered' => false,
+                        'bestell_artikel' => false];
                     $weightToSubstrate = 0;
 
                     if ($alreadyOrdered) {
@@ -86,7 +87,7 @@ if ($path == '') {
 //                    var_dump('after: '.$totalOrderedWeight);
 //                    var_dump('calc: '.$artikel->getGewicht() .'-'. $totalOrderedWeight );
                     // Verfügbares Gewicht
-/*                    highlight_string("<?php\n\$data =\n" . var_export($artikel, true) . ";\n?>");*/
+                    /*                    highlight_string("<?php\n\$data =\n" . var_export($artikel, true) . ";\n?>");*/
 //                    var_dump($artikel->getGewicht() ?? 0);
                     $artikel->setVerfuegbarGewicht(round(($artikel->getGewicht() ?? 0) - ($totalOrderedWeight ?? 0), 2));
                     if (!empty($artikel->getStueckbestellung())) {
@@ -146,9 +147,11 @@ if ($path == 'success') {
         $valuesArr = [];
         for ($i = 0, $iMax = count($_POST['pAmount']); $i < $iMax; $i++) {
             if (!empty($_POST['pAmount'][$i]) || !empty($_POST['kommentar'][$i])) {
-                $valuesArr[] = [
-                    'ba_id' => $_POST['ba_id'][$i], 'bId' => $bestellungId, 'pAmount' => $_POST['pAmount'][$i],
-                    'singleWeight' => $_POST['singleWeight'][$i], 'kommentar' => $_POST['kommentar'][$i],];
+                $valuesArr[] = ['ba_id' => $_POST['ba_id'][$i],
+                    'bId' => $bestellungId,
+                    'pAmount' => $_POST['pAmount'][$i],
+                    'singleWeight' => $_POST['singleWeight'][$i],
+                    'kommentar' => $_POST['kommentar'][$i],];
             }
         }
 
@@ -157,7 +160,7 @@ if ($path == 'success') {
             Bestellposition::add($bestellPosition);
         }
 
-        if ($minId = Bestellung::checkMultipleOrdersAndGetOlder($_SESSION['client'],$_POST['datum'])){
+        if ($minId = Bestellung::checkMultipleOrdersAndGetOlder($_SESSION['client'], $_POST['datum'])) {
             $minId ? Bestellung::del($minId) : Bestellung::del($_POST['bestellung_id']);
 
         }
@@ -189,10 +192,11 @@ if ($path == 'order/dates') {
             unset($dates[$key]);
         }
     }
-    $url = 'order';
+    $url = '';
     require_once __DIR__ . '/templates/pages/dates.html.php';
     exit;
 }
+
 
 if ($path == 'help') {
     require_once __DIR__ . '/templates/pages/help.html.php';
@@ -208,7 +212,7 @@ if ($path == 'feedback/success') {
     require __DIR__ . '/model/entity/Feedback.php';
     if ($_POST && !empty($_POST['feedback'])) {
 
-        Feedback::add($_POST['feedback'],$_SESSION['client']);
+        Feedback::add($_POST['feedback'], $_SESSION['client']);
     }
     // @todo change feedback / Make own button and redirect to specific success
     require_once __DIR__ . '/templates/success/success_bestellung.php';
