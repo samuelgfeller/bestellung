@@ -99,6 +99,14 @@ if ($path == '') {
                     $artikelUndBestellPositionen[$key]['bestell_artikel'] = $artikel;
                 }
             }
+//            https://stackoverflow.com/questions/1597736/how-to-sort-an-array-of-associative-arrays-by-value-of-a-given-key-in-php
+           // Sort that the article with most weight is at the top and those with 0 bottom
+            $aWeight = [];
+            foreach ($artikelUndBestellPositionen as $key => $row){
+//                var_dump($key,$row);
+                $aWeight[$key]['bestell_artikel'] = $row['bestell_artikel']->getVerfuegbarGewicht();
+            }
+            array_multisort($aWeight, SORT_DESC, $artikelUndBestellPositionen);
 //        var_dump($artikelUndBestellPositionen);
             require __DIR__ . '/templates/order/order.html.php';
             exit;
@@ -116,24 +124,57 @@ if ($path == 'artikel') {
     require __DIR__ . '/model/entity/Bestellartikel.php';
     require __DIR__ . '/model/entity/Termin.php';
 
-    $datesYears = Termin::getYearsAndDates();
-    $dates = $datesYears['dates'];
-    $years = $datesYears['years'];
+    if ($_POST) {
+        if(isset($_POST['password'])) {
+            // The post parameter is set and the password got typed in
+            $is_admin = Bestellartikel::checkPassword($_POST['password']);
+            if ($is_admin) {
+                $_SESSION['is_admin'] = 1;
+            }
+        }else if (isset($_POST['newPassword'])){
+            // A new Password was typed in
+            $password = password_hash($_POST['newPassword'], PASSWORD_DEFAULT);
+            Bestellartikel::updPassword($password);
+        }
+    }
 
-    Bestellartikel::checkAndRefresh();
+    if (!empty($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1) {
+        $datesYears = Termin::getYearsAndDates();
+        $dates = $datesYears['dates'];
+        $years = $datesYears['years'];
 
-    // If a dated is in the GET request, it shows the bills for this date
-    if ($_GET && $_GET['datum']) {
-        $datumGET = strtotime($_GET['datum']);
-        $datum = date('d.m.Y', $datumGET);
-        $datumSQL = date('Y-m-d', $datumGET);
-        $allArtikel = Bestellartikel::allFrom($datumSQL);
-        require __DIR__ . '/templates/article/all_artikel.html.php';
+        Bestellartikel::checkAndRefresh();
+
+        // If a dated is in the GET request, it shows the bills for this date
+        if ($_GET && $_GET['datum']) {
+            $datumGET = strtotime($_GET['datum']);
+            $datum = date('d.m.Y', $datumGET);
+            $datumSQL = date('Y-m-d', $datumGET);
+            $allArtikel = Bestellartikel::allFrom($datumSQL);
+            require __DIR__ . '/templates/article/all_artikel.html.php';
+            exit;
+        }
+        //if not it only shows the dates
+        $url = 'artikel'; // is needed in dates.html.php
+        require_once __DIR__ . '/templates/pages/dates.html.php';
         exit;
     }
-    //if not it only shows the dates
-    $url = 'artikel';
-    require_once __DIR__ . '/templates/pages/dates.html.php';
+
+    if(!Bestellartikel::checkIfPasswordExists()){
+        require_once __DIR__ . '/templates/article/update_password.html.php';
+        exit;
+    }
+
+    // If user is not admin
+    require_once __DIR__ . '/templates/article/login.html.php';
+    exit;
+}
+if ($path == 'artikel/update/password') {
+    if(!empty($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1) {
+        require_once __DIR__ . '/templates/article/update_password.html.php';
+        exit;
+    }
+    require_once __DIR__ . '/templates/article/login.html.php';
     exit;
 }
 

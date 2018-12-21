@@ -127,7 +127,7 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
                     $sqlDate = date('Y-m-d', strtotime($date));
                     $selectQuery = 'select * from bestell_artikel where artikel_id = ' . $article['id'] . ' and datum="' . $sqlDate . '"';
                     $ba = $db->query($selectQuery);
-                    // If an entry with the article_id and on the date exists, it has to be checked of it is deleted.
+                    // If an entry with the article_id and on the date exists, it has to be checked if it is deleted.
                     // If not, then an new entry is made
                     if ($article['deleted_at'] == null && (!$ba || $ba->num_rows === 0)) {
                         // Make the new inserts
@@ -309,6 +309,52 @@ group by r.datum ';
         }
         return round($average, 2);
     }
+
+    public static function register($password) {
+
+    }
+
+    public static function checkPassword($entered_password) {
+        $db = Db::instantiate();
+        $query = 'SELECT passwort FROM admin limit 1;';
+
+        $stmt = $db->prepare($query);
+
+        $stmt->execute();
+
+        $stmt->bind_result($passwort);
+
+        $stmt->fetch();
+        //@todo loop over all passwords to check if correct
+        if(password_verify($entered_password , $passwort)) {
+            $_SESSION['is_admin'] = 1;
+            session_regenerate_id();
+            return true;
+        }
+        return false;
+    }
+
+    public static function updPassword($password) {
+        $db = Db::instantiate();
+        if (self::checkIfPasswordExists()) {
+            $query = 'UPDATE admin set passwort=?';
+        }else{
+            $query = 'INSERT INTO admin (passwort) VALUES (?)';
+        }
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s", $password);
+        $stmt->execute();
+    }
+
+    public static function checkIfPasswordExists() {
+        $db = Db::instantiate();
+        $result = $db->query('SELECT * FROM admin');
+        if (!$result || $result->num_rows == 0) {
+            return false;
+        }
+        return true;
+    }
+
 
 
     /**

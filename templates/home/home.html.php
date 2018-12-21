@@ -3,7 +3,7 @@
     <img class="homeImg" src="images/logovache.jpg" alt="logo">
     <div class="alert" id="clientExist">
         <strong>Diese E-Mail Adresse ist noch nicht erfasst:</strong> Bitte schreiben Sie <a
-                href="mailto:nicolasbarth@bluewin.ch">nicolasbarth@bluewin.ch</a> ein Mail mit Ihren Kontaktdaten
+                href="mailto:info@masesselin.ch">info@masesselin.ch</a> ein Mail mit Ihren Kontaktdaten
         damit wir Sie erfassen / anpassen können.
         <br>
     </div>
