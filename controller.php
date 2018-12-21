@@ -260,3 +260,17 @@ if ($path == 'feedback/success') {
     exit;
 }
 
+if ($path == 'mail'){
+	require __DIR__ . '/model/service/Email.php';
+	
+	if($_POST && $_POST['mail'] && $_POST['subject']){
+		echo $_POST['mail'];
+		$mail = new Email();
+		$mail->prepare($_POST['subject'],$_POST['mail']);
+		$mail->send('samuelgfeller@bluewin.ch','info@masesselin.ch','Samuel Gfeller','Masesselin');
+		exit;
+	}
+	require_once __DIR__.'/templates/pages/test_page.html.php';
+	exit;
+}
+
