@@ -84,4 +84,18 @@ class Populate {
         $termin->setDatum($data['datum'] ?? null);
         return $termin;
     }
+
+    /**
+     * @param $data
+     * @return Artikel
+     */
+    public static function populateArtikel($data) {
+        $artikel = new Artikel();
+        $artikel->setId($data['id'] ?? null);
+        $artikel->setNummer($data['nummer'] ?? null);
+        $artikel->setName($data['name'] ?? null);
+        $artikel->setKgPrice($data['kg_price'] ?? null);
+        $artikel->setStueckGewicht($data['stueck_gewicht'] ?? null);
+        return $artikel;
+    }
 }

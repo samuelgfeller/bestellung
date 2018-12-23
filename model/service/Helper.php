@@ -26,9 +26,12 @@ class Helper {
                 }
             }
         }
-        return [
-            'cols' => $cols,
-            'values' => $values
-        ];
+        return ['cols' => $cols,
+            'values' => $values];
+    }
+
+    public static function prepareHtmlMailBody($positionDaten) {
+        $body = '';
     }
 }
+

@@ -100,13 +100,15 @@ if ($path == '') {
                 }
             }
 //            https://stackoverflow.com/questions/1597736/how-to-sort-an-array-of-associative-arrays-by-value-of-a-given-key-in-php
-           // Sort that the article with most weight is at the top and those with 0 bottom
-            $aWeight = [];
-            foreach ($artikelUndBestellPositionen as $key => $row){
+            // Sort that the article with most weight is at the top and those with 0 bottom
+            if ($artikelUndBestellPositionen) {
+                $aWeight = [];
+                foreach ($artikelUndBestellPositionen as $key => $row) {
 //                var_dump($key,$row);
-                $aWeight[$key]['bestell_artikel'] = $row['bestell_artikel']->getVerfuegbarGewicht();
+                    $aWeight[$key]['bestell_artikel'] = $row['bestell_artikel']->getVerfuegbarGewicht();
+                }
+                array_multisort($aWeight, SORT_DESC, $artikelUndBestellPositionen);
             }
-            array_multisort($aWeight, SORT_DESC, $artikelUndBestellPositionen);
 //        var_dump($artikelUndBestellPositionen);
             require __DIR__ . '/templates/order/order.html.php';
             exit;
@@ -125,13 +127,13 @@ if ($path == 'artikel') {
     require __DIR__ . '/model/entity/Termin.php';
 
     if ($_POST) {
-        if(isset($_POST['password'])) {
+        if (isset($_POST['password'])) {
             // The post parameter is set and the password got typed in
             $is_admin = Bestellartikel::checkPassword($_POST['password']);
             if ($is_admin) {
                 $_SESSION['is_admin'] = 1;
             }
-        }else if (isset($_POST['newPassword'])){
+        } else if (isset($_POST['newPassword'])) {
             // A new Password was typed in
             $password = password_hash($_POST['newPassword'], PASSWORD_DEFAULT);
             Bestellartikel::updPassword($password);
@@ -160,7 +162,7 @@ if ($path == 'artikel') {
         exit;
     }
 
-    if(!Bestellartikel::checkIfPasswordExists()){
+    if (!Bestellartikel::checkIfPasswordExists()) {
         require_once __DIR__ . '/templates/article/update_password.html.php';
         exit;
     }
@@ -170,7 +172,7 @@ if ($path == 'artikel') {
     exit;
 }
 if ($path == 'artikel/update/password') {
-    if(!empty($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1) {
+    if (!empty($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1) {
         require_once __DIR__ . '/templates/article/update_password.html.php';
         exit;
     }
@@ -180,11 +182,16 @@ if ($path == 'artikel/update/password') {
 
 if ($path == 'success') {
     require_once __DIR__ . '/model/entity/Bestellung.php';
+    require_once __DIR__ . '/model/entity/Client.php';
     require_once __DIR__ . '/model/entity/Bestellposition.php';
     require_once __DIR__ . '/model/entity/Bestellartikel.php';
+    require_once __DIR__ . '/model/entity/Artikel.php';
+    require_once __DIR__ . '/model/service/Helper.php';
+    require_once __DIR__ . '/model/service/Email.php    ';
 
     if ($_POST && isset($_POST['pAmount'])) {
-        $bestellungId = Bestellung::create($_SESSION['client'], $_POST['datum']);
+        $client = Client::find($_SESSION['client']);
+        $bestellungId = Bestellung::create($client->getId(), $_POST['datum']);
         $valuesArr = [];
         for ($i = 0, $iMax = count($_POST['pAmount']); $i < $iMax; $i++) {
             if (!empty($_POST['pAmount'][$i]) || !empty($_POST['kommentar'][$i])) {
@@ -193,6 +200,7 @@ if ($path == 'success') {
                     'pAmount' => $_POST['pAmount'][$i],
                     'singleWeight' => $_POST['singleWeight'][$i],
                     'kommentar' => $_POST['kommentar'][$i],];
+
             }
         }
 
@@ -201,10 +209,32 @@ if ($path == 'success') {
             Bestellposition::add($bestellPosition);
         }
 
+        // Delete old order
         if ($minId = Bestellung::checkMultipleOrdersAndGetOlder($_SESSION['client'], $_POST['datum'])) {
             $minId ? Bestellung::del($minId) : Bestellung::del($_POST['bestellung_id']);
-
         }
+
+        $positionDaten = [];
+        foreach ($valuesArr as $values) {
+            $artikel = Artikel::findArtikelByBestellArtikel($values['ba_id']);
+            if (!empty($artikel)) {
+                $positionDaten[] = [
+                    'artikel_name' => $artikel->getName(),
+                    'anzahl_paeckchen' => $values['pAmount'],
+                    'gewicht' =>$values['singleWeight'],
+                    'kommentar' => $values['kommentar'],
+                    'stueck_gewicht' => $artikel->getStueckGewicht(),];
+            }
+        }
+
+        // Send confirmation email
+        $mail = new Email();
+        ob_start();
+        include __DIR__ . '/templates/success/confirmation_mail.php';
+        $mailBody = ob_get_clean();
+        $mail->prepare('Bestellbestätigung für den ' . date('d.m.Y', strtotime($_POST['datum'])), $mailBody);
+        $mail->send($client->getEmail(),'info@masesselin.ch',$client->getVorname().' '.$client->getName(), 'Masesselin');
+
 //        require_once __DIR__ . '/templates/success/success_bestellung.php';
         require_once __DIR__ . '/templates/pages/feedback.html.php';
         exit;
@@ -223,7 +253,7 @@ if ($path == 'artikel/dates') {
     exit;
 }
 
-if ($path == 'order/dates') {
+if ($path == 'order/dates'){
     require __DIR__ . '/model/entity/Termin.php';
     $datesYears = Termin::getYearsAndDates();
     $dates = $datesYears['dates'];
@@ -251,26 +281,104 @@ if ($path == 'feedback') {
 
 if ($path == 'feedback/success') {
     require __DIR__ . '/model/entity/Feedback.php';
+    require __DIR__ . '/model/entity/Client.php';
+    require __DIR__ . '/model/service/Email.php';
     if ($_POST && !empty($_POST['feedback'])) {
-
-        Feedback::add($_POST['feedback'], $_SESSION['client']);
+        $client = Client::find($_SESSION['client']);
+        Feedback::add($_POST['feedback'], $client->getId());
+        $mail = new Email();
+        $mailBody=$_POST['feedback'];
+        $fullName = $client->getVorname().' '.$client->getName();
+        $mail->prepare('Feedback von '.$fullName, $mailBody);
+        $mail->send('info@masesselin.ch'.'',$client->getEmail(),'Masesselin', $fullName);
     }
     // @todo change feedback / Make own button and redirect to specific success
     require_once __DIR__ . '/templates/success/success_bestellung.php';
     exit;
 }
 
-if ($path == 'mail'){
-	require __DIR__ . '/model/service/Email.php';
-	
-	if($_POST && $_POST['mail'] && $_POST['subject']){
-		echo $_POST['mail'];
-		$mail = new Email();
-		$mail->prepare($_POST['subject'],$_POST['mail']);
-		$mail->send('samuelgfeller@bluewin.ch','info@masesselin.ch','Samuel Gfeller','Masesselin');
-		exit;
-	}
-	require_once __DIR__.'/templates/pages/test_page.html.php';
-	exit;
+if ($path == 'mail') {
+    require __DIR__ . '/model/service/Email.php';
+    require __DIR__ . '/model/service/Helper.php';
+
+//    echo Helper::prepareHtmlMailBody('asdf');
+
+
+//	if($_POST && $_POST['mail'] && $_POST['subject']){
+//		echo $_POST['mail'];
+//		$mail = new Email();
+//		$mail->prepare($_POST['subject'],$_POST['mail']);
+//		$mail->send('samuelgfeller@bluewin.ch','info@masesselin.ch','Samuel Gfeller','Masesselin');
+//		exit;
+//	}
+    $positionDaten = [0 => ["id" => "7",
+        "artikel_name" => "Apfelsaft",
+        "anzahl_paeckchen" => "1",
+        "gewicht" => "100000",
+        "kommentar" => "",
+        "stueck_gewicht" => "5000",],
+        1 => ["id" => "8",
+            "artikel_name" => "Äpfel",
+            "anzahl_paeckchen" => "2",
+            "gewicht" => "5",
+            "kommentar" => "",
+            "stueck_gewicht" => "1000",],
+        2 => ["id" => "9",
+            "artikel_name" => "Äpfel, Harasse 20kg",
+            "anzahl_paeckchen" => "10",
+            "gewicht" => "1000",
+            "kommentar" => "",
+            "stueck_gewicht" => "20000",],
+        3 => ["id" => "10",
+            "artikel_name" => "Faux Filet",
+            "anzahl_paeckchen" => "2",
+            "gewicht" => "500",
+            "kommentar" => "",
+            "stueck_gewicht" => "300",],
+        4 => ["id" => "11",
+            "artikel_name" => "Rump-Steak",
+            "anzahl_paeckchen" => "2",
+            "gewicht" => "100",
+            "kommentar" => "",
+            "stueck_gewicht" => "650",],
+        5 => ["id" => "12",
+            "artikel_name" => "Entrecote",
+            "anzahl_paeckchen" => "2",
+            "gewicht" => "1000",
+            "kommentar" => "",
+            "stueck_gewicht" => "180",],
+        6 => ["id" => "13",
+            "artikel_name" => "Steak",
+            "anzahl_paeckchen" => "2",
+            "gewicht" => "500",
+            "kommentar" => "",
+            "stueck_gewicht" => "180",],
+        7 => ["id" => "14",
+            "artikel_name" => "Saftplätzli",
+            "anzahl_paeckchen" => "1",
+            "gewicht" => "1000",
+            "kommentar" => "",
+            "stueck_gewicht" => "",],
+        8 => ["id" => "15",
+            "artikel_name" => "Roastbeef",
+            "anzahl_paeckchen" => "2",
+            "gewicht" => "500",
+            "kommentar" => "",
+            "stueck_gewicht" => "650",],
+        9 => ["id" => "16",
+            "artikel_name" => "Braten",
+            "anzahl_paeckchen" => "5",
+            "gewicht" => "200",
+            "kommentar" => "",
+            "stueck_gewicht" => "",],];
+
+    ob_start();
+    include __DIR__ . '/templates/pages/test_page.html.php';
+    $testbody = ob_get_clean();
+    echo $testbody;
+    $mail = new Email();
+    $mail->prepare('Subject', $testbody);
+//    $mail->send('samuelgfeller@bluewin.ch', 'info@masesselin.ch', 'Samuel Gfeller', 'Masesselin');
+    exit;
 }
 
