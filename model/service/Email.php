@@ -19,9 +19,11 @@ class Email
 		$this->mail->Host = 'srv125.tophost.ch';                    // Specify main and backup SMTP servers
 		$this->mail->SMTPAuth = true;                               // Enable SMTP authentication
 		$this->mail->Username = 'no-reply@masesselin.ch';           // SMTP username
-		$this->mail->Password = 'AehhPyaHs7S4M$';                   // SMTP password
-		$this->mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
-		$this->mail->Port = 465;                                    // TCP port to connect to
+		$this->mail->Password = '***';                   // SMTP password
+		$this->mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+		$this->mail->Port = 587;
+		$this->mail->CharSet = 'UTF-8';
+		$this->mail->Encoding = 'base64';
 	}
 	
 	/**
