@@ -868,6 +868,70 @@ form .artikelTable {
 
 }
 
+.dateBox {
+    overflow: hidden;
+    width: 10%;
+    min-width: 100px;
+    min-height: 30px;
+    margin-left: 3%;
+    margin-bottom: 20px;
+    float: left;
+    background-color: #e6e6e6;
+    position: relative;
+    cursor: pointer;
+}
+
+.dateText {
+    text-align: center;
+    vertical-align: middle;
+    line-height: 20px;
+    font-size: 20px;
+    color: #000;
+}
+
+.dateBox:hover {
+    /*background-color: darkgray;*/
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4) /*, 8px 8px 16px 0 rgba(0, 0, 0, 0.2)*/;
+}
+
+
+.check-button {
+    margin:4px;
+    background-color:#EFEFEF;
+    border-radius:4px;
+    border:1px solid #D0D0D0;
+    overflow:auto;
+    float:left;
+}
+
+.check-button:hover {
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+}
+
+.check-button label {
+    cursor: pointer;
+
+    float:left;
+    width:4.0em;
+    margin-bottom: 0;    /*General checkboxes have a style so I have to remove the bottom margin*/
+}
+
+.check-button label span {
+    text-align:center;
+    padding:3px 0px;
+    display:block;
+}
+
+.check-button label input {
+    position:absolute;
+    top:-20px;
+}
+
+.check-button input:checked + span {
+    background-color: #b8b8b8;
+}
+/*
+
 .check-button {
     border-radius: 10px;
     border: 0px solid #D0D0D0;
@@ -882,23 +946,8 @@ form .artikelTable {
     --lightShadow: #e6e6e6;
 }
 
-.leftCheckBox {
-    border-radius: 9px 9px 9px 9px;
-    /*box-shadow: 0 0 6px var(--lightShadow),0 0 0px,0 0 9px var(--lightShadow);*/
-    /*z-index: 99;*/
-}
-
-.rightCheckBox {
-    border-radius: 9px 9px 9px 9px;
-    /*box-shadow: 0 0 6px var(--lightShadow),0 0 0px,0 0 9px var(--lightShadow);*/
-    /*z-index: -1;*/
-}
-
 .check-button:hover {
     background: red;
-}
-
-.check-button label {
 }
 
 .check-button label span {
@@ -915,9 +964,9 @@ form .artikelTable {
 
 .check-button input:checked + span {
     background-color: mediumseagreen;
-
     color: #fff;
 }
+*/
 
 /*Feedback*/
 .feedbackContainer{

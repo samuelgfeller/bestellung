@@ -15,6 +15,7 @@ if ($path == '') {
     require __DIR__ . '/model/entity/Bestellung.php';
     require __DIR__ . '/model/entity/Client.php';
     require __DIR__ . '/model/entity/Termin.php';
+    require __DIR__ . '/model/entity/Artikel.php';
 
     if (!empty($_SESSION['client'])) {
         if ($_GET && $_GET['datum']) {
@@ -32,24 +33,24 @@ if ($path == '') {
             $bestellArtikel = Bestellartikel::allAvailableFrom($GETDateSQL);
 
             $artikelUndBestellPositionen = false;
-
             if ($bestellArtikel) {
                 $artikelUndBestellPositionen = [];
-                foreach ($bestellArtikel as $key => $artikel) {
+                foreach ($bestellArtikel as $key => $ba) {
                     // Initialising array with default values
                     $artikelUndBestellPositionen[$key] = ['already_ordered' => false,
-                        'bestell_artikel' => false];
+                        'bestell_artikel' => false,
+                        'artikel' => false];
                     $weightToSubstrate = 0;
 
                     if ($alreadyOrdered) {
                         // Finding the position with the same bestell_artikel_id
                         foreach ($alreadyOrdered as $position) {
 //                            var_dump($position);
-                            if ($position->getBestellArtikelId() == $artikel->getBestellArtikelId()) {
+                            if ($position->getBestellArtikelId() == $ba->getBestellArtikelId()) {
                                 // Wenn das Gewicht kleiner als 15 ist heisst es, dass es Stückzahlen sind
                                 if ($position->getGewicht() <= 15) {
                                     // Die Anzahl Stücke mit dem Stückgewicht (Standardgewicht) multiplizieren (Resultate ist in Gramm)
-                                    $alreadyOrderedWeight = $position->getGewicht() * Bestellartikel::getDefaultWeight($artikel->getBestellArtikelId());
+                                    $alreadyOrderedWeight = $position->getGewicht() * Bestellartikel::getDefaultWeight($ba->getBestellArtikelId());
                                 } //Wenn höher als 15 ist es direkt ein Gewict in Gramm
                                 else {
                                     $alreadyOrderedWeight = $position->getGewicht();
@@ -62,7 +63,7 @@ if ($path == '') {
                     }
 
                     // Get all the ordered weight and amount for all orders for a date
-                    $orderedWeightAndAmounts = Bestellposition::getTotalOrderedWeightForBa($artikel->getBestellArtikelId(), $GETDateSQL);
+                    $orderedWeightAndAmounts = Bestellposition::getTotalOrderedWeightForBa($ba->getBestellArtikelId(), $GETDateSQL);
                     $totalOrderedWeight = 0;
                     if ($orderedWeightAndAmounts) {
                         // Loop over each ordered weight
@@ -71,7 +72,7 @@ if ($path == '') {
                             // Wenn das Gewicht kleiner als 15 ist heisst es, dass es Stückzahlen sind
                             if ($orderedWeightAndAmount['gewicht'] <= 15) {
                                 // Die Anzahl Stücke mit dem Stückgewicht (Standardgewicht) multiplizieren (Resultate ist in Gramm)
-                                $weight = $orderedWeightAndAmount['gewicht'] * Bestellartikel::getDefaultWeight($artikel->getBestellArtikelId());
+                                $weight = $orderedWeightAndAmount['gewicht'] * Bestellartikel::getDefaultWeight($ba->getBestellArtikelId());
                             } //Wenn höher als 15 ist es direkt ein Gewict in Gramm
                             else {
                                 $weight = $orderedWeightAndAmount['gewicht'];
@@ -89,14 +90,35 @@ if ($path == '') {
                     // Verfügbares Gewicht
                     /*                    highlight_string("<?php\n\$data =\n" . var_export($artikel, true) . ";\n?>");*/
 //                    var_dump($artikel->getGewicht() ?? 0);
-                    $artikel->setVerfuegbarGewicht(round(($artikel->getGewicht() ?? 0) - ($totalOrderedWeight ?? 0), 2));
-                    if (!empty($artikel->getStueckbestellung())) {
-                        $artikel->setStueckgewicht(Bestellartikel::getDefaultWeight($artikel->getBestellArtikelId()));
-                    } else {
-                        $artikel->setStueckgewicht(false);
+
+                    $availableWeight=round(($ba->getGewicht() ?? 0) - ($totalOrderedWeight ?? 0), 2);
+                    if($availableWeight === (float) -0){
+                        $ba->setVerfuegbarGewicht(0);
+                    }else{
+                        $ba->setVerfuegbarGewicht($availableWeight);
                     }
 
-                    $artikelUndBestellPositionen[$key]['bestell_artikel'] = $artikel;
+                    $pieceWeight = Bestellartikel::getDefaultWeight($ba->getBestellArtikelId());
+                    if (!empty($ba->getStueckbestellung())) {
+                        $ba->setStueckgewicht($pieceWeight);
+                    } else {
+                        $ba->setStueckgewicht(false);
+                    }
+
+                    $artikelUndBestellPositionen[$key]['bestell_artikel'] = $ba;
+                    $artikel = Artikel::find($ba->getArtikelId());
+                    $avag = $ba->getVerfuegbarGewicht() * 1000; // Available weight in gramm
+                    $g1 = $artikel->getGewicht1(); $g2 = $artikel->getGewicht2(); $g3 = $artikel->getGewicht3();
+                    $s1 = $artikel->getStueckzahl1(); $s2 = $artikel->getStueckzahl2(); $s3 = $artikel->getStueckzahl3();
+//                    var_dump($s3.' * '.$pieceWeight,$s3*$pieceWeight,$avag);
+                    $artikelUndBestellPositionen[$key]['order_possibilities'] = [
+                        !empty($g1) && $g1 <= $avag ? $g1 : null,
+                        !empty($g2) && $g2 <= $avag ? $g2 : null,
+                        !empty($g3) && $g3 <= $avag ? $g3 : null,
+                        !empty($s1) && $s1 * $pieceWeight <= $avag ? $s1 : null,
+                        !empty($s2) && $s2 * $pieceWeight <= $avag ? $s2 : null,
+                        !empty($s3) && $s3 * $pieceWeight <= $avag ? $s3 : null,];
+//                    var_dump($artikelUndBestellPositionen[$key]['order_possibilities']);
                 }
             }
 //            https://stackoverflow.com/questions/1597736/how-to-sort-an-array-of-associative-arrays-by-value-of-a-given-key-in-php
@@ -152,7 +174,7 @@ if ($path == 'artikel') {
             $datumGET = strtotime($_GET['datum']);
             $datum = date('d.m.Y', $datumGET);
             $datumSQL = date('Y-m-d', $datumGET);
-            $allArtikel = Bestellartikel::allFrom($datumSQL);
+            $allBa = Bestellartikel::allFrom($datumSQL);
             require __DIR__ . '/templates/article/all_artikel.html.php';
             exit;
         }
@@ -187,19 +209,19 @@ if ($path == 'success') {
     require_once __DIR__ . '/model/entity/Bestellartikel.php';
     require_once __DIR__ . '/model/entity/Artikel.php';
     require_once __DIR__ . '/model/service/Helper.php';
-    require_once __DIR__ . '/model/service/Email.php    ';
+    require_once __DIR__ . '/model/service/Email.php';
 
     if ($_POST && isset($_POST['pAmount'])) {
         $client = Client::find($_SESSION['client']);
-        $bestellungId = Bestellung::create($client->getId(), $_POST['datum']);
+        $bestellungId = Bestellung::create($client->getId(), htmlspecialchars($_POST['datum']));
         $valuesArr = [];
         for ($i = 0, $iMax = count($_POST['pAmount']); $i < $iMax; $i++) {
             if (!empty($_POST['pAmount'][$i]) || !empty($_POST['kommentar'][$i])) {
-                $valuesArr[] = ['ba_id' => $_POST['ba_id'][$i],
+                $valuesArr[] = ['ba_id' => (int)$_POST['ba_id'][$i],
                     'bId' => $bestellungId,
-                    'pAmount' => $_POST['pAmount'][$i],
-                    'singleWeight' => $_POST['singleWeight'][$i],
-                    'kommentar' => $_POST['kommentar'][$i],];
+                    'pAmount' => (int)$_POST['pAmount'][$i],
+                    'singleWeight' => (int)$_POST['singleWeight'][$i],
+                    'kommentar' => htmlspecialchars($_POST['kommentar'][$i]),];
 
             }
         }
@@ -214,26 +236,25 @@ if ($path == 'success') {
             $minId ? Bestellung::del($minId) : Bestellung::del($_POST['bestellung_id']);
         }
 
+        // Send confirmation email
         $positionDaten = [];
         foreach ($valuesArr as $values) {
             $artikel = Artikel::findArtikelByBestellArtikel($values['ba_id']);
             if (!empty($artikel)) {
-                $positionDaten[] = [
-                    'artikel_name' => $artikel->getName(),
+                $positionDaten[] = ['artikel_name' => $artikel->getName(),
                     'anzahl_paeckchen' => $values['pAmount'],
-                    'gewicht' =>$values['singleWeight'],
+                    'gewicht' => $values['singleWeight'],
                     'kommentar' => $values['kommentar'],
                     'stueck_gewicht' => $artikel->getStueckGewicht(),];
             }
         }
 
-        // Send confirmation email
         $mail = new Email();
         ob_start();
         include __DIR__ . '/templates/success/confirmation_mail.php';
         $mailBody = ob_get_clean();
         $mail->prepare('Bestellbestätigung für den ' . date('d.m.Y', strtotime($_POST['datum'])), $mailBody);
-        $mail->send($client->getEmail(),'info@masesselin.ch',$client->getVorname().' '.$client->getName(), 'Masesselin');
+        $mail->send($client->getEmail(), 'info@masesselin.ch', $client->getVorname() . ' ' . $client->getName(), 'Masesselin');
 
 //        require_once __DIR__ . '/templates/success/success_bestellung.php';
         require_once __DIR__ . '/templates/pages/feedback.html.php';
@@ -253,7 +274,7 @@ if ($path == 'artikel/dates') {
     exit;
 }
 
-if ($path == 'order/dates'){
+if ($path == 'order/dates') {
     require __DIR__ . '/model/entity/Termin.php';
     $datesYears = Termin::getYearsAndDates();
     $dates = $datesYears['dates'];
@@ -287,10 +308,10 @@ if ($path == 'feedback/success') {
         $client = Client::find($_SESSION['client']);
         Feedback::add($_POST['feedback'], $client->getId());
         $mail = new Email();
-        $mailBody=$_POST['feedback'];
-        $fullName = $client->getVorname().' '.$client->getName();
-        $mail->prepare('Feedback von '.$fullName, $mailBody);
-        $mail->send('info@masesselin.ch'.'',$client->getEmail(),'Masesselin', $fullName);
+        $mailBody = nl2br($_POST['feedback']);
+        $fullName = $client->getVorname() . ' ' . $client->getName();
+        $mail->prepare('Feedback von ' . $fullName, $mailBody);
+        $mail->send('info@masesselin.ch' . '', $client->getEmail(), 'Masesselin', $fullName);
     }
     // @todo change feedback / Make own button and redirect to specific success
     require_once __DIR__ . '/templates/success/success_bestellung.php';

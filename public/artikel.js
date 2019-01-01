@@ -4,7 +4,7 @@ $(document).ready(function () {
     });
 });
 
-function updWeight(id,value) {
+function updWeight(id, value) {
     $.ajax({
         url: 'artikel/gewicht',
         type: 'post',
@@ -14,26 +14,34 @@ function updWeight(id,value) {
         }
     }).done(function (output) {
 // console.log(output);
-    }).fail (function (output){
+    }).fail(function (output) {
         alert('Fehler !');
     });
 }
 
-function checkUncheckAvailable(id) {
-    var checked = $('#box' + id).is(":checked");
-    if(checked){
+function checkUncheckAvailable(ba_id, artikel_id) {
+    var checked = $('#box' + ba_id).is(":checked");
+    if (checked) {
         checked = 1;
-    }else{
+    } else {
         checked = 0;
     }
     $.ajax({
         url: 'bestellArtikel/checkAvailable',
         type: 'post',
         data: {
-            'id': id,
-            'value':checked
+            'id': ba_id,
+            'artikel_id': artikel_id,
+            'value': checked
         }
-    }).fail(function (output){
+    }).done(function (output) {
+        if (output === 'false') {
+            $('#box' + ba_id).prop('checked', false);
+            if (confirm('Das Stückgewicht muss zuerst bei dem Artikel festgelegt werden. Wollen Sie auf die Seite der Artikel weitergeleitet werden?')) {
+                window.open('https://fleisch.masesselin.ch/artikel', '_blank');
+            }
+        }
+    }).fail(function (output) {
         alert('Fehler');
         console.log(output);
     });
@@ -44,11 +52,11 @@ function checkUncheckAvailable(id) {
  * @param artikel_id
  * @param ba_id
  */
-function checkUncheckPiece(artikel_id,ba_id) {
+function checkUncheckPiece(artikel_id, ba_id) {
     var checked = $('#pieceBox' + ba_id).is(":checked");
-    if(checked){
+    if (checked) {
         checked = 1;
-    }else{
+    } else {
         checked = 0;
     }
     $.ajax({
@@ -56,16 +64,16 @@ function checkUncheckPiece(artikel_id,ba_id) {
         type: 'post',
         data: {
             'artikel_id': artikel_id,
-            'value':checked
+            'value': checked
         }
-    }).done(function (output){
+    }).done(function (output) {
         if (output === 'false') {
-            $('#pieceBox' + ba_id).prop('checked','');
-            if(confirm('Das Stückgewicht muss zuerst bei dem Artikel festgelegt werden. Wollen Sie auf die Seite der Artikel weitergeleitet werden?')){
-                window.open('https://fleisch.masesselin.ch/artikel','_blank');
+            $('#pieceBox' + ba_id).prop('checked', '');
+            if (confirm('Das Stückgewicht muss zuerst bei dem Artikel festgelegt werden. Wollen Sie auf die Seite der Artikel weitergeleitet werden?')) {
+                window.open('https://fleisch.masesselin.ch/artikel', '_blank');
             }
         }
-        }).fail(function (output){
+    }).fail(function (output) {
         alert('Fehler');
         console.log(output);
     });

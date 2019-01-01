@@ -167,7 +167,7 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
         Db::checkConnection($sql, $query);
     }
 
-    public static function checkAvailable($id, $value) {
+    public static function toggleAvailable($id, $value) {
         $db = Db::instantiate();
         $query = 'UPDATE bestell_artikel SET verfuegbar=' . $value . ' WHERE id=' . $id;
         $sql = $db->query($query);
@@ -192,7 +192,7 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
 ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba.id =' . $article_id;
         $result = $db->query($query);
 
-        return (int) $result->fetch_assoc()['stueck_gewicht'];
+        return (int)$result->fetch_assoc()['stueck_gewicht'];
     }
 
 
@@ -326,7 +326,7 @@ group by r.datum ';
 
         $stmt->fetch();
         //@todo loop over all passwords to check if correct
-        if(password_verify($entered_password , $passwort)) {
+        if (password_verify($entered_password, $passwort)) {
             $_SESSION['is_admin'] = 1;
             session_regenerate_id();
             return true;
@@ -338,7 +338,7 @@ group by r.datum ';
         $db = Db::instantiate();
         if (self::checkIfPasswordExists()) {
             $query = 'UPDATE admin set passwort=?';
-        }else{
+        } else {
             $query = 'INSERT INTO admin (passwort) VALUES (?)';
         }
         $stmt = $db->prepare($query);
@@ -354,7 +354,6 @@ group by r.datum ';
         }
         return true;
     }
-
 
 
     /**
@@ -382,7 +381,7 @@ group by r.datum ';
      * @param mixed $gewicht
      */
     public function setGewicht($gewicht) {
-        $this->gewicht = (float) $gewicht;
+        $this->gewicht = (float)$gewicht;
     }
 
     /**
@@ -438,7 +437,7 @@ group by r.datum ';
      * @param mixed $bestell_artikel_id
      */
     public function setBestellArtikelId($bestell_artikel_id) {
-        $this->bestell_artikel_id = (int) $bestell_artikel_id;
+        $this->bestell_artikel_id = (int)$bestell_artikel_id;
     }
 
     /**

@@ -1,17 +1,6 @@
 <?php
 
 class Populate {
-    /**
-     * @param $data
-     * @return Ort
-     */
-    public static function populateOrt($data) {
-        $ort = new Ort();
-        $ort->setOrt($data['ort'] ?? null);
-        $ort->setPLZ($data['PLZ'] ?? null);
-        $ort->setId($data['id'] ?? null);
-        return $ort;
-    }
 
     /**
      * @param $data
@@ -40,7 +29,7 @@ class Populate {
      * @param $data
      * @return Bestellartikel
      */
-    public static function populateBestellArtikel($data) {
+    public static function populateBestellArtikel($data){
         $artikel = new Bestellartikel();
         $artikel->setBestellArtikelId($data['ba_id'] ?? null);
         $artikel->setArtikelId($data['artikel_id'] ?? null);
@@ -96,6 +85,12 @@ class Populate {
         $artikel->setName($data['name'] ?? null);
         $artikel->setKgPrice($data['kg_price'] ?? null);
         $artikel->setStueckGewicht($data['stueck_gewicht'] ?? null);
+        $artikel->setGewicht1($data['gewicht_1'] ?? null);
+        $artikel->setGewicht2($data['gewicht_2'] ?? null);
+        $artikel->setGewicht3($data['gewicht_3'] ?? null);
+        $artikel->setStueckzahl1($data['stueckzahl_1'] ?? null);
+        $artikel->setStueckzahl2($data['stueckzahl_2'] ?? null);
+        $artikel->setStueckzahl3($data['stueckzahl_3'] ?? null);
         return $artikel;
     }
 }

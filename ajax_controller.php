@@ -3,30 +3,39 @@ session_start();
 $num = filter_var($path, FILTER_SANITIZE_NUMBER_INT);
 require_once __DIR__ . "/Local.php";
 
-if ($path == 'artikel/gewicht'){
+if ($path == 'artikel/gewicht') {
     require_once 'model/entity/Bestellartikel.php';
-
     Bestellartikel::updWeight($_POST['id'], $_POST['value']);
     exit;
 }
+//test
 if ($path == 'bestellArtikel/checkAvailable') {
     require_once 'model/entity/Bestellartikel.php';
-    Bestellartikel::checkAvailable($_POST['id'], $_POST['value']);
+    require_once 'model/entity/Artikel.php';
+    if($_POST['value'] === '1'){
+        if(Artikel::checkIfHasOrderPossibility($_POST['artikel_id'])){
+            Bestellartikel::toggleAvailable($_POST['id'], $_POST['value']);
+        }else{
+            echo 'false';
+        }
+    }else{
+        Bestellartikel::toggleAvailable($_POST['id'], $_POST['value']);
+    }
     exit;
 }
 if ($path == 'bestellArtikel/checkPiece') {
     require_once 'model/entity/Bestellartikel.php';
 
-    if(Bestellartikel::checkPieceWeight($_POST['artikel_id'])){
+    if (Bestellartikel::checkPieceWeight($_POST['artikel_id'])) {
         Bestellartikel::checkPiece($_POST['artikel_id'], $_POST['value']);
-    }else{
+    } else {
         echo 'false';
     }
     exit;
 }
 // @todo transform all dates into foreign keys from Termin
 
-if ($path == 'order/check_email'){
+if ($path == 'order/check_email') {
     require __DIR__ . '/model/entity/Bestellung.php';
     $clientId = false;
     if ($_POST['email'] != '') {
@@ -65,12 +74,14 @@ if ($path == 'testmail') {
 //		$mail->send('samuelgfeller@bluewin.ch','info@masesselin.ch','Samuel Gfeller','Masesselin');
 //		exit;
 //	}
-    $positionDaten = [0 => ["id" => "7",
-        "artikel_name" => "Apfelsaft",
-        "anzahl_paeckchen" => "1",
-        "gewicht" => "100000",
-        "kommentar" => "",
-        "stueck_gewicht" => "5000",],
+    $positionDaten = [
+        0 => [
+            "id" => "7",
+            "artikel_name" => "Apfelsaft",
+            "anzahl_paeckchen" => "1",
+            "gewicht" => "100000",
+            "kommentar" => "",
+            "stueck_gewicht" => "5000",],
         1 => ["id" => "8",
             "artikel_name" => "Äpfel",
             "anzahl_paeckchen" => "2",
@@ -127,7 +138,7 @@ if ($path == 'testmail') {
             "stueck_gewicht" => "",],];
 
     ob_start();
-    include __DIR__ . '/templates/pages/test_page.html.php';
+    include __DIR__ . '/templates/success/confirmation_mail.php';
     $testbody = ob_get_clean();
     echo $testbody;
     $mail = new Email();
