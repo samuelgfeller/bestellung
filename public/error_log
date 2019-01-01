@@ -1,0 +1,183 @@
+[04-Dec-2018 23:20:28 Europe/Zurich] PHP Warning:  require_once(/home/fleisch1/bestellung.masesselin.ch/Local1.php): failed to open stream: No such file or directory in /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php on line 4
+[04-Dec-2018 23:20:28 Europe/Zurich] PHP Fatal error:  require_once(): Failed opening required '/home/fleisch1/bestellung.masesselin.ch/Local1.php' (include_path='.:/opt/alt/php72/usr/share/pear') in /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php on line 4
+[04-Dec-2018 23:20:29 Europe/Zurich] PHP Warning:  require_once(/home/fleisch1/bestellung.masesselin.ch/Local1.php): failed to open stream: No such file or directory in /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php on line 4
+[04-Dec-2018 23:20:29 Europe/Zurich] PHP Fatal error:  require_once(): Failed opening required '/home/fleisch1/bestellung.masesselin.ch/Local1.php' (include_path='.:/opt/alt/php72/usr/share/pear') in /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php on line 4
+[04-Dec-2018 23:31:29 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('nico')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:32 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('nico')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:38 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('nicolasbarth@bl...')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:39 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('nicolasbarth@bl...')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:39 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('nicolasbarth@bl...')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:45 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('sarahbarth@gmx....')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:46 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('sarahbarth@gmx....')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:47 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('sarahbarth@gmx....')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:47 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('sarahbarth@gmx....')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:47 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('sarahbarth@gmx....')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:48 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('sarahbarth@gmx....')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:48 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('sarahbarth@gmx....')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:48 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('sarahbarth@gmx....')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:49 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('sarahbarth@gmx....')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:49 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('sarahbarth@gmx....')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:56 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('daniel@barth.ne...')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:57 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('daniel@barth.ne...')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:58 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('daniel@barth.ne...')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:31:58 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('daniel@barth.ne...')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[04-Dec-2018 23:32:09 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('roesslein@bluew...')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[05-Dec-2018 08:25:06 Europe/Zurich] PHP Fatal error:  Uncaught Error: Class 'Local1' not found in /home/fleisch1/bestellung.masesselin.ch/connection.php:7
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/model/entity/Bestellung.php(11): Db::instantiate()
+#1 /home/fleisch1/bestellung.masesselin.ch/ajax_controller.php(32): Bestellung::checkEmail('roesslein@bluew...')
+#2 /home/fleisch1/bestellung.masesselin.ch/public/index.php(37): require_once('/home/fleisch1/...')
+#3 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[05-Dec-2018 08:26:21 Europe/Zurich] PHP Parse error:  syntax error, unexpected end of file in /home/fleisch1/bestellung.masesselin.ch/templates/order/order.html.php on line 106
+[05-Dec-2018 09:27:48 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 90
+[05-Dec-2018 09:32:15 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 90
+[05-Dec-2018 09:32:18 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 90
+[05-Dec-2018 09:32:55 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 92
+[05-Dec-2018 09:34:38 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 92
+[05-Dec-2018 09:37:04 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 93
+[05-Dec-2018 12:12:29 Europe/Zurich] PHP Parse error:  syntax error, unexpected end of file in /home/fleisch1/bestellung.masesselin.ch/templates/success/success_bestellung.php on line 6
+[05-Dec-2018 19:55:03 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 51
+[05-Dec-2018 19:57:13 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 51
+[05-Dec-2018 19:57:15 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 51
+[05-Dec-2018 19:57:17 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 51
+[05-Dec-2018 19:58:45 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 54
+[05-Dec-2018 20:03:38 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 51
+[05-Dec-2018 20:08:09 Europe/Zurich] PHP Warning:  A non-numeric value encountered in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 51
+[12-Dec-2018 13:02:48 Europe/Zurich] PHP Warning:  mysqli::__construct(): (28000/1045): Access denied for user 'fleisch1_admin'@'localhost' (using password: YES) in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[12-Dec-2018 13:03:58 Europe/Zurich] PHP Warning:  mysqli::__construct(): (28000/1045): Access denied for user 'fleisch1_admin'@'localhost' (using password: YES) in /home/fleisch1/bestellung.masesselin.ch/connection.php on line 7
+[13-Dec-2018 15:09:24 Europe/Zurich] PHP Notice:  Undefined index: client in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 146
+[13-Dec-2018 15:09:24 Europe/Zurich] PHP Notice:  Undefined index: client in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 163
+[24-Dec-2018 12:30:43 Europe/Zurich] PHP Warning:  require_once(/home/fleisch1/bestellung.masesselin.ch/model/service/Email.php    ): failed to open stream: No such file or directory in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 190
+[24-Dec-2018 12:30:43 Europe/Zurich] PHP Fatal error:  require_once(): Failed opening required '/home/fleisch1/bestellung.masesselin.ch/model/service/Email.php    ' (include_path='.:/opt/alt/php72/usr/share/pear') in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 190
+[24-Dec-2018 12:31:49 Europe/Zurich] PHP Warning:  require_once(/home/fleisch1/bestellung.masesselin.ch/model/service/Email.php    ): failed to open stream: No such file or directory in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 190
+[24-Dec-2018 12:31:49 Europe/Zurich] PHP Fatal error:  require_once(): Failed opening required '/home/fleisch1/bestellung.masesselin.ch/model/service/Email.php    ' (include_path='.:/opt/alt/php72/usr/share/pear') in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 190
+[26-Dec-2018 15:39:09 Europe/Zurich] PHP Warning:  require_once(/home/fleisch1/bestellung.masesselin.ch/model/service/Email.php    ): failed to open stream: No such file or directory in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 190
+[26-Dec-2018 15:39:09 Europe/Zurich] PHP Fatal error:  require_once(): Failed opening required '/home/fleisch1/bestellung.masesselin.ch/model/service/Email.php    ' (include_path='.:/opt/alt/php72/usr/share/pear') in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 190
+[26-Dec-2018 15:41:04 Europe/Zurich] PHP Notice:  Undefined index: client in /home/fleisch1/bestellung.masesselin.ch/controller.php on line 193
+[26-Dec-2018 15:41:04 Europe/Zurich] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on boolean in /home/fleisch1/bestellung.masesselin.ch/model/entity/Client.php:34
+Stack trace:
+#0 /home/fleisch1/bestellung.masesselin.ch/controller.php(193): Client::find(NULL)
+#1 /home/fleisch1/bestellung.masesselin.ch/public/index.php(38): require_once('/home/fleisch1/...')
+#2 {main}
+  thrown in /home/fleisch1/bestellung.masesselin.ch/model/entity/Client.php on line 34
