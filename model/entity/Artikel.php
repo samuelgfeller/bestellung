@@ -13,7 +13,10 @@ class Artikel {
 
     public static function findArtikelByBestellArtikel($artikel_id) {
         $db = Db::instantiate();
-        $query = 'SELECT a.* FROM bestell_artikel bp left join artikel a on bp.artikel_id = a.id WHERE bp.id= ' . $artikel_id . ' and a.deleted_at is null;';
+        $query = 'SELECT a.* FROM bestell_artikel bp left join artikel a on bp.artikel_id = a.id WHERE bp.id=? and a.deleted_at is null;';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i",$artikel_id);
+        $stmt->execute();
         $result = $db->query($query);
         if (!$result || $result->num_rows == 0) {
             return false;
