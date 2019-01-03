@@ -30,7 +30,11 @@ class Client {
      */
     public static function find($id) {
         $db = Db::instantiate();
-        $result = $db->query('SELECT * FROM kunde WHERE deleted_at is null and id ='.$id);
+        $query = ('SELECT * FROM kunde WHERE deleted_at is null and id =?');
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i",$id);
+        $stmt->execute();
+        $result = $stmt->get_result();
         $clientArr = $result->fetch_assoc();
         $client = populate::populateClient($clientArr);
         return $client;
@@ -40,6 +44,7 @@ class Client {
     /**
      * @return array alle Kunden
      */
+    /* Not used
     public static function all($order='ASC') {
         $clients = [];
         $db = Db::instantiate();
@@ -67,13 +72,14 @@ class Client {
             'total_records' => $total_records
         ];
     }
-
+   */
     /**
      * @param $start_from
      * @param $record_per_page
      * @param $order
      * @return array
      */
+    /* Not used
     public static function allPagination($start_from,$record_per_page,$order='ASC') {
         $clients = [];
         $db = Db::instantiate();
@@ -96,13 +102,14 @@ class Client {
             $clients[] = Populate::populateClient($params);
         }
         return  $clients;
-    }
+    }*/
 
 
     /**
      * @param $id
      * @return array
      */
+    /* Not used
     public static function findDeleted($id): array {
         $db = Db::instantiate();
         $result = $db->query('SELECT * FROM kunde WHERE id ='.$id);
@@ -113,7 +120,7 @@ class Client {
             return ['client' => $client, 'deleted_at' => true];
         }
         return ['client' => $client, 'deleted_at' => false];
-    }
+    }*/
 
     /**
      * Updates one Client
@@ -123,9 +130,13 @@ class Client {
     public static function upd($client){
         $db = Db::instantiate();
         $values = Client::getQueryData($client);
-        $query = 'UPDATE kunde SET ' . implode(",", $values). ' WHERE id='.$client->getId();
-        $result = $db->query($query);
-        Db::checkConnection($result,$query);
+        $implodedvalues = implode(",", $values);
+        $clientid = $client->getId();
+        $query = 'UPDATE kunde SET ? WHERE id=?';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("si",$implodedvalues,$clientid);
+        $stmt->execute();
+        Db::checkConnection($stmt->get_result,$query);
         return true;
     }
 
@@ -137,9 +148,12 @@ class Client {
     public static function add($client){
         $db = Db::instantiate();
         $values = Client::getQueryData($client);
-        $query = 'INSERT INTO kunde SET ' . implode(",", $values);
-        $result = $db->query();
-        Db::checkConnection($result,$query);
+        $implodedvalues = implode(",", $values);
+        $query = 'INSERT INTO kunde SET ?';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s",$implodedvalues);
+        $stmt->execute();
+        Db::checkConnection($stmt->get_result,$query);
         $last_id = $db->insert_id;
         return $last_id;
     }
@@ -150,7 +164,11 @@ class Client {
      */
     public static function getSearchResult($inputVal) {
         $db = Db::instantiate();
-        $result = $db->query("SELECT * FROM kunde WHERE deleted_at is null and (name LIKE '%".$inputVal."%' OR vorname LIKE '%".$inputVal."%')");
+        $query("SELECT * FROM kunde WHERE deleted_at is null and (name LIKE '%?%' OR vorname LIKE '%?%')");
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s",$inputVal);
+        $stmt->execute();
+        $result = $stmt->get_result();
         /*OR nummer LIKE '%".$inputVal."%'*/
         $clients=null;
         while ($clientArr = $result->fetch_assoc()) {
@@ -168,14 +186,20 @@ class Client {
      */
     public static function del($id) {
         $db = Db::instantiate();
-        $query = 'UPDATE kunde SET deleted_at=now() WHERE id='.$id;
-        $sql=$db->query($query);
-        Db::checkConnection($sql,$query);
+        $query = 'UPDATE kunde SET deleted_at=now() WHERE id=?';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i",$id);
+        $stmt->execute();
+        Db::checkConnection($stmt->get_result(),$query);
     }
 
     public static function findByName($vorname,$name) {
         $db = Db::instantiate();
-        $result = $db->query('SELECT * FROM kunde WHERE deleted_at is null and vorname="'.$vorname.'" AND name="'.$name.'";');
+        $query = ('SELECT * FROM kunde WHERE deleted_at is null and vorname=? AND name=?;');
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("ss",$vorname,$name);
+        $stmt->execute();
+        $result = $stmt->get_result();
         if ($result->num_rows>0){
             $clientArr = $result->fetch_assoc();
             $client=populate::populateClient($clientArr);
