@@ -333,13 +333,9 @@ group by r.datum ';
     public static function checkPassword($entered_password) {
         $db = Db::instantiate();
         $query = 'SELECT passwort FROM admin limit 1;';
-
         $stmt = $db->prepare($query);
-
         $stmt->execute();
-
         $stmt->bind_result($passwort);
-
         $stmt->fetch();
         //@todo loop over all passwords to check if correct
         if(password_verify($entered_password , $passwort)) {
