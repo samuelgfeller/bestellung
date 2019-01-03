@@ -25,9 +25,13 @@ class Bestellposition {
 
         $colval = Helper::getImportColAndValues($data);
         $db = Db::instantiate();
-        $query = 'INSERT INTO `bestell_position` (' . implode(',', $colval['cols']) . ') VALUES (' . implode(',', $colval['values']) . ')';
-
-        $result = $db->query($query);
+        $columnnames = implode(',', $colval['cols']);
+        $columnvalues = implode(',', $colval['values']);
+        $query = 'INSERT INTO `bestell_position` (?) VALUES (?)';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("ss",$columnnames,$columnvalues);
+        $stmt->execute();
+        $result = $stmt->get_result();
         Db::checkConnection($result, $query);
         $last_id = $db->insert_id;
         return $last_id;
@@ -35,9 +39,11 @@ class Bestellposition {
 
     public static function del($id) {
         $db = Db::instantiate();
-        $query = 'UPDATE `position` SET deleted_at=now() WHERE id=' . $id;
-        $sql = $db->query($query);
-        Db::checkConnection($sql, $query);
+        $query = 'UPDATE `position` SET deleted_at=now() WHERE id=?';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i",$id);
+        $stmt->execute();
+        Db::checkConnection($stmt->get_result(), $query);
     }
 
     public static function getTotalOrderedWeightForBa($bestellArtikelId, $nextDate) {
@@ -48,8 +54,11 @@ class Bestellposition {
         left join bestellung b on bp.bestellung_id=b.id
         left join bestell_artikel ba on ba.id = bp.bestell_artikel_id 
         where b.deleted_at is null and ba.deleted_at is null and bp.deleted_at is null 
-        and ba.id = ' . $bestellArtikelId . ' and b.ziel_datum = "' . $nextDate . '";';
-        $result = $db->query($query);
+        and ba.id = ? and b.ziel_datum = ?;';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("is",$bestellArtikelId,$nextDate);
+        $stmt->execute();
+        $result = $stmt->get_result();
         if (!$result || $result->num_rows == 0) {
             return false;
         } else {
@@ -66,9 +75,11 @@ class Bestellposition {
         $db = Db::instantiate();
         $query = 'SELECT bp.* FROM bestell_position bp
 left join bestellung b on bp.bestellung_id = b.id 
-where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_id . ' and b.ziel_datum="' . $date . '";';
-//        var_dump($query);
-        $result = $db->query($query);
+where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=? and b.ziel_datum=?;';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("is",$client_id,$date);
+        $stmt->execute();
+        $result = $stmt->get_result();
         if (!$result || $result->num_rows == 0) {
             return false;
         }
@@ -85,7 +96,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
         return $positionObj;
     }
 
-
+    /*
     public static function getLastDate() {
         $db = Db::instantiate();
         // Get last bill date
@@ -97,6 +108,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
             return strtotime(date('Y-m-d') . " +60 days");
         }
     }
+    */
 
     /**
      * Get selling infos for an article on a date
@@ -104,6 +116,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
      * @param $date
      * @return array|int
      */
+    /*
     public static function getInfosForAricle($articleId, $date) {
         $db = Db::instantiate();
         $result = $db->query('
@@ -120,7 +133,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
             $resultat = $result->fetch_assoc();
             return $resultat;
         }
-    }
+    }*/
 
     /**
      * @return mixed
