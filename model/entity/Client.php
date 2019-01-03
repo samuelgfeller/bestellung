@@ -40,7 +40,7 @@ class Client {
         return $client;
     }
 
-    /**
+    /**database
      * @return mixed
      */
     public function getId() {
