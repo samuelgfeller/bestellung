@@ -22,28 +22,6 @@ class Bestellartikel {
 
 
     //safe
-    public static function all() {
-        $artikelObj = [];
-        $db = Db::instantiate();
-        $result = $db->query('SELECT ba.*, ba.id bestell_artikel_id, a.*, a.id artikel_id FROM bestell_artikel ba 
-left join artikel a on ba.artikel_id=a.id where a.deleted_at is null and ba.deleted_at is null');
-        while ($artikel = $result->fetch_object()) {
-//            var_dump($artikel);
-            $params = ['ba_id' => $artikel->bestell_artikel_id,
-                'artikel_id' => $artikel->artikel_id,
-                'kg_price' => $artikel->kg_price,
-                'name' => $artikel->name,
-                'nummer' => $artikel->nummer,
-                'gewicht' => $artikel->gewicht,
-                'verfuegbar' => $artikel->verfuegbar,
-                'stueckbestellung' => $artikel->stueckbestellung,
-                'datum' => $artikel->datum];
-            $artikelObj[] = Populate::populateBestellArtikel($params);
-        }
-        return $artikelObj;
-    }
-
-    //safe
     public static function allFrom($datum) {
         $artikelObj = [];
         $db = Db::instantiate();
@@ -67,33 +45,6 @@ left join artikel a on ba.artikel_id=a.id where a.deleted_at is null and ba.dele
                 'datum' => $datum,
                 'avgWeight' => $average];
             $artikelObj[] = Populate::populateBestellArtikel($params);
-        }
-        return $artikelObj;
-    }
-
-    //safe
-    public static function allAvailable() {
-        $artikelObj = [];
-        $db = Db::instantiate();
-        $result = $db->query('SELECT ba.*,ba.id bestell_artikel_id, a.*, a.id artikel_id FROM bestell_artikel ba 
-left join artikel a on ba.artikel_id=a.id 
-where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1');
-        if (!$result || $result->num_rows == 0) {
-            return false;
-        } else {
-            while ($artikel = $result->fetch_object()) {
-//            var_dump($artikel);
-                $params = ['ba_id' => $artikel->bestell_artikel_id,
-                    'artikel_id' => $artikel->artikel_id,
-                    'kg_price' => $artikel->kg_price,
-                    'name' => $artikel->name,
-                    'nummer' => $artikel->nummer,
-                    'gewicht' => $artikel->gewicht,
-                    'verfuegbar' => $artikel->verfuegbar,
-                    'stueckbestellung' => $artikel->stueckbestellung,
-                    'datum' => $artikel->datum];
-                $artikelObj[] = Populate::populateBestellArtikel($params);
-            }
         }
         return $artikelObj;
     }
