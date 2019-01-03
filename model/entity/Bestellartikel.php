@@ -21,6 +21,7 @@ class Bestellartikel {
     private $avgWeight;
 
 
+    //safe
     public static function all() {
         $artikelObj = [];
         $db = Db::instantiate();
@@ -42,29 +43,35 @@ left join artikel a on ba.artikel_id=a.id where a.deleted_at is null and ba.dele
         return $artikelObj;
     }
 
-    public static function allFrom($date) {
+    //safe
+    public static function allFrom($datum) {
         $artikelObj = [];
         $db = Db::instantiate();
-        $query = 'SELECT ba.*, ba.id bestell_artikel_id, a.*, a.id artikel_id FROM bestell_artikel ba left join
- artikel a on ba.artikel_id=a.id where ba.datum = "' . $date . '" and a.deleted_at is null and ba.deleted_at is null order by ba.artikel_id asc';
-        $result = $db->query($query);
-        while ($artikel = $result->fetch_object()) {
-            $average = self::getAverage($artikel->artikel_id);
-            $params = ['ba_id' => $artikel->bestell_artikel_id,
-                'artikel_id' => $artikel->artikel_id,
-                'kg_price' => $artikel->kg_price,
-                'name' => $artikel->name,
-                'nummer' => $artikel->nummer,
-                'gewicht' => $artikel->gewicht,
-                'verfuegbar' => $artikel->verfuegbar,
-                'stueckbestellung' => $artikel->stueckbestellung,
-                'datum' => $artikel->datum,
+        $query = 'SELECT ba.id bestell_artikel_id, a.id artikel_id, a.kg_price, a.name, a.nummer, ba.gewicht, ba.verfuegbar, ba.stueckbestellung, ba.datum  FROM bestell_artikel ba left join
+ artikel a on ba.artikel_id=a.id where ba.datum =? and a.deleted_at is null and ba.deleted_at is null order by ba.artikel_id asc';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s", $datum);
+        //echo $date;
+        $stmt->execute();
+        $stmt->bind_result($bestell_artikel_id,$artikel_id,$kg_price,$name,$nummer, $gewicht,$verfuegbar,$stueckbestellung,$datum);
+        while ($row = $stmt->fetch()){
+            $average = self::getAverage($artikel_id);
+            $params = ['ba_id' => $bestell_artikel_id,
+                'artikel_id' => $artikel_id,
+                'kg_price' => $kg_price,
+                'name' => $name,
+                'nummer' => $nummer,
+                'gewicht' => $gewicht,
+                'verfuegbar' => $verfuegbar,
+                'stueckbestellung' => $stueckbestellung,
+                'datum' => $datum,
                 'avgWeight' => $average];
             $artikelObj[] = Populate::populateBestellArtikel($params);
         }
         return $artikelObj;
     }
 
+    //safe
     public static function allAvailable() {
         $artikelObj = [];
         $db = Db::instantiate();
@@ -91,30 +98,35 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1');
         return $artikelObj;
     }
 
-    public static function allAvailableFrom($date) {
+    //safe
+    public static function allAvailableFrom($datum) {
         $artikelObj = [];
         $db = Db::instantiate();
-        $result = $db->query('SELECT ba.*,ba.id bestell_artikel_id, a.*, a.id artikel_id FROM bestell_artikel ba 
+        $query='SELECT ba.id bestell_artikel_id, a.id artikel_id, a.kg_price, a.name, ba.gewicht, ba.verfuegbar, ba.stueckbestellung, ba.datum  FROM bestell_artikel ba
 left join artikel a on ba.artikel_id=a.id 
-where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and ba.datum="' . $date . '";');
-        if (!$result || $result->num_rows == 0) {
-            return false;
-        } else {
-            while ($artikel = $result->fetch_object()) {
-//            var_dump($artikel);
-                $params = ['ba_id' => $artikel->bestell_artikel_id,
-                    'artikel_id' => $artikel->artikel_id,
-                    'kg_price' => $artikel->kg_price,
-                    'name' => $artikel->name,
-                    'gewicht' => $artikel->gewicht,
-                    'verfuegbar' => $artikel->verfuegbar,
-                    'stueckbestellung' => $artikel->stueckbestellung,
-                    'datum' => $artikel->datum];
-                $artikelObj[] = Populate::populateBestellArtikel($params);
-            }
+where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and ba.datum=?;';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s", $datum);
+        //echo $date;
+        $stmt->execute();
+        $stmt->bind_result($bestell_artikel_id,$artikel_id,$kg_price,$name,$gewicht,$verfuegbar,$stueckbestellung,$datum);
+        while ($row = $stmt->fetch()){
+            // var_dump($bestell_artikel_id,$artikel_id,$kg_price,$name,$gewicht,$verfuegbar,$stueckbestellung,$datum);
+            $params = ['ba_id' => $bestell_artikel_id,
+                'artikel_id' => $artikel_id,
+                'kg_price' => $kg_price,
+                'name' => $name,
+                'gewicht' => $gewicht,
+                'verfuegbar' => $verfuegbar,
+                'stueckbestellung' => $stueckbestellung,
+                'datum' => $datum];
+            $artikelObj[] = Populate::populateBestellArtikel($params);
         }
+
         return $artikelObj;
     }
+
+
 
     public static function checkAndRefresh() {
         $db = Db::instantiate();
@@ -125,31 +137,40 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
             while ($article = $articleRes->fetch_assoc()) {
                 foreach ($dates as $date) {
                     $sqlDate = date('Y-m-d', strtotime($date));
-                    $selectQuery = 'select * from bestell_artikel where artikel_id = ' . $article['id'] . ' and datum="' . $sqlDate . '"';
-                    $ba = $db->query($selectQuery);
+                    $selectQuery = 'select * from bestell_artikel where artikel_id = ? and datum=?;';
+                    $stmt = $db->prepare($selectQuery);
+                    $stmt->bind_param("is",$article['id'],$sqlDate);
+                    $stmt->execute();
+                    $ba = $stmt->get_result();
                     // If an entry with the article_id and on the date exists, it has to be checked if it is deleted.
                     // If not, then an new entry is made
                     if ($article['deleted_at'] == null && (!$ba || $ba->num_rows === 0)) {
                         // Make the new inserts
-                        $insertBaQuery = 'insert into bestell_artikel set artikel_id=' . $article['id'] . ', datum="' . $sqlDate . '"';
-                        $insertBa = $db->query($insertBaQuery);
-                        Db::checkConnection($insertBa, $insertBaQuery);
+                        $insertBaQuery = 'insert into bestell_artikel set artikel_id=?, datum=?;';
+                        $stmt = $db->prepare($insertBaQuery);
+                        $stmt->bind_param("is",$article['id'],$sqlDate);
+                        $stmt->execute();
+                        Db::checkConnection($stmt->get_result(), $insertBaQuery);
                     } else {
                         $baArr = $ba->fetch_assoc();
 
                         // Go only if there is already a ba, the article is deleted but the ba not
                         if ($baArr != null && $article['deleted_at'] != null && $baArr['deleted_at'] == null) {
-                            $delQuery = 'UPDATE bestell_artikel SET deleted_at=now() WHERE id=' . $baArr['id'] . ';';
-                            $delBa = $db->query($delQuery);
-                            Db::checkConnection($delBa, $delQuery);
+                            $delQuery = 'UPDATE bestell_artikel SET deleted_at=now() WHERE id=?;';
+                            $stmt = $db->prepare($delQuery);
+                            $stmt->bind_param("i",$baArr['id']);
+                            $stmt->execute();
+                            Db::checkConnection($stmt->get_result(), $delQuery);
 //                            var_dump('deleted',$delQuery);
                         }
 
                         // Restore an already deleted article
                         if ($baArr != null && $article['deleted_at'] == null && $baArr['deleted_at'] != null) {
-                            $restoreQuery = 'UPDATE bestell_artikel SET deleted_at=NULL WHERE id=' . $baArr['id'] . ';';
-                            $restoreBa = $db->query($restoreQuery);
-                            Db::checkConnection($restoreBa, $restoreQuery);
+                            $restoreQuery = 'UPDATE bestell_artikel SET deleted_at=NULL WHERE id=?;';
+                            $stmt = $db->prepare($restoreQuery);
+                            $stmt->bind_param("i",$baArr['id']);
+                            $stmt->execute();
+                            Db::checkConnection($stmt->get_result(), $restoreQuery);
 //                            var_dump('restored',$restoreQuery);
                         }
                     }
@@ -158,28 +179,36 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
         }
     }
 
+
     public static function updWeight($id, $value) {
         $db = Db::instantiate();
         // Set value to NULL if empty so that the value is not an empty string
         $value = empty($value) ? NULL : $value;
-        $query = 'UPDATE bestell_artikel SET gewicht=' . (float)$value . ' WHERE id=' . $id;
-        $sql = $db->query($query);
-        Db::checkConnection($sql, $query);
+        $query = 'UPDATE bestell_artikel SET gewicht=? WHERE id=?;';
+        $stmt = $db->prepare($query);
+        $floatvalue =  (float)$value;
+        $stmt->bind_param("di",$floatvalue , $id);
+        $stmt->execute();
+        Db::checkConnection($stmt->get_result(), $query);
     }
 
     public static function checkAvailable($id, $value) {
         $db = Db::instantiate();
-        $query = 'UPDATE bestell_artikel SET verfuegbar=' . $value . ' WHERE id=' . $id;
-        $sql = $db->query($query);
-        Db::checkConnection($sql, $query);
+        $query = 'UPDATE bestell_artikel SET verfuegbar=? WHERE id=?;';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("di",$value , $id);
+        $stmt->execute();
+        Db::checkConnection($stmt->get_result(), $query);
     }
 
     public static function checkPiece($artikel_id, $value) {
         $db = Db::instantiate();
 //        $query = 'UPDATE bestell_artikel SET stueckbestellung=' . $value . ' WHERE id=' . $id;
-        $query = 'UPDATE bestell_artikel SET stueckbestellung=' . $value . ' WHERE artikel_id=' . $artikel_id;
-        $sql = $db->query($query);
-        Db::checkConnection($sql, $query);
+        $query = 'UPDATE bestell_artikel SET stueckbestellung=? WHERE artikel_id=?;';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("di",$value , $artikel_id);
+        $stmt->execute();
+        Db::checkConnection($stmt->get_result(), $query);        //w00t
     }
 
     /**
@@ -189,16 +218,22 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
     public static function getDefaultWeight($article_id) {
         $db = Db::instantiate();
         $query = 'SELECT a.stueck_gewicht FROM artikel a left join bestell_artikel ba on 
-ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba.id =' . $article_id;
-        $result = $db->query($query);
-
+ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba.id =?;';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i",$article_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
         return (int) $result->fetch_assoc()['stueck_gewicht'];
     }
 
 
     public static function find($id) {
         $db = Db::instantiate();
-        $result = $db->query('SELECT * FROM bestell_artikel WHERE deleted_at is null and id =' . $id);
+        $query = ('SELECT * FROM bestell_artikel WHERE deleted_at is null and id =?;');
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i",$id);
+        $stmt->execute();
+        $result = $stmt->get_result();
         $artikelArr = $result->fetch_assoc();
         $artikel = populate::populateBestellArtikel($artikelArr);
         return $artikel;
@@ -206,7 +241,11 @@ ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba
 
     public static function findWithNr($nr) {
         $db = Db::instantiate();
-        $result = $db->query('SELECT * FROM bestell_artikel WHERE deleted_at is null and nummer =' . $nr);
+        $query=('SELECT * FROM bestell_artikel WHERE deleted_at is null and nummer =?;');
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i",$nr);
+        $stmt->execute();
+        $result = $stmt->get_result();
         $artikelArr = $result->fetch_assoc();
         $artikel = populate::populateBestellArtikel($artikelArr);
         return $artikel;
@@ -214,7 +253,11 @@ ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba
 
     public static function findByName($name) {
         $db = Db::instantiate();
-        $result = $db->query('SELECT * FROM bestell_artikel WHERE deleted_at is null and name="' . $name . '";');
+        $query = ('SELECT * FROM bestell_artikel WHERE deleted_at is null and name=?;');
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s",$name);
+        $stmt->execute();
+        $result = $stmt->get_result();
         if (!$result || $result->num_rows == 0) {
             return false;
         } else {
@@ -232,10 +275,16 @@ ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba
      */
     public static function upd(Bestellartikel $artikel) {
         $db = Db::instantiate();
-        $query = 'UPDATE bestell_artikel SET nummer=' . $artikel->getNummer() . ', name="' . $artikel->getName() . '",kg_price="' . $artikel->getKgPrice() . '" WHERE id =' . $artikel->getId();
-        $sql = $db->query($query);
-        Db::checkConnection($sql, $query);
-        return $artikel->getId();
+        $query = 'UPDATE bestell_artikel SET nummer=?, name=?,kg_price=? WHERE id =?;';
+        $stmt = $db->prepare($query);
+        $artikelnr =  $artikel->getNummer();
+        $artikelname = $artikel->getName();
+        $artikelkgpreis = $artikel->getKgPrice();
+        $artikelid = $artikel->getId();
+        $stmt->bind_param("isdi",$artikelnr,$artikelname,$artikelkgpreis,$artikelid);
+        $stmt->execute();
+        Db::checkConnection($stmt->get_result(), $query);
+        return $artikelid;
     }
 
     /**
@@ -245,9 +294,14 @@ ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba
      */
     public static function add(Bestellartikel $artikel) {
         $db = Db::instantiate();
-        $query = 'INSERT INTO bestell_artikel (nummer,name,kg_price) VALUES ("' . $artikel->getNummer() . '", "' . $artikel->getName() . '", "' . $artikel->getKgPrice() . '")';
-        $result = $db->query($query);
-        Db::checkConnection($result, $query);
+        $query = 'INSERT INTO bestell_artikel (nummer,name,kg_price) VALUES (?,?,?);';
+        $stmt = $db->prepare($query);
+        $artikelnr =  $artikel->getNummer();
+        $artikelname = $artikel->getName();
+        $artikelkgpreis = $artikel->getKgPrice();
+        $stmt->bind_param("isd",$artikelnr,$artikelname,$artikelkgpreis);
+        $stmt->execute();
+        Db::checkConnection($stmt->get_result(), $query);
         $last_id = $db->insert_id;
         return $last_id;
     }
@@ -257,15 +311,20 @@ ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba
      */
     public static function del($id) {
         $db = Db::instantiate();
-        $query = 'UPDATE bestell_artikel SET deleted_at=now() WHERE id=' . $id;
-        $sql = $db->query($query);
-        Db::checkConnection($sql, $query);
+        $query = 'UPDATE bestell_artikel SET deleted_at=now() WHERE id=?';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i",$id);
+        $stmt->execute();
+        Db::checkConnection($stmt->get_result(), $query);
     }
 
     public static function getSearchResult($inputVal) {
         $db = Db::instantiate();
-        $query = "SELECT * FROM bestell_artikel WHERE deleted_at is null and name LIKE '%" . $inputVal . "%' OR nummer LIKE '%" . $inputVal . "%'";
-        $result = $db->query($query);
+        $query = "SELECT * FROM bestell_artikel WHERE deleted_at is null and name LIKE '%?%' OR nummer LIKE '%?%'";
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("s",$inputVal);
+        $stmt->execute();
+        $result = $stmt->get_result();
         $artikelObj = null;
 
         while ($artikelArr = $result->fetch_assoc()) {
@@ -280,7 +339,11 @@ ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba
 
     public static function checkPieceWeight($artikel_id) {
         $db = Db::instantiate();
-        $result = $db->query('SELECT stueck_gewicht from artikel where id=' . $artikel_id);
+        $query = ('SELECT stueck_gewicht from artikel where id=?');
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i",$artikel_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
         if (empty($result->fetch_assoc()['stueck_gewicht']) || !$result || $result->num_rows == 0) {
             return false;
         }
@@ -290,9 +353,12 @@ ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba
     public static function getAverage($artikel_id) {
         $db = Db::instantiate();
         $query = 'select p.*,sum(gewicht) average,count(*),r.datum from position p left join rechnung r on r.id = p.rechnung_id 
-where artikel_id = ' . $artikel_id . ' and p.deleted_at is null and r.deleted_at is null
+where artikel_id =? and p.deleted_at is null and r.deleted_at is null
 group by r.datum ';
-        $result = $db->query($query);
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i",$artikel_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
         if (!$result || $result->num_rows == 0) {
             return false;
         }
@@ -354,6 +420,8 @@ group by r.datum ';
         }
         return true;
     }
+
+
 
 
 
