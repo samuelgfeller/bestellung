@@ -31,6 +31,7 @@ class Bestellartikel {
         $stmt->bind_param("s", $datum);
         //echo $date;
         $stmt->execute();
+        $stmt->store_result();
         $stmt->bind_result($bestell_artikel_id,$artikel_id,$kg_price,$name,$nummer, $gewicht,$verfuegbar,$stueckbestellung,$datum);
         while ($row = $stmt->fetch()){
             $average = self::getAverage($artikel_id);
