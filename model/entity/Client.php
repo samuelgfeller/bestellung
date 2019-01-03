@@ -30,7 +30,11 @@ class Client {
      */
     public static function find($id) {
         $db = Db::instantiate();
-        $result = $db->query('SELECT * FROM kunde WHERE deleted_at is null and id ='.$id);
+        $query = ('SELECT * FROM kunde WHERE deleted_at is null and id =?');
+        $stmt = $db->prepare($query);
+        $stmt->bind_param("i",$id);
+        $stmt->execute();
+        $result = $stmt->get_result();
         $clientArr = $result->fetch_assoc();
         $client = populate::populateClient($clientArr);
         return $client;
