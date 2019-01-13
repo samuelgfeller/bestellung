@@ -37,8 +37,7 @@
                 $possibilities = $artikelUndBestellPosition['order_possibilities'];
                 // Set bestell_artikel_id
                 $baId = $ba->getBestellArtikelId();
-                // Set boolean if stueckbestellung is allowed
-                $stk = $ba->getStueckbestellung();
+                $pieceWeight = $ba->getStueckGewicht();
 
                 $pAnz = null;
                 $gewicht = null;
@@ -52,8 +51,7 @@
                 ?>
 
                 <tr id="bestell_artikel<?= $baId ?>">
-                    <!--CHANGE JAVASCRIPT WHERE TABLE IS CREATED DYNAMICALY-->
-                    <td><?= $ba->getName() ?></td>
+                    <td><?= !empty($pieceWeight) ? $ba->getName().' (Stk. <b>ca.</b> '.$pieceWeight.')':$ba->getName()?></td>
                     <td><?= $ba->getKgPrice() ?></td>
                     <td id="availableWeight<?= $baId ?>" class="availableWeight">
                         <span><?= $ba->getVerfuegbarGewicht(); ?></span> kg
@@ -64,9 +62,8 @@
                                                     max="15" name="pAmount[]"></td>
                     <td id="timesTd<?= $baId ?>">&times;</td>
                     <td style="width:250px;">
-                        <div id="calcInfo<?= $baId ?>" class="calcInfoClass" data-baid="<?= $baId ?>"
-                             data-stk="<?= $stk ?>">
-                        <?php /*$stk == 1 ? 'g. / Stk. à ca. ' . $ba->getStueckgewicht() . 'g.' : 'g.'*/
+                        <div id="calcInfo<?= $baId ?>" class="calcInfoClass" data-baid="<?= $baId ?>">
+                        <?php
                         foreach ($possibilities as $possibility) {
                             if (!empty($possibility)) { ?>
                                 <div class="check-button">

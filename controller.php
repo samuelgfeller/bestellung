@@ -91,28 +91,27 @@ if ($path == '') {
                     /*                    highlight_string("<?php\n\$data =\n" . var_export($artikel, true) . ";\n?>");*/
 //                    var_dump($artikel->getGewicht() ?? 0);
 
-                    $availableWeight=round(($ba->getGewicht() ?? 0) - ($totalOrderedWeight ?? 0), 2);
-                    if($availableWeight === (float) -0){
+                    $availableWeight = round(($ba->getGewicht() ?? 0) - ($totalOrderedWeight ?? 0), 2);
+                    if ($availableWeight === (float)-0) {
                         $ba->setVerfuegbarGewicht(0);
-                    }else{
+                    } else {
                         $ba->setVerfuegbarGewicht($availableWeight);
                     }
 
                     $pieceWeight = Bestellartikel::getDefaultWeight($ba->getBestellArtikelId());
-                    if (!empty($ba->getStueckbestellung())) {
-                        $ba->setStueckgewicht($pieceWeight);
-                    } else {
-                        $ba->setStueckgewicht(false);
-                    }
+                    $ba->setStueckgewicht($pieceWeight);
 
                     $artikelUndBestellPositionen[$key]['bestell_artikel'] = $ba;
                     $artikel = Artikel::find($ba->getArtikelId());
                     $avag = $ba->getVerfuegbarGewicht() * 1000; // Available weight in gramm
-                    $g1 = $artikel->getGewicht1(); $g2 = $artikel->getGewicht2(); $g3 = $artikel->getGewicht3();
-                    $s1 = $artikel->getStueckzahl1(); $s2 = $artikel->getStueckzahl2(); $s3 = $artikel->getStueckzahl3();
+                    $g1 = $artikel->getGewicht1();
+                    $g2 = $artikel->getGewicht2();
+                    $g3 = $artikel->getGewicht3();
+                    $s1 = $artikel->getStueckzahl1();
+                    $s2 = $artikel->getStueckzahl2();
+                    $s3 = $artikel->getStueckzahl3();
 //                    var_dump($s3.' * '.$pieceWeight,$s3*$pieceWeight,$avag);
-                    $artikelUndBestellPositionen[$key]['order_possibilities'] = [
-                        !empty($g1) && $g1 <= $avag ? $g1 : null,
+                    $artikelUndBestellPositionen[$key]['order_possibilities'] = [!empty($g1) && $g1 <= $avag ? $g1 : null,
                         !empty($g2) && $g2 <= $avag ? $g2 : null,
                         !empty($g3) && $g3 <= $avag ? $g3 : null,
                         !empty($s1) && $s1 * $pieceWeight <= $avag ? $s1 : null,

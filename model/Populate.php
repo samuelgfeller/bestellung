@@ -38,7 +38,6 @@ class Populate {
         $artikel->setKgPrice($data['kg_price'] ?? null);
         $artikel->setGewicht($data['gewicht'] ?? null);
         $artikel->setVerfuegbar($data['verfuegbar'] ?? null);
-        $artikel->setStueckbestellung($data['stueckbestellung'] ?? null);
         $artikel->setDatum($data['datum'] ?? null);
         $artikel->setAvgWeight($data['avgWeight'] ?? null);
         return $artikel;

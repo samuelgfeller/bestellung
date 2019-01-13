@@ -15,7 +15,6 @@ class Bestellartikel {
     private $kg_price;
     private $verfuegbar; // Bool if available
     private $verfuegbarGewicht;
-    private $stueckbestellung;
     private $stueckgewicht;
     private $datum;
     private $avgWeight;
@@ -35,7 +34,6 @@ left join artikel a on ba.artikel_id=a.id where a.deleted_at is null and ba.dele
                 'nummer' => $artikel->nummer,
                 'gewicht' => $artikel->gewicht,
                 'verfuegbar' => $artikel->verfuegbar,
-                'stueckbestellung' => $artikel->stueckbestellung,
                 'datum' => $artikel->datum];
             $artikelObj[] = Populate::populateBestellArtikel($params);
         }
@@ -57,7 +55,6 @@ left join artikel a on ba.artikel_id=a.id where a.deleted_at is null and ba.dele
                 'nummer' => $artikel->nummer,
                 'gewicht' => $artikel->gewicht,
                 'verfuegbar' => $artikel->verfuegbar,
-                'stueckbestellung' => $artikel->stueckbestellung,
                 'datum' => $artikel->datum,
                 'avgWeight' => $average];
             $artikelObj[] = Populate::populateBestellArtikel($params);
@@ -83,7 +80,6 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1');
                     'nummer' => $artikel->nummer,
                     'gewicht' => $artikel->gewicht,
                     'verfuegbar' => $artikel->verfuegbar,
-                    'stueckbestellung' => $artikel->stueckbestellung,
                     'datum' => $artikel->datum];
                 $artikelObj[] = Populate::populateBestellArtikel($params);
             }
@@ -108,7 +104,6 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
                     'name' => $artikel->name,
                     'gewicht' => $artikel->gewicht,
                     'verfuegbar' => $artikel->verfuegbar,
-                    'stueckbestellung' => $artikel->stueckbestellung,
                     'datum' => $artikel->datum];
                 $artikelObj[] = Populate::populateBestellArtikel($params);
             }
@@ -170,14 +165,6 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
     public static function toggleAvailable($id, $value) {
         $db = Db::instantiate();
         $query = 'UPDATE bestell_artikel SET verfuegbar=' . $value . ' WHERE id=' . $id;
-        $sql = $db->query($query);
-        Db::checkConnection($sql, $query);
-    }
-
-    public static function checkPiece($artikel_id, $value) {
-        $db = Db::instantiate();
-//        $query = 'UPDATE bestell_artikel SET stueckbestellung=' . $value . ' WHERE id=' . $id;
-        $query = 'UPDATE bestell_artikel SET stueckbestellung=' . $value . ' WHERE artikel_id=' . $artikel_id;
         $sql = $db->query($query);
         Db::checkConnection($sql, $query);
     }
@@ -466,20 +453,6 @@ group by r.datum ';
      */
     public function setVerfuegbarGewicht($verfuegbarGewicht) {
         $this->verfuegbarGewicht = $verfuegbarGewicht;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStueckbestellung() {
-        return $this->stueckbestellung;
-    }
-
-    /**
-     * @param mixed $stueckbestellung
-     */
-    public function setStueckbestellung($stueckbestellung) {
-        $this->stueckbestellung = $stueckbestellung;
     }
 
     /**

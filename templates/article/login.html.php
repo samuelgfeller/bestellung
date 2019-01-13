@@ -9,7 +9,6 @@
             <input type="text" name="password" placeholder="Passwort"><br><br>
             <button type="submit" class="submitBtn">Einloggen</button>
         </form>
-
     </div>
 
 </div>
