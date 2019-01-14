@@ -49,7 +49,7 @@ from artikel where id=' . $artikel_id);
         if (!$result || $result->num_rows == 0) {
             return false;
         }
-        foreach ($artikel = $result->fetch_assoc() as $key => $value) {
+        foreach ($artikel = $result->fetch_assoc() as $key => $value){
             if ($value !== null){
                 return true;
             }

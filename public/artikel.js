@@ -37,7 +37,7 @@ function checkUncheckAvailable(ba_id, artikel_id) {
     }).done(function (output) {
         if (output === 'false') {
             $('#box' + ba_id).prop('checked', false);
-            if (confirm('Das Stückgewicht muss zuerst bei dem Artikel festgelegt werden. Wollen Sie auf die Seite der Artikel weitergeleitet werden?')) {
+            if (confirm('Eine Bestellart muss zuerst bei dem Artikel festgelegt werden. Wollen Sie auf die Seite der Artikel weitergeleitet werden?')) {
                 window.open('https://fleisch.masesselin.ch/artikel', '_blank');
             }
         }

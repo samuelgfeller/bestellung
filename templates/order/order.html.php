@@ -51,7 +51,7 @@
                 ?>
 
                 <tr id="bestell_artikel<?= $baId ?>">
-                    <td><?= !empty($pieceWeight) ? $ba->getName().' (Stk. <b>ca.</b> '.$pieceWeight.')':$ba->getName()?></td>
+                    <td><?= !empty($pieceWeight) ? $ba->getName() . ' (Stk. <b>ca.</b> ' . $pieceWeight . ')' : $ba->getName() ?></td>
                     <td><?= $ba->getKgPrice() ?></td>
                     <td id="availableWeight<?= $baId ?>" class="availableWeight">
                         <span><?= $ba->getVerfuegbarGewicht(); ?></span> kg
@@ -63,25 +63,26 @@
                     <td id="timesTd<?= $baId ?>">&times;</td>
                     <td style="width:250px;">
                         <div id="calcInfo<?= $baId ?>" class="calcInfoClass" data-baid="<?= $baId ?>">
-                        <?php
-                        foreach ($possibilities as $possibility) {
-                            if (!empty($possibility)) { ?>
-                                <div class="check-button">
-                                    <label>
-                                        <input class="weightCheckbox weightInput<?= $baId ?>"
-                                               type="checkbox"
-                                               value="<?= $possibility ?>"
-                                               data-baid="<?= $baId ?>"
-                                               <?= $gewicht == $possibility ? 'checked' : '' ?>
-                                        >
-                                        <span><?= $possibility > 15 ? $possibility . 'g.' : $possibility . ' Stk. '?></span>
-                                    </label>
-                                </div>
-                            <?php }
-                        } ?>
-                       <!--  Unchecked inputs are not sent to server and an Array with all indexes (empty string as value if nothing)
-                       The value is filled with javascript on the checkbox listener-->
-                       <input type="hidden" id="singleWeight<?= $baId ?>" name="singleWeight[]" value="<?= $gewicht == $possibility ? $possibility : '' ?>">
+                            <?php
+                            foreach ($possibilities as $possibility) {
+                                if (!empty($possibility)) { ?>
+                                    <div class="check-button">
+                                        <label>
+                                            <input class="weightCheckbox weightInput<?= $baId ?>"
+                                                   type="checkbox"
+                                                   value="<?= $possibility ?>"
+                                                   data-baid="<?= $baId ?>"
+                                                <?= $gewicht == $possibility ? 'checked' : '' ?>
+                                            >
+                                            <span><?= $possibility > 15 ? $possibility . 'g.' : $possibility . ' Stk. ' ?></span>
+                                        </label>
+                                    </div>
+                                <?php }
+                            } ?>
+                            <!--  Unchecked inputs are not sent to server and an Array with all indexes (empty string as value if nothing)
+                            The value is filled with javascript on the checkbox listener-->
+                            <input type="hidden" id="singleWeight<?= $baId ?>" name="singleWeight[]"
+                                   value="<?= $gewicht == $possibility ? $possibility : '' ?>">
                         </div>
                         <!-- Inserting the hidden info here because outide it affects the nth:child(even) -->
                         <input type="hidden" name="ba_id[]" value="<?= $baId ?>">
