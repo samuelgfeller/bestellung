@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../connection.php';
-require_once __DIR__ . '/../Populate.php';
+require_once __DIR__ . '/../service/PopulateObject.php';
 
 //require_once __DIR__ . '/Termin.php';
 
@@ -35,7 +35,7 @@ left join artikel a on ba.artikel_id=a.id where a.deleted_at is null and ba.dele
                 'gewicht' => $artikel->gewicht,
                 'verfuegbar' => $artikel->verfuegbar,
                 'datum' => $artikel->datum];
-            $artikelObj[] = Populate::populateBestellArtikel($params);
+            $artikelObj[] = PopulateObject::populateBestellArtikel($params);
         }
         return $artikelObj;
     }
@@ -57,7 +57,7 @@ left join artikel a on ba.artikel_id=a.id where a.deleted_at is null and ba.dele
                 'verfuegbar' => $artikel->verfuegbar,
                 'datum' => $artikel->datum,
                 'avgWeight' => $average];
-            $artikelObj[] = Populate::populateBestellArtikel($params);
+            $artikelObj[] = PopulateObject::populateBestellArtikel($params);
         }
         return $artikelObj;
     }
@@ -81,7 +81,7 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1');
                     'gewicht' => $artikel->gewicht,
                     'verfuegbar' => $artikel->verfuegbar,
                     'datum' => $artikel->datum];
-                $artikelObj[] = Populate::populateBestellArtikel($params);
+                $artikelObj[] = PopulateObject::populateBestellArtikel($params);
             }
         }
         return $artikelObj;
@@ -105,7 +105,7 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
                     'gewicht' => $artikel->gewicht,
                     'verfuegbar' => $artikel->verfuegbar,
                     'datum' => $artikel->datum];
-                $artikelObj[] = Populate::populateBestellArtikel($params);
+                $artikelObj[] = PopulateObject::populateBestellArtikel($params);
             }
         }
         return $artikelObj;
@@ -187,7 +187,7 @@ ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba
         $db = Db::instantiate();
         $result = $db->query('SELECT * FROM bestell_artikel WHERE deleted_at is null and id =' . $id);
         $artikelArr = $result->fetch_assoc();
-        $artikel = populate::populateBestellArtikel($artikelArr);
+        $artikel = PopulateObject::populateBestellArtikel($artikelArr);
         return $artikel;
     }
 
@@ -195,7 +195,7 @@ ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba
         $db = Db::instantiate();
         $result = $db->query('SELECT * FROM bestell_artikel WHERE deleted_at is null and nummer =' . $nr);
         $artikelArr = $result->fetch_assoc();
-        $artikel = populate::populateBestellArtikel($artikelArr);
+        $artikel = PopulateObject::populateBestellArtikel($artikelArr);
         return $artikel;
     }
 
@@ -206,7 +206,7 @@ ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba
             return false;
         } else {
             $artikelArr = $result->fetch_assoc();
-            $artikel = populate::populateBestellArtikel($artikelArr);
+            $artikel = PopulateObject::populateBestellArtikel($artikelArr);
             return $artikel;
         }
     }
@@ -256,7 +256,7 @@ ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba
         $artikelObj = null;
 
         while ($artikelArr = $result->fetch_assoc()) {
-            $artikel = Populate::populateBestellArtikel($artikelArr);
+            $artikel = PopulateObject::populateBestellArtikel($artikelArr);
             $artikelObj[] = $artikel;
         }
         if (!empty($artikelObj)) {

@@ -6,7 +6,7 @@
  * Time: 12:44
  */
 require_once __DIR__ . '/../../connection.php';
-require_once __DIR__ . '/../Populate.php';
+require_once __DIR__ . '/../service/PopulateObject.php';
 
 
 class Termin {
@@ -18,7 +18,7 @@ class Termin {
         $db = Db::instantiate();
         $result = $db->query('SELECT * FROM termin WHERE deleted_at is null order by id desc');
         while ($datumArr = $result->fetch_assoc()) {
-            $termin = Populate::populateTermin($datumArr);
+            $termin = PopulateObject::populateTermin($datumArr);
             $daten[] = $termin;
         }
         if (!empty($daten)) {
