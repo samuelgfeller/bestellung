@@ -1,0 +1,13 @@
+[ver:1,total:6406]
+model/entity/Bestellartikel.php:5261,1547470800:834,1547474400:1010,1547478000:1686,1547481600:1731,m
+model/service/PopulateObject.php:387,1547470800:226,1547474400:70,1547481600:91,m
+controller.php:328,1547470800:80,1547474400:213,1547481600:35,r
+ajax_controller.php:122,1547478000:54,1547481600:68,r
+model/service/DataManagement.php:102,1547478000:30,1547481600:72,r
+templates/article/all_artikel.html.php:79,1547474400:20,1547478000:24,1547481600:35,r
+model/entity/Artikel.php:39,1547470800:20,1547481600:19,r
+templates/pages/help.html.php:25,1547474400:25,r
+templates/pages/noEntries.html.php:20,1547474400:20,r
+templates/success/confirmation_mail.php:20,1547474400:20,r
+public/jquery-3.2.1.min.js:17,1547474400:17,r
+public/artikel.js:6,1547478000:6,r
