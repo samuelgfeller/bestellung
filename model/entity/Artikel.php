@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../connection.php';
 require_once __DIR__ . '/../service/PopulateObject.php';
+require_once __DIR__ . '/../service/DataManagement.php';
 
 class Artikel {
 
@@ -33,9 +34,11 @@ class Artikel {
     public static function checkIfHasOrderPossibility($artikel_id) {
         $query = 'SELECT gewicht_1,gewicht_2,gewicht_3,stueckzahl_1,stueckzahl_2,stueckzahl_3 from artikel where id=?;';
         $dataArr = DataManagement::selectAndFetchSingleData($query, [$artikel_id]);
-        if($dataArr){
-            return true;
-        }
+	    foreach ($dataArr as $key => $value){
+		    if ($value !== null){
+			    return true;
+		    }
+	    }
         return false;
     }
 
