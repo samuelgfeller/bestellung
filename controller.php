@@ -226,7 +226,7 @@ if ($path == 'success') {
         }
 
         foreach ($valuesArr as $values) {
-            $bestellPosition = Populate::populateBestellPosition($values);
+            $bestellPosition = PopulateObject::populateBestellPosition($values);
             Bestellposition::add($bestellPosition);
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-class Populate {
+class PopulateObject {
 
     /**
      * @param $data
