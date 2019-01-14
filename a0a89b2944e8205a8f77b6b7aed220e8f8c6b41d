@@ -1,0 +1,14 @@
+[ver:1,total:1535]
+model/entity/Termin.php:703,1547460000:630,1547467200:73,m
+public/index.php:280,1547460000:280,r
+.gitignore:210,1547460000:210,r
+templates/pages/noEntries.html.php:112,1547467200:112,r
+ajax_controller.php:74,1547460000:54,1547467200:20,r
+model/entity/Artikel.php:60,1547460000:60,r
+templates/pages/test_page.html.php:23,1547467200:23,r
+templates/success/success_bestellung.php:18,1547467200:18,r
+templates/pagination.php:13,1547467200:13,r
+public/.htaccess:12,1547467200:12,r
+public/style.css:12,1547460000:12,r
+model/entity/Bestellartikel.php:12,1547460000:12,r
+public/home.js:6,1547467200:6,r
