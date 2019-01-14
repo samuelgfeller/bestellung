@@ -130,8 +130,8 @@ group by r.datum ';
 	public static function checkPassword($entered_password) {
 		$query = 'SELECT passwort FROM admin limit 1;';
 		$allData = DataManagement::selectAndFetchAssocMultipleData($query);
-		foreach ($allData as $password){
-			if (password_verify($entered_password, $password)) {
+		foreach ($allData as $data){
+			if (password_verify($entered_password, $data['passwort'])) {
 				$_SESSION['is_admin'] = 1;
 				session_regenerate_id();
 				return true;
