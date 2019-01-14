@@ -1,12 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: samue
- * Date: 25.11.2018
- * Time: 12:44
- */
-require_once __DIR__ . '/../../connection.php';
+
 require_once __DIR__ . '/../service/PopulateObject.php';
+require_once __DIR__ . '/../service/DataManagement.php';
 
 
 class Termin {
@@ -14,53 +9,28 @@ class Termin {
     private $datum;
 
     public static function all() {
-        $daten = [];
-        $db = Db::instantiate();
-        $result = $db->query('SELECT * FROM termin WHERE deleted_at is null order by id desc');
-        while ($datumArr = $result->fetch_assoc()) {
-            $termin = PopulateObject::populateTermin($datumArr);
-            $daten[] = $termin;
-        }
-        if (!empty($daten)) {
-            return $daten;
-        }
-        return false;
+	    $query = 'SELECT * FROM termin WHERE deleted_at is null order by id desc';
+	    $result = DataManagement::selectAndFetchAssocMultipleData($query);
+	    $dataObjArr = [];
+	    foreach ($result as $dataArr) {
+		    $dataObjArr[] = PopulateObject::populateTermin($dataArr);
+	    }
+	    return $dataObjArr;
     }
 
-/*    public static function getTextDates() {
-        $daten = [];
-        $db = Db::instantiate();
-        $result = $db->query('SELECT datum FROM termin WHERE deleted_at is null order by datum desc');
-        if (!$result || $result->num_rows == 0) {
-            return null;
-        } else {
-            while ($datumArr = $result->fetch_assoc()) {
-                $daten[] = date('d.m.Y', strtotime($datumArr['datum']));
-            }
-            if (!empty($daten)) {
-                return $daten;
-            }
-            return false;
-        }
-    }*/
-
     public static function getYearsAndDates() {
-        $years = [];
-        $dates = [];
-        $db = Db::instantiate();
-        $result = $db->query('SELECT datum FROM termin WHERE deleted_at is null order by datum desc');
-        if (!$result || $result->num_rows == 0) {
-            return null;
-        }
-        while ($datumArr = $result->fetch_assoc()) {
-            $years[] = date('Y', strtotime($datumArr['datum']));
-            $dates[] = date('d.m.Y', strtotime($datumArr['datum']));
-        }
-        return [
-            'years' => $years,
-            'dates' => $dates,
-        ];
-
+	    $years = [];
+	    $dates = [];
+	    $query = 'SELECT datum FROM termin WHERE deleted_at is null order by datum desc';
+	    $allData = DataManagement::selectAndFetchAssocMultipleData($query);
+	    foreach ($allData as $dateArr) {
+		    $years[] = date('Y', strtotime($dateArr['datum']));
+		    $dates[] = date('d.m.Y', strtotime($dateArr['datum']));
+	    }
+	    return [
+		    'years' => $years,
+		    'dates' => $dates,
+	    ];
     }
 
     /**
@@ -69,7 +39,8 @@ class Termin {
     public static function getNextDate(){
         $dateArr = self::getYearsAndDates()['dates'];
         $today = time();
-        foreach ($dateArr as $key => $date) {
+	    $intervals = [];
+	    foreach ($dateArr as $key => $date) {
             $interval = $today - strtotime($date);
 //            var_dump($interval,$date);
             if ($interval < 0) {
@@ -83,8 +54,8 @@ class Termin {
         $closest = key($intervals);
 //        var_dump($closest);
         return [
-            'sql'=> date('Y-m-d', strtotime($dateArr[$closest])),
-            'text' => $dateArr[$closest],
+	        'sql' => $closest ? date('Y-m-d', strtotime($dateArr[$closest])) : null,
+	        'text' => $closest ? $dateArr[$closest] : null,
             ];
     }
     /**
