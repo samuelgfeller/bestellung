@@ -43,7 +43,6 @@
     if (!$datesYears['years']){?>
         <div class="noDates">
             <p>Keine Daten gefunden <br>
-                <a href="/termine">Termine hinzufügen</a></p>
         </div>
     <?php }?>
 </div>
