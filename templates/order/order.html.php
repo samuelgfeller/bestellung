@@ -52,7 +52,7 @@
                 ?>
 
                 <tr id="bestell_artikel<?= $baId ?>">
-                    <td><?= !empty($pieceWeight) ? $ba->getName() . ' (Stk. <b>ca.</b> ' . $pieceWeight . ')' : $ba->getName() ?></td>
+                    <td><?= !empty($pieceWeight) ? $ba->getName() . ' (Stk. <b>ca.</b> ' . $pieceWeight . 'g.)' : $ba->getName() ?></td>
                     <td><?= $ba->getKgPrice() ?></td>
                     <td id="availableWeight<?= $baId ?>" class="availableWeight">
                         <span><?= $ba->getVerfuegbarGewicht(); ?></span> kg
