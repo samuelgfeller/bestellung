@@ -43,7 +43,7 @@ class Termin {
 	    foreach ($dateArr as $key => $date) {
             $interval = $today - strtotime($date);
 //            var_dump($interval,$date);
-            if ($interval < 0) {
+            if ($interval < 0){
                 $intervals[$key] = abs($interval);
             }else{
                 unset($dateArr[$key]);
@@ -54,8 +54,8 @@ class Termin {
         $closest = key($intervals);
 //        var_dump($closest);
         return [
-	        'sql' => $closest ? date('Y-m-d', strtotime($dateArr[$closest])) : null,
-	        'text' => $closest ? $dateArr[$closest] : null,
+	        'sql' => $closest !== null ? date('Y-m-d', strtotime($dateArr[$closest])) : null,
+	        'text' => $closest !== null ? $dateArr[$closest] : null,
             ];
     }
     /**

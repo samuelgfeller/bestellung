@@ -128,7 +128,6 @@ if ($path == '') {
 				}
 				array_multisort($aWeight, SORT_DESC, $artikelUndBestellPositionen);
 			}
-//        var_dump($artikelUndBestellPositionen);
 			require __DIR__ . '/templates/order/order.html.php';
 			exit;
 		}
