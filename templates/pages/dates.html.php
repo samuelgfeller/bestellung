@@ -1,9 +1,10 @@
+<?php require_once __DIR__ . '/../base.html.php'; ?>
 <div class="content">
     <?php
-    foreach (array_unique($years) as $year) {
+    foreach (array_unique($datesYears['years']) as $year) {
         // The years should not be shown if there are no dates so it checks for all years if a date inside has the same year
         $showYear = false;
-        foreach ($dates as $date) {
+        foreach ($datesYears['dates'] as $date) {
             if (date('Y', strtotime($date)) === $year) {
                 $showYear = true;
             }
@@ -17,7 +18,7 @@
                     $dateWrongOrder = [];
                     // The dates have to be displayed with the first month at the left so I iterate first on all dates in a specific year
                     // to reverse them later. It is not possible to do the array_reverse earlier because the newer year has to be at the top
-                    foreach ($dates as $date) {
+                    foreach ($datesYears['dates'] as $date) {
                         // Check if year of the date corresponds with the year which it actually gets iterated
                         if (date('Y', strtotime($date)) === $year) {
                             // Add the date to the array $dateA
@@ -38,6 +39,12 @@
                 </div>
             </div>
         <?php }
-    } ?>
+    }
+    if (!$datesYears['years']){?>
+        <div class="noDates">
+            <p>Keine Daten gefunden <br>
+                <a href="/termine">Termine hinzufügen</a></p>
+        </div>
+    <?php }?>
 </div>
 

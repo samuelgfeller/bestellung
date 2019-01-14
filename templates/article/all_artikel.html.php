@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../base.html.php'; ?>
 <h2 style="font-weight: normal; margin-left: 20px">Artikel für den <b><?= $datum ?></b></h2>
 <div class="search">
     <input type="text" id="searchInput" autocomplete="off" placeholder="Artikel suchen"
