@@ -1,0 +1,6 @@
+[ver:1,total:1440]
+model/entity/Termin.php:1018,1547467200:330,1547470800:688,m
+controller.php:212,1547467200:75,1547470800:137,m
+ajax_controller.php:171,1547467200:156,1547470800:15,m
+model/entity/Artikel.php:24,1547467200:24,r
+templates/home/home.html.php:15,1547467200:15,r
