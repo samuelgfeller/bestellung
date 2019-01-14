@@ -1,1 +1,7 @@
 [ver:1,total:0]
+
+[ver:1,total:240]
+model/entity/Artikel.php:140,1547460000:140,r
+.gitignore:50,1547460000:50,m
+.idea/deployment.xml:30,1547460000:30,r
+ajax_controller.php:20,1547460000:20,r
