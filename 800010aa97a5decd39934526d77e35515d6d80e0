@@ -1,0 +1,13 @@
+[ver:1,total:2605]
+controller.php:1420,1547460000:762,1547463600:300,1547467200:358,m
+templates/pages/dates.html.php:700,1547467200:700,m
+templates/base.html.php:205,1547460000:170,1547467200:35,m
+templates/article/all_artikel.html.php:133,1547460000:30,1547467200:103,m
+model/entity/Termin.php:60,1547467200:60,r
+templates/order/order.html.php:23,1547467200:23,m
+templates/article/login.html.php:15,1547467200:15,m
+templates/pages/noEntries.html.php:15,1547467200:15,r
+templates/article/update_password.html.php:15,1547467200:15,m
+templates/home/home.html.php:7,1547467200:7,m
+templates/pages/error.html.php:6,1547467200:6,m
+templates/pages/feedback.html.php:6,1547467200:6,m
