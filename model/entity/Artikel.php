@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../connection.php';
-require_once __DIR__ . '/../Populate.php';
+require_once __DIR__ . '/../service/PopulateObject.php';
 
 class Artikel {
 
@@ -17,42 +17,24 @@ class Artikel {
     private $stueckzahl_3;
 
     public static function findArtikelByBestellArtikel($ba_id) {
-        $db = Db::instantiate();
-        $query = 'SELECT a.* FROM bestell_artikel bp left join artikel a on bp.artikel_id = a.id WHERE bp.id= ' . $ba_id . ' and a.deleted_at is null;';
-        $result = $db->query($query);
-        if (!$result || $result->num_rows == 0) {
-            return false;
-        } else {
-            $artikelArr = $result->fetch_assoc();
-            $artikel = populate::populateArtikel($artikelArr);
-            return $artikel;
-        }
+        $query = 'SELECT a.* FROM bestell_artikel bp left join artikel a on bp.artikel_id = a.id WHERE bp.id=? and a.deleted_at is null;';
+        $dataArr = DataManagement::selectAndFetchSingleData($query, [$ba_id]);
+        return PopulateObject::populateArtikel($dataArr);
+
     }
 
     public static function find($artikel_id) {
-        $db = Db::instantiate();
-        $query = 'SELECT * FROM artikel WHERE id= ' . $artikel_id . ' and deleted_at is null;';
-        $result = $db->query($query);
-        if (!$result || $result->num_rows == 0) {
-            return false;
-        } else {
-            $artikelArr = $result->fetch_assoc();
-            $artikel = populate::populateArtikel($artikelArr);
-            return $artikel;
-        }
+        $query = 'SELECT * FROM artikel WHERE id=? and deleted_at is null;';
+        $dataArr = DataManagement::selectAndFetchSingleData($query, [$artikel_id]);
+        return PopulateObject::populateArtikel($dataArr);
+
     }
 
     public static function checkIfHasOrderPossibility($artikel_id) {
-        $db = Db::instantiate();
-        $result = $db->query('SELECT gewicht_1,gewicht_2,gewicht_3,stueckzahl_1,stueckzahl_2,stueckzahl_3 
-from artikel where id=' . $artikel_id);
-        if (!$result || $result->num_rows == 0) {
-            return false;
-        }
-        foreach ($artikel = $result->fetch_assoc() as $key => $value){
-            if ($value !== null){
-                return true;
-            }
+        $query = 'SELECT gewicht_1,gewicht_2,gewicht_3,stueckzahl_1,stueckzahl_2,stueckzahl_3 from artikel where id=?;';
+        $dataArr = DataManagement::selectAndFetchSingleData($query, [$artikel_id]);
+        if($dataArr){
+            return true;
         }
         return false;
     }
