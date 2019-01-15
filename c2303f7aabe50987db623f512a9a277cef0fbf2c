@@ -1,0 +1,9 @@
+[ver:1,total:60]
+model/entity/Artikel.php:16,1547542800:16,m
+model/entity/Client.php:10,1547542800:10,m
+model/entity/Bestellung.php:9,1547542800:9,m
+model/entity/Feedback.php:5,1547542800:5,m
+model/entity/Bestellartikel.php:5,1547542800:5,m
+model/entity/Bestellposition.php:5,1547542800:5,m
+model/service/DataManagement.php:5,1547542800:5,r
+public/jquery-3.2.1.min.js:5,1547542800:5,r
