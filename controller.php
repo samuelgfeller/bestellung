@@ -8,12 +8,12 @@ require_once __DIR__ . '/Local.php';
 $num = filter_var($path, FILTER_SANITIZE_NUMBER_INT);
 
 if ($path == '') {
-	require __DIR__ . '/model/entity/Bestellposition.php';
-	require __DIR__ . '/model/entity/Bestellartikel.php';
-	require __DIR__ . '/model/entity/Bestellung.php';
-	require __DIR__ . '/model/entity/Client.php';
-	require __DIR__ . '/model/entity/Termin.php';
-	require __DIR__ . '/model/entity/Artikel.php';
+	require_once __DIR__ . '/model/entity/Bestellposition.php';
+	require_once __DIR__ . '/model/entity/Bestellartikel.php';
+	require_once __DIR__ . '/model/entity/Bestellung.php';
+	require_once __DIR__ . '/model/entity/Client.php';
+	require_once __DIR__ . '/model/entity/Termin.php';
+	require_once __DIR__ . '/model/entity/Artikel.php';
 	
 	if (!empty($_SESSION['client'])) {
 		if ($_GET && $_GET['datum']) {
@@ -217,10 +217,10 @@ if ($path == 'success') {
 		$valuesArr = [];
 		for ($i = 0, $iMax = count($_POST['pAmount']); $i < $iMax; $i++) {
 			if (!empty($_POST['pAmount'][$i]) || !empty($_POST['kommentar'][$i])) {
-				$valuesArr[] = ['ba_id' => (int)$_POST['ba_id'][$i],
-					'bId' => $bestellungId,
-					'pAmount' => (int)$_POST['pAmount'][$i],
-					'singleWeight' => (int)$_POST['singleWeight'][$i],
+				$valuesArr[] = ['bestell_artikel_id' => (int)$_POST['ba_id'][$i],
+					'bestellung_id' => $bestellungId,
+					'anzahl_paeckchen' => (int)$_POST['pAmount'][$i],
+					'gewicht' => (int)$_POST['singleWeight'][$i],
 					'kommentar' => htmlspecialchars($_POST['kommentar'][$i]),];
 				
 			}
@@ -239,11 +239,11 @@ if ($path == 'success') {
 		// Send confirmation email
 		$positionDaten = [];
 		foreach ($valuesArr as $values) {
-			$artikel = Artikel::findArtikelByBestellArtikel($values['ba_id']);
+			$artikel = Artikel::findArtikelByBestellArtikel($values['bestell_artikel_id']);
 			if (!empty($artikel)) {
 				$positionDaten[] = ['artikel_name' => $artikel->getName(),
-					'anzahl_paeckchen' => $values['pAmount'],
-					'gewicht' => $values['singleWeight'],
+					'anzahl_paeckchen' => $values['anzahl_paeckchen'],
+					'gewicht' => $values['gewicht'],
 					'kommentar' => $values['kommentar'],
 					'stueck_gewicht' => $artikel->getStueckGewicht(),];
 			}

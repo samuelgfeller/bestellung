@@ -50,10 +50,10 @@ class PopulateObject {
     public static function populateBestellPosition($data) {
         $position = new Bestellposition();
         $position->setId($data['id'] ?? null);
-        $position->setBestellungId($data['bId'] ?? null);
-        $position->setBestellArtikelId($data['ba_id'] ?? null);
-        $position->setAnzahlPaeckchen($data['pAmount'] ?? null);
-        $position->setGewicht($data['singleWeight'] ?? null);
+        $position->setBestellungId($data['bestellung_id'] ?? null);
+        $position->setBestellArtikelId($data['bestell_artikel_id'] ?? null);
+        $position->setAnzahlPaeckchen($data['anzahl_paeckchen'] ?? null);
+        $position->setGewicht($data['gewicht'] ?? null);
         $position->setKommentar($data['kommentar'] ?? null);
         return $position;
     }
