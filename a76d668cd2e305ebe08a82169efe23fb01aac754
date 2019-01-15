@@ -1,0 +1,8 @@
+[ver:1,total:1800]
+model/entity/Bestellposition.php:700,1547539200:700,m
+model/entity/Bestellartikel.php:585,1547481600:360,1547535600:180,1547539200:45,r
+controller.php:372,1547539200:372,m
+model/service/PopulateObject.php:54,1547539200:54,m
+model/service/PopulateArray.php:35,1547539200:35,r
+templates/article/all_artikel.html.php:30,1547539200:30,r
+model/entity/Artikel.php:24,1547539200:24,r
