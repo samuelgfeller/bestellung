@@ -12,9 +12,11 @@ class Artikel {
     private $gewicht_1;
     private $gewicht_2;
     private $gewicht_3;
+    private $gewicht_4;
     private $stueckzahl_1;
     private $stueckzahl_2;
     private $stueckzahl_3;
+    private $stueckzahl_4;
 
     public static function findArtikelByBestellArtikel($ba_id) {
         $query = 'SELECT a.* FROM bestell_artikel bp left join artikel a on bp.artikel_id = a.id WHERE bp.id=? and a.deleted_at is null;';
@@ -31,7 +33,7 @@ class Artikel {
     }
 
     public static function checkIfHasOrderPossibility($artikel_id) {
-        $query = 'SELECT gewicht_1,gewicht_2,gewicht_3,stueckzahl_1,stueckzahl_2,stueckzahl_3 from artikel where id=?;';
+        $query = 'SELECT gewicht_1,gewicht_2,gewicht_3,gewicht_4,stueckzahl_1,stueckzahl_2,stueckzahl_3,stueckzahl_4 from artikel where id=?;';
         $dataArr = DataManagement::selectAndFetchSingleData($query, [$artikel_id]);
 	    foreach ($dataArr as $key => $value){
 		    if ($value !== null){
@@ -194,16 +196,35 @@ class Artikel {
     public function setStueckzahl3($stueckzahl_3) {
         $this->stueckzahl_3 = $stueckzahl_3;
     }
+	
+	/**
+	 * @return mixed
+	 */
+	public function getGewicht4() {
+		return $this->gewicht_4;
+	}
+	
+	/**
+	 * @param mixed $gewicht_4
+	 */
+	public function setGewicht4($gewicht_4) {
+		$this->gewicht_4 = $gewicht_4;
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getStueckzahl4() {
+		return $this->stueckzahl_4;
+	}
+	
+	/**
+	 * @param mixed $stueckzahl_4
+	 */
+	public function setStueckzahl4($stueckzahl_4) {
+		$this->stueckzahl_4 = $stueckzahl_4;
+	}
 
 
-    /*    public function jsonSerialize(){
-            return [
-                'artikel' => [
-                    'artikel' => $this->artikel,
-                    'PLZ' => $this->PLZ,
-                    'id' => $this->id
-                ]
-            ];
-        }*/
 
 }

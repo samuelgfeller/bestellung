@@ -62,7 +62,7 @@
                                                     data-baid="<?= $baId ?>"
                                                     max="15" name="pAmount[]"></td>
                     <td id="timesTd<?= $baId ?>">&times;</td>
-                    <td style="width:250px;">
+                    <td style="width:350px;">
                         <div id="calcInfo<?= $baId ?>" class="calcInfoClass" data-baid="<?= $baId ?>">
                             <?php
                             foreach ($possibilities as $possibility) {

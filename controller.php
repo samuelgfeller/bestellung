@@ -105,16 +105,20 @@ if ($path == '') {
 					$g1 = $artikel->getGewicht1();
 					$g2 = $artikel->getGewicht2();
 					$g3 = $artikel->getGewicht3();
+					$g4 = $artikel->getGewicht4();
 					$s1 = $artikel->getStueckzahl1();
 					$s2 = $artikel->getStueckzahl2();
 					$s3 = $artikel->getStueckzahl3();
+					$s4 = $artikel->getStueckzahl4();
 //                    var_dump($s3.' * '.$pieceWeight,$s3*$pieceWeight,$avag);
 					$artikelUndBestellPositionen[$key]['order_possibilities'] = [!empty($g1) && $g1 <= $avag ? $g1 : null,
 						!empty($g2) && $g2 <= $avag ? $g2 : null,
 						!empty($g3) && $g3 <= $avag ? $g3 : null,
+						!empty($g4) && $g4 <= $avag ? $g4 : null,
 						!empty($s1) && $s1 * $pieceWeight <= $avag ? $s1 : null,
 						!empty($s2) && $s2 * $pieceWeight <= $avag ? $s2 : null,
-						!empty($s3) && $s3 * $pieceWeight <= $avag ? $s3 : null,];
+						!empty($s3) && $s3 * $pieceWeight <= $avag ? $s3 : null,
+						!empty($s4) && $s4 * $pieceWeight <= $avag ? $s4 : null,];
 //                    var_dump($artikelUndBestellPositionen[$key]['order_possibilities']);
 				}
 			}

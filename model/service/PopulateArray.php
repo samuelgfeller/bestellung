@@ -25,9 +25,11 @@ class PopulateArray
 			'gewicht_1' => $artikel->getGewicht1(),
 			'gewicht_2' => $artikel->getGewicht2(),
 			'gewicht_3' => $artikel->getGewicht3(),
+			'gewicht_4' => $artikel->getGewicht4(),
 			'stueckzahl_1' => $artikel->getStueckzahl1(),
 			'stueckzahl_2' => $artikel->getStueckzahl2(),
-			'stueckzahl_3' => $artikel->getStueckzahl3(),];
+			'stueckzahl_3' => $artikel->getStueckzahl3(),
+			'stueckzahl_4' => $artikel->getStueckzahl4(),];
 	}
 	
 	public static function populateClientArray(Client $client): array {

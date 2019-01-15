@@ -95,9 +95,11 @@ class PopulateObject {
         $artikel->setGewicht1(Helper::ckVal($data['gewicht_1'] ?? null));
         $artikel->setGewicht2(Helper::ckVal($data['gewicht_2'] ?? null));
         $artikel->setGewicht3(Helper::ckVal($data['gewicht_3'] ?? null));
+        $artikel->setGewicht4(Helper::ckVal($data['gewicht_4'] ?? null));
         $artikel->setStueckzahl1(Helper::ckVal($data['stueckzahl_1'] ?? null));
         $artikel->setStueckzahl2(Helper::ckVal($data['stueckzahl_2'] ?? null));
         $artikel->setStueckzahl3(Helper::ckVal($data['stueckzahl_3'] ?? null));
+        $artikel->setStueckzahl4(Helper::ckVal($data['stueckzahl_4'] ?? null));
         return $artikel;
     }
 }
