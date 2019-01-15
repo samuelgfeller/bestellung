@@ -5,10 +5,9 @@ require_once __DIR__ . '/../service/DataManagement.php';
 
 class Feedback {
     public static function add($feedback,$client_id) {
-        $db = Db::instantiate();
-        $query ='INSERT INTO feedback (feedback,kunde_id,zeit) VALUES ("'.$feedback.'",'.$client_id.',now());';
-        $result = $db->query($query);
-        Db::checkConnection($result,$query);
-        return $db->insert_id;
+	    // Cannot use the function insert here, because the date has to be set with now()
+	    $query = 'INSERT INTO feedback (feedback,kunde_id,zeit) VALUES (?,?,now());';
+	    $conn = DataManagement::run($query, [$feedback,$client_id]);
+	    return $conn->lastInsertId();
     }
 }
