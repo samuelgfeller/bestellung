@@ -1,0 +1,6 @@
+[ver:1,total:475]
+templates/order/order.html.php:175,1547560800:175,m
+model/entity/Artikel.php:155,1547560800:155,m
+controller.php:60,1547560800:60,m
+model/service/PopulateObject.php:50,1547560800:50,m
+model/service/PopulateArray.php:35,1547560800:35,m
