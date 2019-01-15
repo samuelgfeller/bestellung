@@ -17,18 +17,18 @@ class PopulateObject {
      */
     public static function populateClient($data) {
         $client = new Client();
-        $client->setVorname( Helper::ckVal($data['vorname']));
-        $client->setName(Helper::ckVal($data['name']));
-        $client->setAdresse(Helper::ckVal($data['adresse']));
-        $client->setOrtId(Helper::ckVal($data['ort_id']));
-        $client->setTel(Helper::ckVal($data['tel']));
-        $client->setNatel(Helper::ckVal($data['natel']));
-        $client->setEmail(Helper::ckVal($data['email']));
-        $client->setPersonen(Helper::ckVal($data['personen']));
-        $client->setSiedfleisch(Helper::ckVal($data['siedfleisch']));
-        $client->setBesonderes(Helper::ckVal($data['besonderes']));
-        $client->setId(Helper::ckVal($data['id']));
-        $client->setDeletedAt(Helper::ckVal($data['deleted_at']));
+        $client->setVorname( Helper::ckVal($data['vorname'] ?? null));
+        $client->setName(Helper::ckVal($data['name'] ?? null));
+        $client->setAdresse(Helper::ckVal($data['adresse'] ?? null));
+        $client->setOrtId(Helper::ckVal($data['ort_id'] ?? null));
+        $client->setTel(Helper::ckVal($data['tel'] ?? null));
+        $client->setNatel(Helper::ckVal($data['natel'] ?? null));
+        $client->setEmail(Helper::ckVal($data['email'] ?? null));
+        $client->setPersonen(Helper::ckVal($data['personen'] ?? null));
+        $client->setSiedfleisch(Helper::ckVal($data['siedfleisch'] ?? null));
+        $client->setBesonderes(Helper::ckVal($data['besonderes'] ?? null));
+        $client->setId(Helper::ckVal($data['id'] ?? null));
+        $client->setDeletedAt(Helper::ckVal($data['deleted_at'] ?? null));
         return $client;
     }
 
@@ -39,15 +39,15 @@ class PopulateObject {
      */
     public static function populateBestellArtikel($data){
         $artikel = new Bestellartikel();
-        $artikel->setBestellArtikelId(Helper::ckVal($data['bestell_artikel_id']));
-        $artikel->setArtikelId(Helper::ckVal($data['artikel_id']));
-        $artikel->setNummer(Helper::ckVal($data['nummer']));
-        $artikel->setName(Helper::ckVal($data['name']));
-        $artikel->setKgPrice(Helper::ckVal($data['kg_price']));
-        $artikel->setGewicht(Helper::ckVal($data['gewicht']));
-        $artikel->setVerfuegbar(Helper::ckVal($data['verfuegbar']));
-        $artikel->setDatum(Helper::ckVal($data['datum']));
-        $artikel->setAvgWeight(Helper::ckVal($data['avgWeight']));
+        $artikel->setBestellArtikelId(Helper::ckVal($data['bestell_artikel_id'] ?? null));
+        $artikel->setArtikelId(Helper::ckVal($data['artikel_id'] ?? null));
+        $artikel->setNummer(Helper::ckVal($data['nummer'] ?? null));
+        $artikel->setName(Helper::ckVal($data['name'] ?? null));
+        $artikel->setKgPrice(Helper::ckVal($data['kg_price'] ?? null));
+        $artikel->setGewicht(Helper::ckVal($data['gewicht'] ?? null));
+        $artikel->setVerfuegbar(Helper::ckVal($data['verfuegbar'] ?? null));
+        $artikel->setDatum(Helper::ckVal($data['datum'] ?? null));
+        $artikel->setAvgWeight(Helper::ckVal($data['avgWeight'] ?? null));
         return $artikel;
     }
 
@@ -57,27 +57,27 @@ class PopulateObject {
      */
     public static function populateBestellPosition($data) {
         $position = new Bestellposition();
-        $position->setId(Helper::ckVal($data['id']));
-        $position->setBestellungId(Helper::ckVal($data['bestellung_id']));
-        $position->setBestellArtikelId(Helper::ckVal($data['bestell_artikel_id']));
-        $position->setAnzahlPaeckchen(Helper::ckVal($data['anzahl_paeckchen']));
-        $position->setGewicht(Helper::ckVal($data['gewicht']));
-        $position->setKommentar(Helper::ckVal($data['kommentar']));
+        $position->setId(Helper::ckVal($data['id'] ?? null));
+        $position->setBestellungId(Helper::ckVal($data['bestellung_id'] ?? null));
+        $position->setBestellArtikelId(Helper::ckVal($data['bestell_artikel_id'] ?? null));
+        $position->setAnzahlPaeckchen(Helper::ckVal($data['anzahl_paeckchen'] ?? null));
+        $position->setGewicht(Helper::ckVal($data['gewicht'] ?? null));
+        $position->setKommentar(Helper::ckVal($data['kommentar'] ?? null));
         return $position;
     }
 
     public static function populateBestellung($data) {
         $bestellung = new Bestellung();
-        $bestellung->setId(Helper::ckVal($data['id']));
-        $bestellung->setKundeId(Helper::ckVal($data['datum']));
-        $bestellung->setDate(Helper::ckVal($data['kunde_id']));
+        $bestellung->setId(Helper::ckVal($data['id'] ?? null));
+        $bestellung->setKundeId(Helper::ckVal($data['datum'] ?? null));
+        $bestellung->setDate(Helper::ckVal($data['kunde_id'] ?? null));
         return $bestellung;
     }
 
     public static function populateTermin($data) {
         $termin = new Termin();
-        $termin->setId(Helper::ckVal($data['id']));
-        $termin->setDatum(Helper::ckVal($data['datum']));
+        $termin->setId(Helper::ckVal($data['id'] ?? null));
+        $termin->setDatum(Helper::ckVal($data['datum'] ?? null));
         return $termin;
     }
 
@@ -87,17 +87,17 @@ class PopulateObject {
      */
     public static function populateArtikel($data) {
         $artikel = new Artikel();
-        $artikel->setId(Helper::ckVal($data['id']));
-        $artikel->setNummer(Helper::ckVal($data['nummer']));
-        $artikel->setName(Helper::ckVal($data['name']));
-        $artikel->setKgPrice(Helper::ckVal($data['kg_price']));
-        $artikel->setStueckGewicht(Helper::ckVal($data['stueck_gewicht']));
-        $artikel->setGewicht1(Helper::ckVal($data['gewicht_1']));
-        $artikel->setGewicht2(Helper::ckVal($data['gewicht_2']));
-        $artikel->setGewicht3(Helper::ckVal($data['gewicht_3']));
-        $artikel->setStueckzahl1(Helper::ckVal($data['stueckzahl_1']));
-        $artikel->setStueckzahl2(Helper::ckVal($data['stueckzahl_2']));
-        $artikel->setStueckzahl3(Helper::ckVal($data['stueckzahl_3']));
+        $artikel->setId(Helper::ckVal($data['id'] ?? null));
+        $artikel->setNummer(Helper::ckVal($data['nummer'] ?? null));
+        $artikel->setName(Helper::ckVal($data['name'] ?? null));
+        $artikel->setKgPrice(Helper::ckVal($data['kg_price'] ?? null));
+        $artikel->setStueckGewicht(Helper::ckVal($data['stueck_gewicht'] ?? null));
+        $artikel->setGewicht1(Helper::ckVal($data['gewicht_1'] ?? null));
+        $artikel->setGewicht2(Helper::ckVal($data['gewicht_2'] ?? null));
+        $artikel->setGewicht3(Helper::ckVal($data['gewicht_3'] ?? null));
+        $artikel->setStueckzahl1(Helper::ckVal($data['stueckzahl_1'] ?? null));
+        $artikel->setStueckzahl2(Helper::ckVal($data['stueckzahl_2'] ?? null));
+        $artikel->setStueckzahl3(Helper::ckVal($data['stueckzahl_3'] ?? null));
         return $artikel;
     }
 }

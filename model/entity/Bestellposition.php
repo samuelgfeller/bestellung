@@ -130,7 +130,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=? and b.ziel
      * @param mixed $kommentar
      */
     public function setKommentar($kommentar) {
-        $this->kommentar = (string) $kommentar;
+        $this->kommentar = $kommentar;
     }
 
 

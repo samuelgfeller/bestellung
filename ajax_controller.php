@@ -26,7 +26,7 @@ if ($path == 'bestellArtikel/checkAvailable'){
 // @todo transform all dates into foreign keys from Termin
 
 if ($path == 'order/check_email') {
-    require __DIR__ . '/model/entity/Bestellung.php';
+    require_once __DIR__ . '/model/entity/Bestellung.php';
     $clientId = false;
     if ($_POST['email'] != '') {
         $clientId = Bestellung::checkEmail($_POST['email']);

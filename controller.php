@@ -128,7 +128,7 @@ if ($path == '') {
 				}
 				array_multisort($aWeight, SORT_DESC, $artikelUndBestellPositionen);
 			}
-			require __DIR__ . '/templates/order/order.html.php';
+			require_once __DIR__ . '/templates/order/order.html.php';
 			exit;
 		}
 		$date = Termin::getNextDate()['text'];
@@ -137,16 +137,16 @@ if ($path == '') {
 			header("Location: " . $url);
 			exit;
 		}
-		require __DIR__ . '/templates/pages/noEntries.html.php';
+		require_once __DIR__ . '/templates/pages/noEntries.html.php';
 		exit;
 	}
-	require __DIR__ . '/templates/home/home.html.php';
+	require_once __DIR__ . '/templates/home/home.html.php';
 	exit;
 }
 
 if ($path == 'artikel') {
-	require __DIR__ . '/model/entity/Bestellartikel.php';
-	require __DIR__ . '/model/entity/Termin.php';
+	require_once __DIR__ . '/model/entity/Bestellartikel.php';
+	require_once __DIR__ . '/model/entity/Termin.php';
 	
 	if ($_POST) {
 		if (isset($_POST['password'])) {
@@ -175,7 +175,7 @@ if ($path == 'artikel') {
 			$datum = date('d.m.Y', $datumGET);
 			$datumSQL = date('Y-m-d', $datumGET);
 			$allBa = Bestellartikel::allFrom($datumSQL);
-			require __DIR__ . '/templates/article/all_artikel.html.php';
+			require_once __DIR__ . '/templates/article/all_artikel.html.php';
 			exit;
 		}
 		//if not it only shows the dates
@@ -265,7 +265,7 @@ if ($path == 'success') {
 }
 
 if ($path == 'artikel/dates') {
-	require __DIR__ . '/model/entity/Termin.php';
+	require_once __DIR__ . '/model/entity/Termin.php';
 	$datesYears = Termin::getYearsAndDates();
 	$dates = $datesYears['dates'];
 	$years = $datesYears['years'];
@@ -275,7 +275,7 @@ if ($path == 'artikel/dates') {
 }
 
 if ($path == 'order/dates') {
-	require __DIR__ . '/model/entity/Termin.php';
+	require_once __DIR__ . '/model/entity/Termin.php';
 	$datesYears = Termin::getYearsAndDates();
 	foreach ($datesYears['dates'] as $key => $date) {
 		if (strtotime($date) < time()) {
@@ -299,9 +299,9 @@ if ($path == 'feedback') {
 }
 
 if ($path == 'feedback/success') {
-	require __DIR__ . '/model/entity/Feedback.php';
-	require __DIR__ . '/model/entity/Client.php';
-	require __DIR__ . '/model/service/Email.php';
+	require_once __DIR__ . '/model/entity/Feedback.php';
+	require_once __DIR__ . '/model/entity/Client.php';
+	require_once __DIR__ . '/model/service/Email.php';
 	if ($_POST && !empty($_POST['feedback'])) {
 		$client = Client::find($_SESSION['client']);
 		Feedback::add($_POST['feedback'], $client->getId());
@@ -317,8 +317,8 @@ if ($path == 'feedback/success') {
 }
 
 if ($path == 'mail') {
-	require __DIR__ . '/model/service/Email.php';
-	require __DIR__ . '/model/service/Helper.php';
+	require_once __DIR__ . '/model/service/Email.php';
+	require_once __DIR__ . '/model/service/Helper.php';
 
 //    echo Helper::prepareHtmlMailBody('asdf');
 
