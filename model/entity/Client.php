@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../connection.php';
 require_once __DIR__ . '/../service/PopulateObject.php';
 require_once __DIR__ . '/../service/DataManagement.php';
 

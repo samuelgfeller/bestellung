@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: samue
- * Date: 07.12.2018
- * Time: 16:52
- */
-require_once __DIR__ . '/../../connection.php';
+
 require_once __DIR__ . '/../service/PopulateObject.php';
 require_once __DIR__ . '/../service/DataManagement.php';
 
