@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../base.html.php'; ?>
 <div class="homeContainer">
     <h1 class="title">Passwort ändern</h1>
     <img class="homeImg" src="images/logovache.jpg" alt="logo">

@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../base.html.php'; ?>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <h2 style="font-weight: normal;"><b><?php echo $client->getVorname() . ' ' . $client->getName() ?></b><br>Bestellung für
@@ -7,7 +8,7 @@
 
 <div class="search">
     <input type="text" id="searchInput" autocomplete="off" placeholder="Artikel suchen"
-           onkeyup="filter('artikelTable',0)">
+           onkeyup="filter('bestellArtikelTable',0  )">
 </div><br>
 <form action="success" method="post" id="bestellForm" onkeypress="return event.keyCode != 13;">
 
@@ -32,52 +33,67 @@
         if ($artikelUndBestellPositionen && $artikelUndBestellPositionen) {
             foreach ($artikelUndBestellPositionen as $artikelUndBestellPosition) {
                 // Initialise variables
-                $artikel = $artikelUndBestellPosition['bestell_artikel'];
+                $ba = $artikelUndBestellPosition['bestell_artikel'];
                 $position = $artikelUndBestellPosition['already_ordered'];
+                $possibilities = $artikelUndBestellPosition['order_possibilities'];
                 // Set bestell_artikel_id
-                $baId = $artikel->getBestellArtikelId();
-                // Set boolean if stueckbestellung is allowed
-                $stk = $artikel->getStueckbestellung();
+                $baId = $ba->getBestellArtikelId();
+                $pieceWeight = $ba->getStueckGewicht();
 
-                $anzStk = null;
+                $pAnz = null;
                 $gewicht = null;
                 $kommentar = null;
                 if ($position) {
-                    $anzStk = $position->getAnzahlPaeckchen();
-                    $gewicht = $position->getGewicht();
+                    $pAnz = empty($position->getAnzahlPaeckchen()) ? null : $position->getAnzahlPaeckchen();
+                    $gewicht = empty($position->getGewicht()) ? null : $position->getGewicht();
                     $kommentar = $position->getKommentar();
                 }
 
                 ?>
 
                 <tr id="bestell_artikel<?= $baId ?>">
-                    <!--CHANGE JAVASCRIPT WHERE TABLE IS CREATED DYNAMICALY-->
-                    <td><?= $artikel->getName() ?></td>
-                    <td><?= $artikel->getKgPrice() ?></td>
+                    <td><?= !empty($pieceWeight) ? $ba->getName() . ' (Stk. <b>ca.</b> ' . $pieceWeight . 'g.)' : $ba->getName() ?></td>
+                    <td><?= $ba->getKgPrice() ?></td>
                     <td id="availableWeight<?= $baId ?>" class="availableWeight">
-                        <span><?= $artikel->getVerfuegbarGewicht(); ?></span> kg
+                        <span><?= $ba->getVerfuegbarGewicht(); ?></span> kg
                     </td>
-                    <td class="amountNumber"><input id="pAmount<?= $baId ?>" class="comment calcWeight" type="number"
-                                                    placeholder="0" min="0" value="<?= $anzStk ?>"
+                    <td class="amountNumber"><input id="pAmount<?= $baId ?>" class="comment pAmount" type="number"
+                                                    placeholder="0" min="0" value="<?= $pAnz ?>"
                                                     data-baid="<?= $baId ?>"
                                                     max="15" name="pAmount[]"></td>
                     <td id="timesTd<?= $baId ?>">&times;</td>
-                    <td style="width:250px;"><input class="comment weightText calcWeight" id="weightInput<?= $baId ?>"
-                                                    type="number" placeholder="0" value="<?= $gewicht ?>"
-                                                    data-baid="<?= $baId ?>"
-                                                    name="singleWeight[]">
-                        <?= $stk == 1 ? 'g. / Stk. à ca. ' . $artikel->getStueckgewicht() . 'g.' : 'g.'; ?>
-                        <!--                    Inserting the hidden info here because outide it affects the nth:child(even)-->
+                    <td style="width:350px;">
+                        <div id="calcInfo<?= $baId ?>" class="calcInfoClass" data-baid="<?= $baId ?>">
+                            <?php
+                            foreach ($possibilities as $possibility) {
+                                if (!empty($possibility)) { ?>
+                                    <div class="check-button">
+                                        <label>
+                                            <input class="weightCheckbox weightInput<?= $baId ?>"
+                                                   type="checkbox"
+                                                   value="<?= $possibility ?>"
+                                                   data-baid="<?= $baId ?>"
+                                                <?= $gewicht == $possibility ? 'checked' : '' ?>
+                                            >
+                                            <span><?= $possibility > 15 ? $possibility . 'g.' : $possibility . ' Stk. ' ?></span>
+                                        </label>
+                                    </div>
+                                <?php }
+                            } ?>
+                            <!--  Unchecked inputs are not sent to server and an Array with all indexes (empty string as value if nothing)
+                            The value is filled with javascript on the checkbox listener-->
+                            <input type="hidden" id="singleWeight<?= $baId ?>" name="singleWeight[]"
+                                   value="<?= $gewicht == $possibility ? $possibility : '' ?>">
+                        </div>
+                        <!-- Inserting the hidden info here because outide it affects the nth:child(even) -->
                         <input type="hidden" name="ba_id[]" value="<?= $baId ?>">
-
                     </td>
-                    <td><input class="comment" type="text" value="<?= $kommentar ?>" name="kommentar[]"></td>
+                    <td><input class="comment" type="text" maxlength="200" value="<?= $kommentar ?>" name="kommentar[]">
+                    </td>
                     <td id="outputWeight<?= $baId ?>">
                     </td>
                 </tr>
 
-                <div id="calcInfo<?= $baId ?>" class="calcInfoClass" data-baid="<?= $baId ?>"
-                     data-stk="<?= $stk ?>"></div>
                 <?php
             }
         } else {

@@ -14,14 +14,16 @@ class Email
 	public function __construct() {
 		$this->mail = new PHPMailer(true);                // Passing `true` enables exceptions
 		//Server settings
-		$this->mail->SMTPDebug = 2;                                 // Enable verbose debug output
+		$this->mail->SMTPDebug = 0;                                 // Enable verbose debug output
 		$this->mail->isSMTP();                                      // Set mailer to use SMTP
 		$this->mail->Host = 'srv125.tophost.ch';                    // Specify main and backup SMTP servers
 		$this->mail->SMTPAuth = true;                               // Enable SMTP authentication
 		$this->mail->Username = 'no-reply@masesselin.ch';           // SMTP username
 		$this->mail->Password = 'AehhPyaHs7S4M$';                   // SMTP password
-		$this->mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
-		$this->mail->Port = 465;                                    // TCP port to connect to
+		$this->mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+		$this->mail->Port = 587;
+		$this->mail->CharSet = 'UTF-8';
+		$this->mail->Encoding = 'base64';
 	}
 	
 	/**

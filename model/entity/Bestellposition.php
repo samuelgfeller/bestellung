@@ -1,7 +1,9 @@
 <?php
-require_once __DIR__ . '/../../connection.php';
-require_once __DIR__ . '/../Populate.php';
+require_once __DIR__ . '/../service/PopulateObject.php';
+require_once __DIR__ . '/../service/PopulateArray.php';
 require_once __DIR__ . '/../service/Helper.php';
+require_once __DIR__ . '/../service/DataManagement.php';
+
 
 class Bestellposition {
     private $id;
@@ -17,109 +19,34 @@ class Bestellposition {
      * @return mixed
      */
     public static function add(Bestellposition $position) {
-        $data = ['bestellung_id' => $position->getBestellungId(),
-            'bestell_artikel_id' => $position->getBestellArtikelId(),
-            'anzahl_paeckchen' => $position->getAnzahlPaeckchen(),
-            'gewicht' => $position->getGewicht(),
-            'kommentar' => $position->getKommentar()];
-
-        $colval = Helper::getImportColAndValues($data);
-        $db = Db::instantiate();
-        $query = 'INSERT INTO `bestell_position` (' . implode(',', $colval['cols']) . ') VALUES (' . implode(',', $colval['values']) . ')';
-
-        $result = $db->query($query);
-        Db::checkConnection($result, $query);
-        $last_id = $db->insert_id;
-        return $last_id;
+        $data = PopulateArray::populateBestellpositionArray($position);
+	    return DataManagement::insert('bestell_position', $data);
     }
 
     public static function del($id) {
-        $db = Db::instantiate();
-        $query = 'UPDATE `position` SET deleted_at=now() WHERE id=' . $id;
-        $sql = $db->query($query);
-        Db::checkConnection($sql, $query);
+	    $query = 'UPDATE `position` SET deleted_at=now() WHERE id=?';
+	    DataManagement::run($query, [$id]);
     }
 
     public static function getTotalOrderedWeightForBa($bestellArtikelId, $nextDate) {
-        $db = Db::instantiate();
-
-        // Get the sum
-        $query = 'SELECT bp.anzahl_paeckchen anz, bp.gewicht gewicht FROM bestell_position bp
+	    $query = 'SELECT bp.anzahl_paeckchen anz, bp.gewicht gewicht FROM bestell_position bp
         left join bestellung b on bp.bestellung_id=b.id
-        left join bestell_artikel ba on ba.id = bp.bestell_artikel_id 
-        where b.deleted_at is null and ba.deleted_at is null and bp.deleted_at is null 
-        and ba.id = ' . $bestellArtikelId . ' and b.ziel_datum = "' . $nextDate . '";';
-        $result = $db->query($query);
-        if (!$result || $result->num_rows == 0) {
-            return false;
-        } else {
-            $bestellungen = [];
-            while ($bestellung = $result->fetch_assoc()) {
-                $bestellungen[] = $bestellung;
-            }
-            return $bestellungen;
-//                return $result->fetch_assoc();
-        }
+        left join bestell_artikel ba on ba.id = bp.bestell_artikel_id
+        where b.deleted_at is null and ba.deleted_at is null and bp.deleted_at is null
+        and ba.id = ? and b.ziel_datum = ?;';
+	    return DataManagement::selectAndFetchAssocMultipleData($query, [$bestellArtikelId, $nextDate]);
     }
 
     public static function getIfAlreadyOrdered($client_id, $date) {
-        $db = Db::instantiate();
-        $query = 'SELECT bp.* FROM bestell_position bp
-left join bestellung b on bp.bestellung_id = b.id 
-where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_id . ' and b.ziel_datum="' . $date . '";';
-//        var_dump($query);
-        $result = $db->query($query);
-        if (!$result || $result->num_rows == 0) {
-            return false;
-        }
-        $positionObj = null;
-        while ($position = $result->fetch_object()) {
-            $params = ['id' => $position->id,
-                'ba_id' => $position->bestell_artikel_id,
-                'bId' => $position->bestellung_id,
-                'pAmount' => $position->anzahl_paeckchen,
-                'singleWeight' => $position->gewicht,
-                'kommentar' => $position->kommentar,];
-            $positionObj[] = Populate::populateBestellPosition($params);
-        }
-        return $positionObj;
-    }
-
-
-    public static function getLastDate() {
-        $db = Db::instantiate();
-        // Get last bill date
-        $result1 = $db->query('SELECT datum FROM rechnung where deleted_at is null order by datum desc limit 1;');
-        //if the result is empty the $result will be an object with numrows == 0 but if its an invalid statement like "nummer="
-        if ($result1 && !$result1->num_rows == 0) {
-            return strtotime($result1->fetch_assoc()['datum']);
-        } else {
-            return strtotime(date('Y-m-d') . " +60 days");
-        }
-    }
-
-    /**
-     * Get selling infos for an article on a date
-     * @param $articleId
-     * @param $date
-     * @return array|int
-     */
-    public static function getInfosForAricle($articleId, $date) {
-        $db = Db::instantiate();
-        $result = $db->query('
-        select 
-        a.name artikel,count(*) anzahl, sum(p.gewicht) gewicht, sum(p.preis) preis 
-        from position p 
-        left join rechnung r on p.rechnung_id=r.id 
-        left join artikel a on a.id = p.artikel_id
-        where p.artikel_id = ' . $articleId . ' and r.datum = "' . $date . ' "
-        and p.deleted_at is null and r.deleted_at is null');
-        if (!$result || $result->num_rows == 0) {
-            return 0;
-        } else {
-            $resultat = $result->fetch_assoc();
-            return $resultat;
-        }
+	    $query = 'SELECT bp.* FROM bestell_position bp
+left join bestellung b on bp.bestellung_id = b.id
+where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=? and b.ziel_datum=?;';
+	    $allData = DataManagement::selectAndFetchAssocMultipleData($query, [$client_id, $date]);
+	    $allDataObj = [];
+	    foreach ($allData as $allDataArr) {
+		    $allDataObj[] = PopulateObject::populateBestellPosition($allDataArr);
+	    }
+	    return $allDataObj;
     }
 
     /**
@@ -203,7 +130,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
      * @param mixed $kommentar
      */
     public function setKommentar($kommentar) {
-        $this->kommentar = (string) $kommentar;
+        $this->kommentar = $kommentar;
     }
 
 

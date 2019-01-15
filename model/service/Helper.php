@@ -26,9 +26,49 @@ class Helper {
                 }
             }
         }
+        return ['cols' => $cols,
+            'values' => $values];
+    }
+
+    /**
+     * Transform an assoc array of data to a string in the SQL-Query (set key = ?) and return it and the values
+     *
+     * @param array $data
+     * @return array
+     */
+    public static function getUpdateStringAndValues(Array $data): array {
+        $formattedData = [];
+        $values = [];
+        foreach ($data as $col => $val) {
+            $formattedData[] = $col . ' = ?';
+            $values[] = $val;
+        }
         return [
-            'cols' => $cols,
-            'values' => $values
+            'updString' => $formattedData,
+            'values' => $values,
         ];
     }
+
+    /**
+     * Put % around string for pdo like
+     *
+     * @param string $string
+     * @return mixed
+     */
+    public static function getLikeString(string $string) {
+        $len = strlen($string);
+        $first = substr_replace($string, '%', 0, 0);
+        return substr_replace($first, '%', $len + 1, 0);
+    }
+
+    /**
+     * If the value is empty return null otherwise the value
+     *
+     * @param $val
+     * @return null | $val
+     */
+    public static function ckVal($val) {
+        return !empty($val) ? $val : null;
+    }
 }
+
