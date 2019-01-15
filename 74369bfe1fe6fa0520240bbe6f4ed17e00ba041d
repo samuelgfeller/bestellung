@@ -1,0 +1,7 @@
+[ver:1,total:485]
+model/entity/Feedback.php:350,1547557200:180,1547560800:170,r
+model/database/structure.sql:70,1547560800:70,m
+templates/pages/help.html.php:20,1547560800:20,r
+templates/success/success_bestellung.php:15,1547560800:15,r
+composer.lock:15,1547560800:15,r
+public/artikel.js:15,1547560800:15,r
