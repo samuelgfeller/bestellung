@@ -1,7 +1,9 @@
 <?php
 require_once __DIR__ . '/../../connection.php';
-require_once __DIR__ . '/../Populate.php';
+require_once __DIR__ . '/../service/PopulateObject.php';
 require_once __DIR__ . '/../service/Helper.php';
+require_once __DIR__ . '/../service/DataManagement.php';
+
 
 class Bestellposition {
     private $id;
@@ -80,7 +82,7 @@ where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=' . $client_
                 'pAmount' => $position->anzahl_paeckchen,
                 'singleWeight' => $position->gewicht,
                 'kommentar' => $position->kommentar,];
-            $positionObj[] = Populate::populateBestellPosition($params);
+            $positionObj[] = PopulateObject::populateBestellPosition($params);
         }
         return $positionObj;
     }

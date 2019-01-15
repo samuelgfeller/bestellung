@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../base.html.php'; ?>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <h2 style="font-weight: normal;"><b><?php echo $client->getVorname() . ' ' . $client->getName() ?></b><br>Bestellung für
@@ -51,7 +52,7 @@
                 ?>
 
                 <tr id="bestell_artikel<?= $baId ?>">
-                    <td><?= !empty($pieceWeight) ? $ba->getName() . ' (Stk. <b>ca.</b> ' . $pieceWeight . ')' : $ba->getName() ?></td>
+                    <td><?= !empty($pieceWeight) ? $ba->getName() . ' (Stk. <b>ca.</b> ' . $pieceWeight . 'g.)' : $ba->getName() ?></td>
                     <td><?= $ba->getKgPrice() ?></td>
                     <td id="availableWeight<?= $baId ?>" class="availableWeight">
                         <span><?= $ba->getVerfuegbarGewicht(); ?></span> kg

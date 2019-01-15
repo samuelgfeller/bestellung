@@ -1,7 +1,8 @@
 <?php
 
 require_once __DIR__ . '/../../connection.php';
-require_once __DIR__ . '/../Populate.php';
+require_once __DIR__ . '/../service/PopulateObject.php';
+require_once __DIR__ . '/../service/DataManagement.php';
 
 /**
  * Class Client
@@ -32,7 +33,7 @@ class Client {
         $db = Db::instantiate();
         $result = $db->query('SELECT * FROM kunde WHERE deleted_at is null and id ='.$id);
         $clientArr = $result->fetch_assoc();
-        $client = populate::populateClient($clientArr);
+        $client = PopulateObject::populateClient($clientArr);
         return $client;
     }
 
@@ -60,7 +61,7 @@ class Client {
                 "id" =>$client->id,
 //                "nummer" =>$client->nummer
             ];
-            $clients[] = Populate::populateClient($params);
+            $clients[] = PopulateObject::populateClient($params);
         }
         return  [
             'clients' => $clients,
@@ -93,7 +94,7 @@ class Client {
                 "id" =>$client->id,
 //                "nummer" =>$client->nummer
             ];
-            $clients[] = Populate::populateClient($params);
+            $clients[] = PopulateObject::populateClient($params);
         }
         return  $clients;
     }
@@ -107,7 +108,7 @@ class Client {
         $db = Db::instantiate();
         $result = $db->query('SELECT * FROM kunde WHERE id ='.$id);
         $clientArr = $result->fetch_assoc();
-        $client=populate::populateClient($clientArr);
+        $client=PopulateObject::populateClient($clientArr);
         //If client is deleted
         if($client->getDeletedAt()){
             return ['client' => $client, 'deleted_at' => true];
@@ -154,7 +155,7 @@ class Client {
         /*OR nummer LIKE '%".$inputVal."%'*/
         $clients=null;
         while ($clientArr = $result->fetch_assoc()) {
-            $client = Populate::populateClient($clientArr);
+            $client = PopulateObject::populateClient($clientArr);
             $clients[] = $client;
         }
         if (!empty($clients)){
@@ -178,7 +179,7 @@ class Client {
         $result = $db->query('SELECT * FROM kunde WHERE deleted_at is null and vorname="'.$vorname.'" AND name="'.$name.'";');
         if ($result->num_rows>0){
             $clientArr = $result->fetch_assoc();
-            $client=populate::populateClient($clientArr);
+            $client=PopulateObject::populateClient($clientArr);
             return $client;
         }else{
             return false;

@@ -6,7 +6,9 @@
  * Time: 16:52
  */
 require_once __DIR__ . '/../../connection.php';
-require_once __DIR__ . '/../Populate.php';
+require_once __DIR__ . '/../service/PopulateObject.php';
+require_once __DIR__ . '/../service/DataManagement.php';
+
 class Feedback {
     public static function add($feedback,$client_id) {
         $db = Db::instantiate();

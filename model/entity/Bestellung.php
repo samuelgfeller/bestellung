@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../../connection.php';
-require_once __DIR__ . '/../Populate.php';
+require_once __DIR__ . '/../service/PopulateObject.php';
+require_once __DIR__ . '/../service/DataManagement.php';
+
 
 class Bestellung {
     private $id;
@@ -36,7 +38,7 @@ class Bestellung {
             return false;
         } else {
             $bestellungArr = $result->fetch_assoc();
-            $bestellung = populate::populateBestellung($bestellungArr);
+            $bestellung = PopulateObject::populateBestellung($bestellungArr);
             return $bestellung;
         }
     }
@@ -49,7 +51,7 @@ class Bestellung {
             return false;
         } else {
             $rechnungArr = $result->fetch_assoc();
-            $rechnung = populate::populateRechnung($rechnungArr);
+            $rechnung = PopulateObject::populateRechnung($rechnungArr);
             return $rechnung;
         }
     }
@@ -59,7 +61,7 @@ class Bestellung {
         $db = Db::instantiate();
         $result = $db->query('SELECT * FROM rechnung WHERE deleted_at is null and datum="' . $datum . '" order by id desc');
         while ($rechnungArr = $result->fetch_assoc()) {
-            $rechnung = Populate::populateRechnung($rechnungArr);
+            $rechnung = PopulateObject::populateRechnung($rechnungArr);
             $rechnungen[] = $rechnung;
         }
         if (!empty($rechnungen)) {
@@ -77,7 +79,7 @@ class Bestellung {
         $rechnungen = null;
 
         while ($rechnungArr = $result->fetch_assoc()) {
-            $rechnung = Populate::populateRechnung($rechnungArr);
+            $rechnung = PopulateObject::populateRechnung($rechnungArr);
             $rechnungen[] = $rechnung;
         }
         if (!empty($rechnungen)) {

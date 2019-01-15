@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../base.html.php'; ?>
 <div class="homeContainer">
     <h1 class="title" style="text-align: left;">Anleitung</h1>
     <h2>Einloggen</h2>

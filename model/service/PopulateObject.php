@@ -1,6 +1,6 @@
 <?php
 
-class Populate {
+class PopulateObject {
 
     /**
      * @param $data
@@ -31,7 +31,7 @@ class Populate {
      */
     public static function populateBestellArtikel($data){
         $artikel = new Bestellartikel();
-        $artikel->setBestellArtikelId($data['ba_id'] ?? null);
+        $artikel->setBestellArtikelId($data['bestell_artikel_id'] ?? null);
         $artikel->setArtikelId($data['artikel_id'] ?? null);
         $artikel->setNummer($data['nummer'] ?? null);
         $artikel->setName($data['name'] ?? null);

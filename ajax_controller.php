@@ -8,8 +8,8 @@ if ($path == 'artikel/gewicht') {
     Bestellartikel::updWeight($_POST['id'], $_POST['value']);
     exit;
 }
-//test
-if ($path == 'bestellArtikel/checkAvailable') {
+
+if ($path == 'bestellArtikel/checkAvailable'){
     require_once 'model/entity/Bestellartikel.php';
     require_once 'model/entity/Artikel.php';
     if($_POST['value'] === '1'){
