@@ -37,7 +37,6 @@ class Email
 		$this->mail->Body = $message;
 		$this->mail->AltBody = strip_tags($message);
 //		$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
-	
 	}
 	
 	public function send($to, $replyTo, $toName = false, $replyToName = false) {

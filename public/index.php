@@ -32,7 +32,7 @@ $len = strlen($scriptName);
 if (($len > 0 && $scriptName !== '/') || $scriptName !== "\\") {
     $path = substr($path, $len);
 }
-//var_dump($path);
+session_start();
 
 require_once __DIR__."/../ajax_controller.php";
 require_once __DIR__."/../controller.php";

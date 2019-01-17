@@ -11,7 +11,7 @@ class Bestellung {
     public static function checkEmail($email) {
 	    $email = Helper::getLikeString($email);
 	    $query = 'SELECT id FROM kunde where deleted_at is null and email COLLATE UTF8_GENERAL_CI like ?;';
-	    return DataManagement::selectAndFetchSingleData($query, [$email]);
+	    return DataManagement::selectAndFetchSingleData($query, [$email])['id'];
     }
 
     public static function create($kunde_id, $targetDate) {

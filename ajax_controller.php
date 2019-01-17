@@ -1,5 +1,4 @@
 <?php
-session_start();
 $num = filter_var($path, FILTER_SANITIZE_NUMBER_INT);
 require_once __DIR__ . "/Local.php";
 

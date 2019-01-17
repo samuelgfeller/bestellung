@@ -22,7 +22,11 @@
                 <td style="padding: 7px;">
                     <b><?= (int)$position['anzahl_paeckchen'] ?></b> Päckchen <b><?= $position['artikel_name'] ?></b>
                     <?php if (!empty($position['anzahl_paeckchen'])) {
-                        echo $position['gewicht'] < 15 ? ' mit <b>' . $position['gewicht'] . '</b> Stücke pro Päckchen à <b>' . $position['stueck_gewicht'] . 'g.</b> (pro Stück)' : ' à <b>' . $position['gewicht'] . 'g.</b>';
+                        if($position['gewicht'] < 15){
+	                        echo ' à <b>'.$position['gewicht']*$position['stueck_gewicht'].'g.</b> (' . $position['gewicht'] . ' Stk. à ' . $position['stueck_gewicht'] . 'g.)';
+                        }else{
+	                        echo ' à <b>' . $position['gewicht'] . 'g.</b>';
+                        }
                     }
                     ?>
                     <?= !empty($position['kommentar']) ? ' | ' . $position['kommentar'] . '<br>' : '<br>' ?>
@@ -32,6 +36,7 @@
         <tr>
             <td>
                 <br>Sie können Ihre bestellung jederzeit anpassen: <a href="https://bestellung.masesselin.ch/">https://bestellung.masesselin.ch/</a>
+                <br>Nachdem Sie Änderungen vorgenommen haben, können Sie einfach wieder auf "Bestellen" drücken und die alte Bestellung wird überschrieben.
             </td>
         </tr>
         <tr>
