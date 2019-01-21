@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../service/PopulateObject.php';
 require_once __DIR__ . '/../service/DataManagement.php';
 
-class Termin {
+class Appointment {
     private $id;
     private $datum;
 

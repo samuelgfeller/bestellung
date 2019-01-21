@@ -5,7 +5,7 @@ require_once __DIR__ . '/../service/DataManagement.php';
 //require_once __DIR__ . '/Termin.php';
 
 
-class Bestellartikel
+class OrderArticle
 {
 	
 	private $bestell_artikel_id;
@@ -46,7 +46,7 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
 	}
 	
 	public static function checkAndRefresh() {
-		$dates = Termin::getYearsAndDates()['dates'];
+		$dates = Appointment::getYearsAndDates()['dates'];
 		$articleRes = DataManagement::selectAndFetchAssocMultipleData('select * from artikel;');
 		foreach ($articleRes as $article) {
 			foreach ($dates as $date) {
@@ -127,10 +127,10 @@ group by r.datum ';
 	}
 	
 	public static function checkPassword($entered_password) {
-		$query = 'SELECT passwort FROM admin limit 1;';
+		$query = 'SELECT password FROM admin limit 1;';
 		$allData = DataManagement::selectAndFetchAssocMultipleData($query);
 		foreach ($allData as $data){
-			if (password_verify($entered_password, $data['passwort'])) {
+			if (password_verify($entered_password, $data['password'])) {
 				$_SESSION['is_admin'] = 1;
 				session_regenerate_id();
 				return true;
@@ -141,9 +141,9 @@ group by r.datum ';
 	
 	public static function updPassword($password) {
 		if (self::checkIfPasswordExists()) {
-			$query = 'UPDATE admin set passwort=?';
+			$query = 'UPDATE admin set password=?';
 		} else {
-			$query = 'INSERT INTO admin (passwort) VALUES (?)';
+			$query = 'INSERT INTO admin (password) VALUES (?)';
 		}
 		DataManagement::run($query,[$password]);
 	}

@@ -5,7 +5,7 @@ require_once __DIR__ . '/../service/Helper.php';
 require_once __DIR__ . '/../service/DataManagement.php';
 
 
-class Bestellposition {
+class OrderPosition {
     private $id;
     private $bestellung_id;
     private $bestell_artikel_id;
@@ -15,10 +15,10 @@ class Bestellposition {
 
 
     /**
-     * @param Bestellposition $position
+     * @param OrderPosition $position
      * @return mixed
      */
-    public static function add(Bestellposition $position) {
+    public static function add(OrderPosition $position) {
         $data = PopulateArray::populateBestellpositionArray($position);
 	    return DataManagement::insert('bestell_position', $data);
     }
@@ -30,7 +30,7 @@ class Bestellposition {
 
     public static function getTotalOrderedWeightForBa($bestellArtikelId, $nextDate) {
 	    $query = 'SELECT bp.anzahl_paeckchen anz, bp.gewicht gewicht FROM bestell_position bp
-        left join bestellung b on bp.bestellung_id=b.id
+        left join `order` b on bp.bestellung_id=b.id
         left join bestell_artikel ba on ba.id = bp.bestell_artikel_id
         where b.deleted_at is null and ba.deleted_at is null and bp.deleted_at is null
         and ba.id = ? and b.ziel_datum = ?;';
@@ -39,8 +39,8 @@ class Bestellposition {
 
     public static function getIfAlreadyOrdered($client_id, $date) {
 	    $query = 'SELECT bp.* FROM bestell_position bp
-left join bestellung b on bp.bestellung_id = b.id
-where b.deleted_at is null and bp.deleted_at is null and b.kunde_id=? and b.ziel_datum=?;';
+left join `order` b on bp.bestellung_id = b.id
+where b.deleted_at is null and bp.deleted_at is null and b.client_id=? and b.ziel_datum=?;';
 	    $allData = DataManagement::selectAndFetchAssocMultipleData($query, [$client_id, $date]);
 	    $allDataObj = [];
 	    foreach ($allData as $allDataArr) {

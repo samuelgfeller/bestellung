@@ -8,12 +8,12 @@ require_once __DIR__ . '/Local.php';
 $num = filter_var($path, FILTER_SANITIZE_NUMBER_INT);
 
 if ($path == '') {
-	require_once __DIR__ . '/model/entity/Bestellposition.php';
-	require_once __DIR__ . '/model/entity/Bestellartikel.php';
-	require_once __DIR__ . '/model/entity/Bestellung.php';
+	require_once __DIR__ . '/model/entity/OrderPosition.php';
+	require_once __DIR__ . '/model/entity/OrderArticle.php';
+	require_once __DIR__ . '/model/entity/Order.php';
 	require_once __DIR__ . '/model/entity/Client.php';
-	require_once __DIR__ . '/model/entity/Termin.php';
-	require_once __DIR__ . '/model/entity/Artikel.php';
+	require_once __DIR__ . '/model/entity/Appointment.php';
+	require_once __DIR__ . '/model/entity/Article.php';
 	
 	if (!empty($_SESSION['client'])) {
 		if ($_GET && $_GET['datum']) {
@@ -22,13 +22,13 @@ if ($path == '') {
 			$GETDateText = date('d.m.Y', strtotime($_GET['datum']));
 			
 			// Get all positions of the order if the client already did one for this date
-			$alreadyOrdered = Bestellposition::getIfAlreadyOrdered($client->getId(), $GETDateSQL);
+			$alreadyOrdered = OrderPosition::getIfAlreadyOrdered($client->getId(), $GETDateSQL);
 			
 			// Initialise the variable with the order id for the html
 			$bestellung_id = $alreadyOrdered ? $alreadyOrdered[0]->getBestellungId() : '';
 			
 			// Get all bestell_artikel which are available (verfügbar=1)
-			$bestellArtikel = Bestellartikel::allAvailableFrom($GETDateSQL);
+			$bestellArtikel = OrderArticle::allAvailableFrom($GETDateSQL);
 			
 			$artikelUndBestellPositionen = false;
 			if ($bestellArtikel) {
@@ -37,7 +37,7 @@ if ($path == '') {
 					// Initialising array with default values
 					$artikelUndBestellPositionen[$key] = ['already_ordered' => false,
 						'bestell_artikel' => false,
-						'artikel' => false];
+						'Article' => false];
 					$weightToSubstrate = 0;
 					
 					if ($alreadyOrdered) {
@@ -48,7 +48,7 @@ if ($path == '') {
 								// Wenn das Gewicht kleiner als 15 ist heisst es, dass es Stückzahlen sind
 								if ($position->getGewicht() <= 15) {
 									// Die Anzahl Stücke mit dem Stückgewicht (Standardgewicht) multiplizieren (Resultate ist in Gramm)
-									$alreadyOrderedWeight = $position->getGewicht() * Bestellartikel::getDefaultWeight($ba->getBestellArtikelId());
+									$alreadyOrderedWeight = $position->getGewicht() * OrderArticle::getDefaultWeight($ba->getBestellArtikelId());
 								} //Wenn höher als 15 ist es direkt ein Gewict in Gramm
 								else {
 									$alreadyOrderedWeight = $position->getGewicht();
@@ -61,7 +61,7 @@ if ($path == '') {
 					}
 					
 					// Get all the ordered weight and amount for all orders for a date
-					$orderedWeightAndAmounts = Bestellposition::getTotalOrderedWeightForBa($ba->getBestellArtikelId(), $GETDateSQL);
+					$orderedWeightAndAmounts = OrderPosition::getTotalOrderedWeightForBa($ba->getBestellArtikelId(), $GETDateSQL);
 					$totalOrderedWeight = 0;
 					if ($orderedWeightAndAmounts) {
 						// Loop over each ordered weight
@@ -70,7 +70,7 @@ if ($path == '') {
 							// Wenn das Gewicht kleiner als 15 ist heisst es, dass es Stückzahlen sind
 							if ($orderedWeightAndAmount['gewicht'] <= 15) {
 								// Die Anzahl Stücke mit dem Stückgewicht (Standardgewicht) multiplizieren (Resultate ist in Gramm)
-								$weight = $orderedWeightAndAmount['gewicht'] * Bestellartikel::getDefaultWeight($ba->getBestellArtikelId());
+								$weight = $orderedWeightAndAmount['gewicht'] * OrderArticle::getDefaultWeight($ba->getBestellArtikelId());
 							} //Wenn höher als 15 ist es direkt ein Gewict in Gramm
 							else {
 								$weight = $orderedWeightAndAmount['gewicht'];
@@ -96,11 +96,11 @@ if ($path == '') {
 						$ba->setVerfuegbarGewicht($availableWeight);
 					}
 					
-					$pieceWeight = Bestellartikel::getDefaultWeight($ba->getBestellArtikelId());
+					$pieceWeight = OrderArticle::getDefaultWeight($ba->getBestellArtikelId());
 					$ba->setStueckgewicht($pieceWeight);
 					
 					$artikelUndBestellPositionen[$key]['bestell_artikel'] = $ba;
-					$artikel = Artikel::find($ba->getArtikelId());
+					$artikel = Article::find($ba->getArtikelId());
 					$avag = $ba->getVerfuegbarGewicht() * 1000; // Available weight in gramm
 					$g1 = $artikel->getGewicht1();
 					$g2 = $artikel->getGewicht2();
@@ -135,7 +135,7 @@ if ($path == '') {
 			require_once __DIR__ . '/templates/order/order.html.php';
 			exit;
 		}
-		$date = Termin::getNextDate()['text'];
+		$date = Appointment::getNextDate()['text'];
 		if ($date) {
 			$url = '?datum=' . $date;
 			header("Location: " . $url);
@@ -148,47 +148,47 @@ if ($path == '') {
 	exit;
 }
 
-if ($path == 'artikel') {
-	require_once __DIR__ . '/model/entity/Bestellartikel.php';
-	require_once __DIR__ . '/model/entity/Termin.php';
+if ($path == 'Article') {
+	require_once __DIR__ . '/model/entity/OrderArticle.php';
+	require_once __DIR__ . '/model/entity/Appointment.php';
 	
 	if ($_POST) {
 		if (isset($_POST['password'])) {
 			// The post parameter is set and the password got typed in
-			$is_admin = Bestellartikel::checkPassword($_POST['password']);
+			$is_admin = OrderArticle::checkPassword($_POST['password']);
 			if ($is_admin) {
 				$_SESSION['is_admin'] = 1;
 			}
 		} else if (isset($_POST['newPassword'])) {
 			// A new Password was typed in
 			$password = password_hash($_POST['newPassword'], PASSWORD_DEFAULT);
-			Bestellartikel::updPassword($password);
+			OrderArticle::updPassword($password);
 		}
 	}
 	
 	if (!empty($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1) {
-		$datesYears = Termin::getYearsAndDates();
+		$datesYears = Appointment::getYearsAndDates();
 		$dates = $datesYears['dates'];
 		$years = $datesYears['years'];
 		
-		Bestellartikel::checkAndRefresh();
+		OrderArticle::checkAndRefresh();
 		
 		// If a dated is in the GET request, it shows the bills for this date
 		if ($_GET && $_GET['datum']) {
 			$datumGET = strtotime($_GET['datum']);
 			$datum = date('d.m.Y', $datumGET);
 			$datumSQL = date('Y-m-d', $datumGET);
-			$allBa = Bestellartikel::allFrom($datumSQL);
+			$allBa = OrderArticle::allFrom($datumSQL);
 			require_once __DIR__ . '/templates/article/all_artikel.html.php';
 			exit;
 		}
 		//if not it only shows the dates
-		$url = 'artikel'; // is needed in dates.html.php
+		$url = 'Article'; // is needed in dates.html.php
 		require_once __DIR__ . '/templates/pages/dates.html.php';
 		exit;
 	}
 	
-	if (!Bestellartikel::checkIfPasswordExists()) {
+	if (!OrderArticle::checkIfPasswordExists()) {
 		require_once __DIR__ . '/templates/article/update_password.html.php';
 		exit;
 	}
@@ -207,17 +207,17 @@ if ($path == 'artikel/update/password') {
 }
 
 if ($path == 'success') {
-	require_once __DIR__ . '/model/entity/Bestellung.php';
+	require_once __DIR__ . '/model/entity/Order.php';
 	require_once __DIR__ . '/model/entity/Client.php';
-	require_once __DIR__ . '/model/entity/Bestellposition.php';
-	require_once __DIR__ . '/model/entity/Bestellartikel.php';
-	require_once __DIR__ . '/model/entity/Artikel.php';
+	require_once __DIR__ . '/model/entity/OrderPosition.php';
+	require_once __DIR__ . '/model/entity/OrderArticle.php';
+	require_once __DIR__ . '/model/entity/Article.php';
 	require_once __DIR__ . '/model/service/Helper.php';
 	require_once __DIR__ . '/model/service/Email.php';
 	
 	if ($_POST && isset($_POST['pAmount'])) {
 		$client = Client::find($_SESSION['client']);
-		$bestellungId = Bestellung::create($client->getId(), htmlspecialchars($_POST['datum']));
+		$bestellungId = Order::create($client->getId(), htmlspecialchars($_POST['datum']));
 		$valuesArr = [];
 		for ($i = 0, $iMax = count($_POST['pAmount']); $i < $iMax; $i++) {
 			if (!empty($_POST['pAmount'][$i]) || !empty($_POST['kommentar'][$i])) {
@@ -232,18 +232,18 @@ if ($path == 'success') {
 		
 		foreach ($valuesArr as $values) {
 			$bestellPosition = PopulateObject::populateBestellPosition($values);
-			Bestellposition::add($bestellPosition);
+			OrderPosition::add($bestellPosition);
 		}
 		
 		// Delete old order
-		if ($minId = Bestellung::checkMultipleOrdersAndGetOlder($_SESSION['client'], $_POST['datum'])) {
-			$minId ? Bestellung::del($minId) : Bestellung::del($_POST['bestellung_id']);
+		if ($minId = Order::checkMultipleOrdersAndGetOlder($_SESSION['client'], $_POST['datum'])) {
+			$minId ? Order::del($minId) : Order::del($_POST['bestellung_id']);
 		}
 		
 		// Send confirmation email
 		$positionDaten = [];
 		foreach ($valuesArr as $values) {
-			$artikel = Artikel::findArtikelByBestellArtikel($values['bestell_artikel_id']);
+			$artikel = Article::findArtikelByBestellArtikel($values['bestell_artikel_id']);
 			if (!empty($artikel)) {
 				$positionDaten[] = ['artikel_name' => $artikel->getName(),
 					'anzahl_paeckchen' => $values['anzahl_paeckchen'],
@@ -269,18 +269,18 @@ if ($path == 'success') {
 }
 
 if ($path == 'artikel/dates') {
-	require_once __DIR__ . '/model/entity/Termin.php';
-	$datesYears = Termin::getYearsAndDates();
+	require_once __DIR__ . '/model/entity/Appointment.php';
+	$datesYears = Appointment::getYearsAndDates();
 	$dates = $datesYears['dates'];
 	$years = $datesYears['years'];
-	$url = 'artikel';
+	$url = 'Article';
 	require_once __DIR__ . '/templates/pages/dates.html.php';
 	exit;
 }
 
 if ($path == 'order/dates') {
-	require_once __DIR__ . '/model/entity/Termin.php';
-	$datesYears = Termin::getYearsAndDates();
+	require_once __DIR__ . '/model/entity/Appointment.php';
+	$datesYears = Appointment::getYearsAndDates();
 	foreach ($datesYears['dates'] as $key => $date) {
 		if (strtotime($date) < time()) {
 			unset($datesYears['dates'][$key]);

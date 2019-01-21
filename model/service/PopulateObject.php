@@ -1,11 +1,11 @@
 <?php
 
-require_once __DIR__ . '/../entity/Artikel.php';
-require_once __DIR__ . '/../entity/Bestellposition.php';
-require_once __DIR__ . '/../entity/Bestellartikel.php';
-require_once __DIR__ . '/../entity/Bestellung.php';
+require_once __DIR__ . '/../entity/Article.php';
+require_once __DIR__ . '/../entity/OrderPosition.php';
+require_once __DIR__ . '/../entity/OrderArticle.php';
+require_once __DIR__ . '/../entity/Order.php';
 require_once __DIR__ . '/../entity/Client.php';
-require_once __DIR__ . '/../entity/Termin.php';
+require_once __DIR__ . '/../entity/Appointment.php';
 require_once __DIR__ . '/../entity/Feedback.php';
 require_once __DIR__ . '/../service/Helper.php';
 
@@ -35,10 +35,10 @@ class PopulateObject {
 
     /**
      * @param $data
-     * @return Bestellartikel
+     * @return OrderArticle
      */
     public static function populateBestellArtikel($data){
-        $artikel = new Bestellartikel();
+        $artikel = new OrderArticle();
         $artikel->setBestellArtikelId(Helper::ckVal($data['bestell_artikel_id'] ?? null));
         $artikel->setArtikelId(Helper::ckVal($data['artikel_id'] ?? null));
         $artikel->setNummer(Helper::ckVal($data['nummer'] ?? null));
@@ -53,10 +53,10 @@ class PopulateObject {
 
     /**
      * @param $data
-     * @return Bestellposition
+     * @return OrderPosition
      */
     public static function populateBestellPosition($data) {
-        $position = new Bestellposition();
+        $position = new OrderPosition();
         $position->setId(Helper::ckVal($data['id'] ?? null));
         $position->setBestellungId(Helper::ckVal($data['bestellung_id'] ?? null));
         $position->setBestellArtikelId(Helper::ckVal($data['bestell_artikel_id'] ?? null));
@@ -67,15 +67,15 @@ class PopulateObject {
     }
 
     public static function populateBestellung($data) {
-        $bestellung = new Bestellung();
+        $bestellung = new Order();
         $bestellung->setId(Helper::ckVal($data['id'] ?? null));
         $bestellung->setKundeId(Helper::ckVal($data['datum'] ?? null));
-        $bestellung->setDate(Helper::ckVal($data['kunde_id'] ?? null));
+        $bestellung->setDate(Helper::ckVal($data['client_id'] ?? null));
         return $bestellung;
     }
 
     public static function populateTermin($data) {
-        $termin = new Termin();
+        $termin = new Appointment();
         $termin->setId(Helper::ckVal($data['id'] ?? null));
         $termin->setDatum(Helper::ckVal($data['datum'] ?? null));
         return $termin;
@@ -83,10 +83,10 @@ class PopulateObject {
 
     /**
      * @param $data
-     * @return Artikel
+     * @return Article
      */
     public static function populateArtikel($data) {
-        $artikel = new Artikel();
+        $artikel = new Article();
         $artikel->setId(Helper::ckVal($data['id'] ?? null));
         $artikel->setNummer(Helper::ckVal($data['nummer'] ?? null));
         $artikel->setName(Helper::ckVal($data['name'] ?? null));

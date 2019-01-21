@@ -1,23 +1,23 @@
 <?php
 
 
-require_once __DIR__ . '/../entity/Artikel.php';
-require_once __DIR__ . '/../entity/Bestellartikel.php';
-require_once __DIR__ . '/../entity/Bestellposition.php';
-require_once __DIR__ . '/../entity/Bestellung.php';
+require_once __DIR__ . '/../entity/Article.php';
+require_once __DIR__ . '/../entity/OrderArticle.php';
+require_once __DIR__ . '/../entity/OrderPosition.php';
+require_once __DIR__ . '/../entity/Order.php';
 require_once __DIR__ . '/../entity/Client.php';
 require_once __DIR__ . '/../entity/Feedback.php';
-require_once __DIR__ . '/../entity/Termin.php';
+require_once __DIR__ . '/../entity/Appointment.php';
 
 
 class PopulateArray
 {
 	
 	/**
-	 * @param Artikel $artikel
+	 * @param Article $artikel
 	 * @return array
 	 */
-	public static function populateArtikelArray(Artikel $artikel): array {
+	public static function populateArtikelArray(Article $artikel): array {
 		return ['nummer' => $artikel->getNummer(),
 			'name' => $artikel->getName(),
 			'kg_price' => $artikel->getKgPrice(),
@@ -47,22 +47,22 @@ class PopulateArray
 			'deleted_at' => $client->getDeletedAt(),];
 	}
 	
-	public static function populateTerminArray(Termin $termin): array {
+	public static function populateTerminArray(Appointment $termin): array {
 		return [
 			'id' => $termin->getId(),
 			'datum' => $termin->getDatum(),
 		];
 	}
 	
-	public static function populateBestellungArray(Bestellung $bestellung): array {
+	public static function populateBestellungArray(Order $bestellung): array {
 		return [
 			'id' => $bestellung->getId(),
-			'kunde_id' => $bestellung->getKundeId(),
+			'client_id' => $bestellung->getKundeId(),
 			'datum' => $bestellung->getDate(),
 		];
 	}
 	
-	public static function populateBestellpositionArray(Bestellposition $position): array {
+	public static function populateBestellpositionArray(OrderPosition $position): array {
 		return [
 			'id' => $position->getId(),
 			'bestellung_id' => $position->getBestellungId(),
