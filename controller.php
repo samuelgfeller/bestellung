@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/model/service/Flash.php';
 
-//require_once __DIR__ . '/templates/base.html.php'; //base.html.php url;
+//base.html.php is now on top of each view
 require_once __DIR__ . '/Local.php';
 
 //number inside the url
