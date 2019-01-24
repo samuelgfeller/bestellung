@@ -1,23 +1,23 @@
 <?php require_once __DIR__ . '/../base.html.php'; ?>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<h2 style="font-weight: normal;"><b><?php echo $client->getVorname() . ' ' . $client->getName() ?></b><br>Bestellung für
+<h2 style="font-weight: normal;"><b><?php echo $client->getFirstName() . ' ' . $client->getName() ?></b><br>Bestellung für
     den <b> <?= $GETDateText ?> </b>
 </h2>
 <button class="ownBtn otherDateBtn" id="changeOrderDateBtn">Bestelldatum ändern</button>
 
 <div class="search">
     <input type="text" id="searchInput" autocomplete="off" placeholder="Artikel suchen"
-           onkeyup="filter('bestellArtikelTable',0  )">
+           onkeyup="filter('orderArticleTable',0  )">
 </div><br>
-<form action="success" method="post" id="bestellForm" onkeypress="return event.keyCode != 13;">
+<form action="success" method="post" id="orderForm" onkeypress="return event.keyCode != 13;">
 
     <!--    Set date outside the foreach loop -->
-    <input type="hidden" name="datum" value="<?= $GETDateSQL ?>">
+    <input type="hidden" name="date" value="<?= $GETDateSQL ?>">
     <!--    set the order id -->
-    <input type="hidden" name="bestellung_id" value="<?= $bestellung_id ?>">
+    <input type="hidden" name="order_id" value="<?= $order_id ?>">
 
-    <table class="items artikel" id="bestellArtikelTable">
+    <table class="items article" id="orderArticleTable">
         <tr>
             <th>Name</th>
             <th>Kg Preis</th>
@@ -30,32 +30,32 @@
 
         </tr>
         <?php
-        if ($artikelUndBestellPositionen && $artikelUndBestellPositionen) {
-            foreach ($artikelUndBestellPositionen as $artikelUndBestellPosition) {
+        if ($articleAndOrderPositions) {
+            foreach ($articleAndOrderPositions as $articleAndOrderPosition) {
                 // Initialise variables
-                $ba = $artikelUndBestellPosition['bestell_artikel'];
-                $position = $artikelUndBestellPosition['already_ordered'];
-                $possibilities = $artikelUndBestellPosition['order_possibilities'];
-                // Set bestell_artikel_id
-                $baId = $ba->getBestellArtikelId();
-                $pieceWeight = $ba->getStueckGewicht();
+                $ba = $articleAndOrderPosition['order_article'];
+                $position = $articleAndOrderPosition['already_ordered'];
+                $possibilities = $articleAndOrderPosition['order_possibilities'];
+                // Set order_article_id
+                $baId = $ba->getOrderArticleId();
+                $pieceWeight = $ba->getPieceWeight();
 
                 $pAnz = null;
-                $gewicht = null;
-                $kommentar = null;
+                $weight = null;
+                $comment = null;
                 if ($position) {
-                    $pAnz = empty($position->getAnzahlPaeckchen()) ? null : $position->getAnzahlPaeckchen();
-                    $gewicht = empty($position->getGewicht()) ? null : $position->getGewicht();
-                    $kommentar = $position->getKommentar();
+                    $pAnz = empty($position->getPackageAmount()) ? null : $position->getPackageAmount();
+                    $weight = empty($position->getWeight()) ? null : $position->getWeight();
+                    $comment = $position->getComment();
                 }
 
                 ?>
 
-                <tr id="bestell_artikel<?= $baId ?>">
+                <tr id="order_article<?= $baId ?>">
                     <td><?= !empty($pieceWeight) ? $ba->getName() . ' (Stk. <b>ca.</b> ' . $pieceWeight . 'g.)' : $ba->getName() ?></td>
                     <td><?= $ba->getKgPrice() ?></td>
                     <td id="availableWeight<?= $baId ?>" class="availableWeight">
-                        <span><?= $ba->getVerfuegbarGewicht(); ?></span> kg
+                        <span><?= $ba->getAvailableWeight(); ?></span> kg
                     </td>
                     <td class="amountNumber"><input id="pAmount<?= $baId ?>" class="comment pAmount" type="number"
                                                     placeholder="0" min="0" value="<?= $pAnz ?>"
@@ -73,7 +73,7 @@
                                                    type="checkbox"
                                                    value="<?= $possibility ?>"
                                                    data-baid="<?= $baId ?>"
-                                                <?= $gewicht == $possibility ? 'checked' : '' ?>
+                                                <?= $weight == $possibility ? 'checked' : '' ?>
                                             >
                                             <span><?= $possibility > 15 ? $possibility . 'g.' : $possibility . ' Stk. ' ?></span>
                                         </label>
@@ -83,12 +83,12 @@
                             <!--  Unchecked inputs are not sent to server and an Array with all indexes (empty string as value if nothing)
                             The value is filled with javascript on the checkbox listener-->
                             <input type="hidden" id="singleWeight<?= $baId ?>" name="singleWeight[]"
-                                   value="<?= $gewicht == $possibility ? $possibility : '' ?>">
+                                   value="<?= $weight == $possibility ? $possibility : '' ?>">
                         </div>
                         <!-- Inserting the hidden info here because outide it affects the nth:child(even) -->
                         <input type="hidden" name="ba_id[]" value="<?= $baId ?>">
                     </td>
-                    <td><input class="comment" type="text" maxlength="200" value="<?= $kommentar ?>" name="kommentar[]">
+                    <td><input class="comment" type="text" maxlength="200" value="<?= $comment ?>" name="comment[]">
                     </td>
                     <td id="outputWeight<?= $baId ?>">
                     </td>

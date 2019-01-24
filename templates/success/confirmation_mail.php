@@ -11,7 +11,7 @@
 
     <h1>Bestellbestätigung</h1>
     Vielen Dank für Ihre Bestellung. <br>
-    <!--    <img style="width: 100%;" src="../../public/images/logovache.jpg" alt="">-->
+    <!--    <img style="width: 100%;" src="../../public/images/logo_banner.jpg" alt="">-->
     Sie haben folgende Artikel bestellt: <br>
     <table style=" border-collapse: collapse;
         width: 100%;" align="center">
@@ -20,16 +20,16 @@
         foreach ($positionDaten as $position) { ?>
             <tr style="">
                 <td style="padding: 7px;">
-                    <b><?= (int)$position['anzahl_paeckchen'] ?></b> Päckchen <b><?= $position['artikel_name'] ?></b>
-                    <?php if (!empty($position['anzahl_paeckchen'])) {
-                        if($position['gewicht'] < 15){
-	                        echo ' à <b>'.$position['gewicht']*$position['stueck_gewicht'].'g.</b> (' . $position['gewicht'] . ' Stk. à ' . $position['stueck_gewicht'] . 'g.)';
+                    <b><?= (int)$position['package_amount'] ?></b> Päckchen <b><?= $position['article_name'] ?></b>
+                    <?php if (!empty($position['package_amount'])) {
+                        if($position['weight'] < 15){
+	                        echo ' à <b>'.$position['weight']*$position['piece_weight'].'g.</b> (' . $position['weight'] . ' Stk. à ' . $position['piece_weight'] . 'g.)';
                         }else{
-	                        echo ' à <b>' . $position['gewicht'] . 'g.</b>';
+	                        echo ' à <b>' . $position['weight'] . 'g.</b>';
                         }
                     }
                     ?>
-                    <?= !empty($position['kommentar']) ? ' | ' . $position['kommentar'] . '<br>' : '<br>' ?>
+                    <?= !empty($position['comment']) ? ' | ' . $position['comment'] . '<br>' : '<br>' ?>
                 </td>
             </tr>
         <?php } ?>

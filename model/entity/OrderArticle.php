@@ -2,56 +2,56 @@
 require_once __DIR__ . '/../service/PopulateObject.php';
 require_once __DIR__ . '/../service/DataManagement.php';
 
-//require_once __DIR__ . '/Termin.php';
+//require_once __DIR__ . '/Appointment.php';
 
 
 class OrderArticle
 {
 	
-	private $bestell_artikel_id;
-	private $artikel_id;
-	private $gewicht;
-	private $nummer;
+	private $order_article_id;
+	private $article_id;
+	private $weight;
+	private $nr;
 	private $name;
 	private $kg_price;
-	private $verfuegbar; // Bool if available
-	private $verfuegbarGewicht;
-	private $stueckGewicht;
-	private $datum;
+	private $available; // Bool if available
+	private $availableWeight;
+	private $pieceWeight;
+	private $date;
 	private $avgWeight;
 	
 	
 	public static function allFrom($date) {
-		$query = 'SELECT ba.*, ba.id bestell_artikel_id, a.*, a.id artikel_id FROM bestell_artikel ba left join
- artikel a on ba.artikel_id=a.id where ba.datum = ? and a.deleted_at is null and ba.deleted_at is null order by ba.artikel_id asc;';
+		$query = 'SELECT ba.*, ba.id order_article_id, a.*, a.id article_id FROM order_article ba left join
+ article a on ba.article_id=a.id where ba.date = ? and a.deleted_at is null and ba.deleted_at is null order by ba.article_id asc;';
 		$result = DataManagement::selectAndFetchAssocMultipleData($query, [$date]);
 		$dataObjArr = [];
 		foreach ($result as $dataArr) {
-			$dataArr['avgWeight'] = self::getAverage($dataArr['artikel_id']);
-			$dataObjArr[] = PopulateObject::populateBestellArtikel($dataArr);
+			$dataArr['avgWeight'] = self::getAverage($dataArr['article_id']);
+			$dataObjArr[] = PopulateObject::populateOrderArticle($dataArr);
 		}
 		return $dataObjArr;
 	}
 	
 	public static function allAvailableFrom($date) {
-		$query = 'SELECT ba.*,ba.id bestell_artikel_id, a.*, a.id artikel_id FROM bestell_artikel ba
-left join artikel a on ba.artikel_id=a.id
-where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and ba.datum=?;';
+		$query = 'SELECT ba.*,ba.id order_article_id, a.*, a.id article_id FROM order_article ba
+left join article a on ba.article_id=a.id
+where a.deleted_at is null and ba.deleted_at is null and ba.available = 1 and ba.date=?;';
 		$result = DataManagement::selectAndFetchAssocMultipleData($query, [$date]);
 		$dataObjArr = [];
 		foreach ($result as $dataArr) {
-			$dataObjArr[] = PopulateObject::populateBestellArtikel($dataArr);
+			$dataObjArr[] = PopulateObject::populateOrderArticle($dataArr);
 		}
 		return $dataObjArr;
 	}
 	
 	public static function checkAndRefresh() {
 		$dates = Appointment::getYearsAndDates()['dates'];
-		$articleRes = DataManagement::selectAndFetchAssocMultipleData('select * from artikel;');
+		$articleRes = DataManagement::selectAndFetchAssocMultipleData('select * from article;');
 		foreach ($articleRes as $article) {
 			foreach ($dates as $date) {
 				$sqlDate = date('Y-m-d', strtotime($date));
-				$selectQuery = 'select * from bestell_artikel where artikel_id =? and datum=?;';
+				$selectQuery = 'select * from order_article where article_id =? and date=?;';
 				$ba = DataManagement::selectAndFetchSingleData($selectQuery, [$article['id'], $sqlDate]);
 				
 				// If an entry with the article_id and on the date exists, it has to be checked if it is deleted.
@@ -59,18 +59,18 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
 				if (!$ba) {
 					if ($article['deleted_at'] === null) {
 						// Make the new inserts
-						$baData = ['artikel_id' => $article['id'],
-							'datum' => $sqlDate,
+						$baData = ['article_id' => $article['id'],
+							'date' => $sqlDate,
 						];
-						DataManagement::insert('bestell_artikel', $baData);
+						DataManagement::insert('order_article', $baData);
 					}
 				} else if ($article['deleted_at'] !== null && $ba['deleted_at'] === null) {
-					$delQuery = 'UPDATE bestell_artikel SET deleted_at=now() WHERE id=?;';
+					$delQuery = 'UPDATE order_article SET deleted_at=now() WHERE id=?;';
 					DataManagement::run($delQuery, [$ba['id']]);
 				}
 				// Restore an already deleted article
 				if ($article['deleted_at'] === null && $ba['deleted_at'] !== null) {
-					$restoreQuery = 'UPDATE bestell_artikel SET deleted_at=NULL WHERE id=?;';
+					$restoreQuery = 'UPDATE order_article SET deleted_at=NULL WHERE id=?;';
 					DataManagement::run($restoreQuery, [$ba['id']]);
 				}
 			}
@@ -79,13 +79,13 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
 	}
 	
 	public static function updWeight($id, $value) {
-		$restoreQuery = 'UPDATE bestell_artikel SET gewicht=? WHERE id=?';
+		$restoreQuery = 'UPDATE order_article SET weight=? WHERE id=?';
 		$value = empty($value) ? null : $value;
 		DataManagement::run($restoreQuery, [$value,$id]);
 	}
 	
 	public static function toggleAvailable($id, $value) {
-		$restoreQuery = 'UPDATE bestell_artikel SET gewicht=? WHERE id=?';
+		$restoreQuery = 'UPDATE order_article SET weight=? WHERE id=?';
 		DataManagement::run($restoreQuery, [$value,$id]);
 	}
 	
@@ -94,16 +94,16 @@ where a.deleted_at is null and ba.deleted_at is null and ba.verfuegbar = 1 and b
 	 * @return int
 	 */
 	public static function getDefaultWeight($article_id) {
-		$query = 'SELECT a.stueck_gewicht FROM artikel a left join bestell_artikel ba on
-ba.artikel_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba.id =?';
-		return (int)DataManagement::selectAndFetchSingleData($query, [$article_id])['stueck_gewicht'];
+		$query = 'SELECT a.piece_weight FROM article a left join order_article ba on
+ba.article_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba.id =?';
+		return (int)DataManagement::selectAndFetchSingleData($query, [$article_id])['piece_weight'];
 	}
 	
-	public static function getAverage($artikel_id) {
-		$query = 'select p.*,sum(gewicht) average,count(*),r.datum from position p left join rechnung r on r.id = p.rechnung_id
-where artikel_id = ? and p.deleted_at is null and r.deleted_at is null
-group by r.datum ';
-		$allData = DataManagement::selectAndFetchAssocMultipleData($query, [$artikel_id]);
+	public static function getAverage($article_id) {
+		$query = 'select p.*,sum(weight) average,count(*),r.date from position p left join bill r on r.id = p.bill_id
+where article_id = ? and p.deleted_at is null and r.deleted_at is null
+group by r.date ';
+		$allData = DataManagement::selectAndFetchAssocMultipleData($query, [$article_id]);
 		
 		// Array with all sums per date
 		$sums = [];
@@ -156,47 +156,60 @@ group by r.datum ';
 		return false;
 	}
 	
-	
 	/**
 	 * @return mixed
 	 */
-	public function getArtikelId() {
-		return $this->artikel_id;
+	public function getOrderArticleId() {
+		return $this->order_article_id;
 	}
 	
 	/**
-	 * @param mixed $artikel_id
+	 * @param mixed $order_article_id
 	 */
-	public function setArtikelId($artikel_id) {
-		$this->artikel_id = $artikel_id;
-	}
-	
-	/**
-	 * @return mixed
-	 */
-	public function getGewicht() {
-		return $this->gewicht;
-	}
-	
-	/**
-	 * @param mixed $gewicht
-	 */
-	public function setGewicht($gewicht) {
-		$this->gewicht = (float)$gewicht;
+	public function setOrderArticleId($order_article_id): void {
+		$this->order_article_id = $order_article_id;
 	}
 	
 	/**
 	 * @return mixed
 	 */
-	public function getNummer() {
-		return $this->nummer;
+	public function getArticleId() {
+		return $this->article_id;
 	}
 	
 	/**
-	 * @param mixed $nummer
+	 * @param mixed $article_id
 	 */
-	public function setNummer($nummer) {
-		$this->nummer = $nummer;
+	public function setArticleId($article_id): void {
+		$this->article_id = $article_id;
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getWeight() {
+		return $this->weight;
+	}
+	
+	/**
+	 * @param mixed $weight
+	 */
+	public function setWeight($weight): void {
+		$this->weight = $weight;
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getNr() {
+		return $this->nr;
+	}
+	
+	/**
+	 * @param mixed $nr
+	 */
+	public function setNr($nr): void {
+		$this->nr = $nr;
 	}
 	
 	/**
@@ -209,7 +222,7 @@ group by r.datum ';
 	/**
 	 * @param mixed $name
 	 */
-	public function setName($name) {
+	public function setName($name): void {
 		$this->name = $name;
 	}
 	
@@ -223,50 +236,64 @@ group by r.datum ';
 	/**
 	 * @param mixed $kg_price
 	 */
-	public function setKgPrice($kg_price) {
+	public function setKgPrice($kg_price): void {
 		$this->kg_price = $kg_price;
 	}
 	
 	/**
 	 * @return mixed
 	 */
-	public function getBestellArtikelId() {
-		return $this->bestell_artikel_id;
+	public function getAvailable() {
+		return $this->available;
 	}
 	
 	/**
-	 * @param mixed $bestell_artikel_id
+	 * @param mixed $available
 	 */
-	public function setBestellArtikelId($bestell_artikel_id) {
-		$this->bestell_artikel_id = (int)$bestell_artikel_id;
-	}
-	
-	/**
-	 * @return mixed
-	 */
-	public function getVerfuegbar() {
-		return $this->verfuegbar;
-	}
-	
-	/**
-	 * @param mixed $verfuegbar
-	 */
-	public function setVerfuegbar($verfuegbar) {
-		$this->verfuegbar = $verfuegbar;
+	public function setAvailable($available): void {
+		$this->available = $available;
 	}
 	
 	/**
 	 * @return mixed
 	 */
-	public function getDatum() {
-		return $this->datum;
+	public function getAvailableWeight() {
+		return $this->availableWeight;
 	}
 	
 	/**
-	 * @param mixed $datum
+	 * @param mixed $availableWeight
 	 */
-	public function setDatum($datum) {
-		$this->datum = $datum;
+	public function setAvailableWeight($availableWeight): void {
+		$this->availableWeight = $availableWeight;
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getPieceWeight() {
+		return $this->pieceWeight;
+	}
+	
+	/**
+	 * @param mixed $pieceWeight
+	 */
+	public function setPieceWeight($pieceWeight): void {
+		$this->pieceWeight = $pieceWeight;
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getDate() {
+		return $this->date;
+	}
+	
+	/**
+	 * @param mixed $date
+	 */
+	public function setDate($date): void {
+		$this->date = $date;
 	}
 	
 	/**
@@ -279,36 +306,8 @@ group by r.datum ';
 	/**
 	 * @param mixed $avgWeight
 	 */
-	public function setAvgWeight($avgWeight) {
+	public function setAvgWeight($avgWeight): void {
 		$this->avgWeight = $avgWeight;
-	}
-	
-	/**
-	 * @return mixed
-	 */
-	public function getVerfuegbarGewicht() {
-		return $this->verfuegbarGewicht;
-	}
-	
-	/**
-	 * @param mixed $verfuegbarGewicht
-	 */
-	public function setVerfuegbarGewicht($verfuegbarGewicht) {
-		$this->verfuegbarGewicht = $verfuegbarGewicht;
-	}
-	
-	/**
-	 * @return mixed
-	 */
-	public function getStueckGewicht() {
-		return $this->stueckGewicht;
-	}
-	
-	/**
-	 * @param mixed $stueckGewicht
-	 */
-	public function setStueckGewicht($stueckGewicht) {
-		$this->stueckGewicht = $stueckGewicht;
 	}
 	
 }

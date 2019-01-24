@@ -10,13 +10,13 @@ class Order {
 
     public static function checkEmail($email) {
 	    $email = Helper::getLikeString($email);
-	    $query = 'SELECT id FROM kunde where deleted_at is null and email COLLATE UTF8_GENERAL_CI like ?;';
+	    $query = 'SELECT id FROM client where deleted_at is null and email COLLATE UTF8_GENERAL_CI like ?;';
 	    return DataManagement::selectAndFetchSingleData($query, [$email])['id'];
     }
 
     public static function create($client_id, $targetDate) {
 	    // Cannot use the function insert here, because the date has to be set with now()
-	    $query = 'INSERT INTO `order` (client_id,datum,ziel_datum) VALUES (?, now(),?)';
+	    $query = 'INSERT INTO `order` (client_id,date,target_date) VALUES (?, now(),?)';
 	    $conn = DataManagement::run($query, [$client_id,$targetDate]);
 	    return $conn->lastInsertId();
     }
@@ -24,11 +24,11 @@ class Order {
     public static function find($id) {
 	    $query = 'SELECT * FROM `order` WHERE deleted_at is null and id=?;';
 	    $dataArr = DataManagement::selectAndFetchSingleData($query, [$id]);
-	    return PopulateObject::populateBestellung($dataArr);
+	    return PopulateObject::populateOrder($dataArr);
     }
     
     public static function del($id) {
-        $query1 = 'UPDATE `bestell_position` SET deleted_at=now() WHERE bestellung_id=?';
+        $query1 = 'UPDATE `order_position` SET deleted_at=now() WHERE order_id=?';
         $query2 = 'UPDATE `order` SET deleted_at=now() WHERE id=?';
 	    DataManagement::run($query1, [$id]);
 	    DataManagement::run($query2, [$id]);
@@ -38,12 +38,12 @@ class Order {
      * return true if there are multiple orders
      *
      * @param $client_id
-     * @param $datum
+     * @param $date
      * @return bool|mixed
      */
-    public static function checkMultipleOrdersAndGetOlder($client_id, $datum) {
-	    $query = 'select id from `order` where client_id=? and ziel_datum=? and deleted_at is null;';
-	    $result = DataManagement::selectAndFetchAssocMultipleData($query,[$client_id,$datum]);
+    public static function checkMultipleOrdersAndGetOlder($client_id, $date) {
+	    $query = 'select id from `order` where client_id=? and target_date=? and deleted_at is null;';
+	    $result = DataManagement::selectAndFetchAssocMultipleData($query,[$client_id,$date]);
 	    $ids=[];
 	    foreach ($result as $dataArr) {
 		    $ids[] = $dataArr['id'];
@@ -53,48 +53,48 @@ class Order {
 	    }
 	    return false;
     }
+	
+	/**
+	 * @return mixed
+	 */
+	public function getId() {
+		return $this->id;
+	}
+	
+	/**
+	 * @param mixed $id
+	 */
+	public function setId($id): void {
+		$this->id = $id;
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getClientId() {
+		return $this->client_id;
+	}
+	
+	/**
+	 * @param mixed $client_id
+	 */
+	public function setClientId($client_id): void {
+		$this->client_id = $client_id;
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getDate() {
+		return $this->date;
+	}
+	
+	/**
+	 * @param mixed $date
+	 */
+	public function setDate($date): void {
+		$this->date = $date;
+	}
 
-    /**
-     * @return mixed
-     */
-    public function getId() {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id) {
-        $this->id = $id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getKundeId() {
-        return $this->client_id;
-    }
-
-    /**
-     * @param mixed $client_id
-     */
-    public function setKundeId($client_id) {
-        $this->client_id = $client_id;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getDate() {
-        return $this->date;
-    }
-
-    /**
-     * @param mixed $date
-     */
-    public function setDate($date) {
-        $this->date = $date;
-    }
 
 }

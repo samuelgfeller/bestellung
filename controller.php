@@ -25,55 +25,55 @@ if ($path == '') {
 			$alreadyOrdered = OrderPosition::getIfAlreadyOrdered($client->getId(), $GETDateSQL);
 			
 			// Initialise the variable with the order id for the html
-			$bestellung_id = $alreadyOrdered ? $alreadyOrdered[0]->getBestellungId() : '';
+			$order_id = $alreadyOrdered ? $alreadyOrdered[0]->getOrderId() : '';
 			
-			// Get all bestell_artikel which are available (verfügbar=1)
-			$bestellArtikel = OrderArticle::allAvailableFrom($GETDateSQL);
+			// Get all bestell_article which are available (verfügbar=1)
+			$orderArticle = OrderArticle::allAvailableFrom($GETDateSQL);
 			
-			$artikelUndBestellPositionen = false;
-			if ($bestellArtikel) {
-				$artikelUndBestellPositionen = [];
-				foreach ($bestellArtikel as $key => $ba) {
+			$articleAndOrderPositions = false;
+			if ($orderArticle) {
+				$articleAndOrderPositions = [];
+				foreach ($orderArticle as $key => $ba) {
 					// Initialising array with default values
-					$artikelUndBestellPositionen[$key] = ['already_ordered' => false,
-						'bestell_artikel' => false,
-						'Article' => false];
+					$articleAndOrderPositions[$key] = ['already_ordered' => false,
+						'order_article' => false,
+						'article' => false];
 					$weightToSubstrate = 0;
 					
 					if ($alreadyOrdered) {
-						// Finding the position with the same bestell_artikel_id
+						// Finding the position with the same order_article_id
 						foreach ($alreadyOrdered as $position) {
 //                            var_dump($position);
-							if ($position->getBestellArtikelId() == $ba->getBestellArtikelId()) {
+							if ($position->getOrderArticleId() == $ba->getOrderArticleId()) {
 								// Wenn das Gewicht kleiner als 15 ist heisst es, dass es Stückzahlen sind
-								if ($position->getGewicht() <= 15) {
-									// Die Anzahl Stücke mit dem Stückgewicht (Standardgewicht) multiplizieren (Resultate ist in Gramm)
-									$alreadyOrderedWeight = $position->getGewicht() * OrderArticle::getDefaultWeight($ba->getBestellArtikelId());
+								if ($position->getWeight() <= 15) {
+									// Die Anzahl Stücke mit dem Stückweight (Standardweight) multiplizieren (Resultate ist in Gramm)
+									$alreadyOrderedWeight = $position->getWeight() * OrderArticle::getDefaultWeight($ba->getOrderArticleId());
 								} //Wenn höher als 15 ist es direkt ein Gewict in Gramm
 								else {
-									$alreadyOrderedWeight = $position->getGewicht();
+									$alreadyOrderedWeight = $position->getWeight();
 								}
-								$weightToSubstrate += $position->getAnzahlPaeckchen() * ($alreadyOrderedWeight / 1000);
+								$weightToSubstrate += $position->getPackageAmount() * ($alreadyOrderedWeight / 1000);
 								
-								$artikelUndBestellPositionen[$key] = ['already_ordered' => $position];
+								$articleAndOrderPositions[$key] = ['already_ordered' => $position];
 							}
 						}
 					}
 					
 					// Get all the ordered weight and amount for all orders for a date
-					$orderedWeightAndAmounts = OrderPosition::getTotalOrderedWeightForBa($ba->getBestellArtikelId(), $GETDateSQL);
+					$orderedWeightAndAmounts = OrderPosition::getTotalOrderedWeightForBa($ba->getOrderArticleId(), $GETDateSQL);
 					$totalOrderedWeight = 0;
 					if ($orderedWeightAndAmounts) {
 						// Loop over each ordered weight
 						foreach ($orderedWeightAndAmounts as $orderedWeightAndAmount) {
 							
 							// Wenn das Gewicht kleiner als 15 ist heisst es, dass es Stückzahlen sind
-							if ($orderedWeightAndAmount['gewicht'] <= 15) {
+							if ($orderedWeightAndAmount['weight'] <= 15) {
 								// Die Anzahl Stücke mit dem Stückgewicht (Standardgewicht) multiplizieren (Resultate ist in Gramm)
-								$weight = $orderedWeightAndAmount['gewicht'] * OrderArticle::getDefaultWeight($ba->getBestellArtikelId());
+								$weight = $orderedWeightAndAmount['weight'] * OrderArticle::getDefaultWeight($ba->getOrderArticleId());
 							} //Wenn höher als 15 ist es direkt ein Gewict in Gramm
 							else {
-								$weight = $orderedWeightAndAmount['gewicht'];
+								$weight = $orderedWeightAndAmount['weight'];
 							}
 							// Anzahl Pakete mit gewicht multiplizieren
 							$totalOrderedWeight += $orderedWeightAndAmount['anz'] * ($weight / 1000);
@@ -84,34 +84,34 @@ if ($path == '') {
 //                    var_dump('befire: '.$totalOrderedWeight,$weightToSubstrate);
 					$totalOrderedWeight -= $weightToSubstrate;
 //                    var_dump('after: '.$totalOrderedWeight);
-//                    var_dump('calc: '.$artikel->getGewicht() .'-'. $totalOrderedWeight );
+//                    var_dump('calc: '.$article->getWeight() .'-'. $totalOrderedWeight );
 					// Verfügbares Gewicht
-					/*                    highlight_string("<?php\n\$data =\n" . var_export($artikel, true) . ";\n?>");*/
-//                    var_dump($artikel->getGewicht() ?? 0);
+					/*                    highlight_string("<?php\n\$data =\n" . var_export($article, true) . ";\n?>");*/
+//                    var_dump($article->getWeight() ?? 0);
 					
-					$availableWeight = round(($ba->getGewicht() ?? 0) - ($totalOrderedWeight ?? 0), 2);
+					$availableWeight = round(($ba->getWeight() ?? 0) - ($totalOrderedWeight ?? 0), 2);
 					if ($availableWeight === (float)-0) {
-						$ba->setVerfuegbarGewicht(0);
+						$ba->setAvailableWeight(0);
 					} else {
-						$ba->setVerfuegbarGewicht($availableWeight);
+						$ba->setAvailableWeight($availableWeight);
 					}
 					
-					$pieceWeight = OrderArticle::getDefaultWeight($ba->getBestellArtikelId());
-					$ba->setStueckgewicht($pieceWeight);
+					$pieceWeight = OrderArticle::getDefaultWeight($ba->getOrderArticleId());
+					$ba->setPieceWeight($pieceWeight);
 					
-					$artikelUndBestellPositionen[$key]['bestell_artikel'] = $ba;
-					$artikel = Article::find($ba->getArtikelId());
-					$avag = $ba->getVerfuegbarGewicht() * 1000; // Available weight in gramm
-					$g1 = $artikel->getGewicht1();
-					$g2 = $artikel->getGewicht2();
-					$g3 = $artikel->getGewicht3();
-					$g4 = $artikel->getGewicht4();
-					$s1 = $artikel->getStueckzahl1();
-					$s2 = $artikel->getStueckzahl2();
-					$s3 = $artikel->getStueckzahl3();
-					$s4 = $artikel->getStueckzahl4();
+					$articleAndOrderPositions[$key]['order_article'] = $ba;
+					$article = Article::find($ba->getArticleId());
+					$avag = $ba->getAvailableWeight() * 1000; // Available weight in gramm
+					$g1 = $article->getWeight1();
+					$g2 = $article->getWeight2();
+					$g3 = $article->getWeight3();
+					$g4 = $article->getWeight4();
+					$s1 = $article->getPieceAmount1();
+					$s2 = $article->getPieceAmount2();
+					$s3 = $article->getPieceAmount3();
+					$s4 = $article->getPieceAmount4();
 //                    var_dump($s3.' * '.$pieceWeight,$s3*$pieceWeight,$avag);
-					$artikelUndBestellPositionen[$key]['order_possibilities'] = [!empty($g1) && $g1 <= $avag ? $g1 : null,
+					$articleAndOrderPositions[$key]['order_possibilities'] = [!empty($g1) && $g1 <= $avag ? $g1 : null,
 						!empty($g2) && $g2 <= $avag ? $g2 : null,
 						!empty($g3) && $g3 <= $avag ? $g3 : null,
 						!empty($g4) && $g4 <= $avag ? $g4 : null,
@@ -119,18 +119,18 @@ if ($path == '') {
 						!empty($s2) && $s2 * $pieceWeight <= $avag ? $s2 : null,
 						!empty($s3) && $s3 * $pieceWeight <= $avag ? $s3 : null,
 						!empty($s4) && $s4 * $pieceWeight <= $avag ? $s4 : null,];
-//                    var_dump($artikelUndBestellPositionen[$key]['order_possibilities']);
+//                    var_dump($articleAndOrderPositions[$key]['order_possibilities']);
 				}
 			}
 //            https://stackoverflow.com/questions/1597736/how-to-sort-an-array-of-associative-arrays-by-value-of-a-given-key-in-php
 			// Sort that the article with most weight is at the top and those with 0 bottom
-			if ($artikelUndBestellPositionen) {
+			if ($articleAndOrderPositions) {
 				$aWeight = [];
-				foreach ($artikelUndBestellPositionen as $key => $row) {
+				foreach ($articleAndOrderPositions as $key => $row) {
 //                var_dump($key,$row);
-					$aWeight[$key]['bestell_artikel'] = $row['bestell_artikel']->getVerfuegbarGewicht();
+					$aWeight[$key]['order_article'] = $row['order_article']->getAvailableWeight();
 				}
-				array_multisort($aWeight, SORT_DESC, $artikelUndBestellPositionen);
+				array_multisort($aWeight, SORT_DESC, $articleAndOrderPositions);
 			}
 			require_once __DIR__ . '/templates/order/order.html.php';
 			exit;
@@ -144,11 +144,11 @@ if ($path == '') {
 		require_once __DIR__ . '/templates/pages/noEntries.html.php';
 		exit;
 	}
-	require_once __DIR__ . '/templates/home/home.html.php';
+	require_once __DIR__ . '/templates/pages/home.html.php';
 	exit;
 }
 
-if ($path == 'Article') {
+if ($path == 'artikel') {
 	require_once __DIR__ . '/model/entity/OrderArticle.php';
 	require_once __DIR__ . '/model/entity/Appointment.php';
 	
@@ -175,15 +175,15 @@ if ($path == 'Article') {
 		
 		// If a dated is in the GET request, it shows the bills for this date
 		if ($_GET && $_GET['datum']) {
-			$datumGET = strtotime($_GET['datum']);
-			$datum = date('d.m.Y', $datumGET);
-			$datumSQL = date('Y-m-d', $datumGET);
-			$allBa = OrderArticle::allFrom($datumSQL);
-			require_once __DIR__ . '/templates/article/all_artikel.html.php';
+			$dateGET = strtotime($_GET['datum']);
+			$date = date('d.m.Y', $dateGET);
+			$dateSQL = date('Y-m-d', $dateGET);
+			$allBa = OrderArticle::allFrom($dateSQL);
+			require_once __DIR__ . '/templates/article/article_all.html.php';
 			exit;
 		}
 		//if not it only shows the dates
-		$url = 'Article'; // is needed in dates.html.php
+		$url = 'artikel'; // is needed in dates.html.php
 		require_once __DIR__ . '/templates/pages/dates.html.php';
 		exit;
 	}
@@ -217,39 +217,39 @@ if ($path == 'success') {
 	
 	if ($_POST && isset($_POST['pAmount'])) {
 		$client = Client::find($_SESSION['client']);
-		$bestellungId = Order::create($client->getId(), htmlspecialchars($_POST['datum']));
+		$orderId = Order::create($client->getId(), htmlspecialchars($_POST['date']));
 		$valuesArr = [];
 		for ($i = 0, $iMax = count($_POST['pAmount']); $i < $iMax; $i++) {
-			if (!empty($_POST['pAmount'][$i]) || !empty($_POST['kommentar'][$i])) {
-				$valuesArr[] = ['bestell_artikel_id' => (int)$_POST['ba_id'][$i],
-					'bestellung_id' => $bestellungId,
-					'anzahl_paeckchen' => (int)$_POST['pAmount'][$i],
-					'gewicht' => (int)$_POST['singleWeight'][$i],
-					'kommentar' => htmlspecialchars($_POST['kommentar'][$i]),];
+			if (!empty($_POST['pAmount'][$i]) || !empty($_POST['comment'][$i])) {
+				$valuesArr[] = ['order_article_id' => (int)$_POST['ba_id'][$i],
+					'order_id' => $orderId,
+					'package_amount' => (int)$_POST['pAmount'][$i],
+					'weight' => (int)$_POST['singleWeight'][$i],
+					'comment' => htmlspecialchars($_POST['comment'][$i]),];
 				
 			}
 		}
 		
 		foreach ($valuesArr as $values) {
-			$bestellPosition = PopulateObject::populateBestellPosition($values);
-			OrderPosition::add($bestellPosition);
+			$orderPosition = PopulateObject::populateOrderPosition($values);
+			OrderPosition::add($orderPosition);
 		}
 		
 		// Delete old order
-		if ($minId = Order::checkMultipleOrdersAndGetOlder($_SESSION['client'], $_POST['datum'])) {
-			$minId ? Order::del($minId) : Order::del($_POST['bestellung_id']);
+		if ($minId = Order::checkMultipleOrdersAndGetOlder($_SESSION['client'], $_POST['date'])) {
+			$minId ? Order::del($minId) : Order::del($_POST['order_id']);
 		}
 		
 		// Send confirmation email
 		$positionDaten = [];
 		foreach ($valuesArr as $values) {
-			$artikel = Article::findArtikelByBestellArtikel($values['bestell_artikel_id']);
-			if (!empty($artikel)) {
-				$positionDaten[] = ['artikel_name' => $artikel->getName(),
-					'anzahl_paeckchen' => $values['anzahl_paeckchen'],
-					'gewicht' => $values['gewicht'],
-					'kommentar' => $values['kommentar'],
-					'stueck_gewicht' => $artikel->getStueckGewicht(),];
+			$article = Article::findArticleByOrderArticle($values['order_article_id']);
+			if (!empty($article)) {
+				$positionDaten[] = ['article_name' => $article->getName(),
+					'package_amount' => $values['package_amount'],
+					'weight' => $values['weight'],
+					'comment' => $values['comment'],
+					'piece_weight' => $article->getPieceWeight(),];
 			}
 		}
 		
@@ -257,14 +257,14 @@ if ($path == 'success') {
 		ob_start();
 		include __DIR__ . '/templates/success/confirmation_mail.php';
 		$mailBody = ob_get_clean();
-		$mail->prepare('Bestellbestätigung für den ' . date('d.m.Y', strtotime($_POST['datum'])), $mailBody);
-		$mail->send($client->getEmail(), 'info@masesselin.ch', $client->getVorname() . ' ' . $client->getName(), 'Masesselin');
+		$mail->prepare('Bestellbestätigung für den ' . date('d.m.Y', strtotime($_POST['date'])), $mailBody);
+		$mail->send($client->getEmail(), 'info@masesselin.ch', $client->getFirstName() . ' ' . $client->getName(), 'Masesselin');
 
-//        require_once __DIR__ . '/templates/success/success_bestellung.php';
+//        require_once __DIR__ . '/templates/success/order_success.php';
 		require_once __DIR__ . '/templates/pages/feedback.html.php';
 		exit;
 	}
-	require_once __DIR__ . '/templates/success/success_bestellung.php';
+	require_once __DIR__ . '/templates/success/order_success.php';
 	exit;
 }
 
@@ -273,7 +273,7 @@ if ($path == 'artikel/dates') {
 	$datesYears = Appointment::getYearsAndDates();
 	$dates = $datesYears['dates'];
 	$years = $datesYears['years'];
-	$url = 'Article';
+	$url = 'artikel';
 	require_once __DIR__ . '/templates/pages/dates.html.php';
 	exit;
 }
@@ -311,12 +311,12 @@ if ($path == 'feedback/success') {
 		Feedback::add($_POST['feedback'], $client->getId());
 		$mail = new Email();
 		$mailBody = nl2br($_POST['feedback']);
-		$fullName = $client->getVorname() . ' ' . $client->getName();
+		$fullName = $client->getFirstName() . ' ' . $client->getName();
 		$mail->prepare('Feedback von ' . $fullName, $mailBody);
 		$mail->send('info@masesselin.ch' . '', $client->getEmail(), 'Masesselin', $fullName);
 	}
 	// @todo change feedback / Make own button and redirect to specific success
-	require_once __DIR__ . '/templates/success/success_bestellung.php';
+	require_once __DIR__ . '/templates/success/order_success.php';
 	exit;
 }
 
@@ -334,66 +334,6 @@ if ($path == 'mail') {
 //		$mail->send('samuelgfeller@bluewin.ch','info@masesselin.ch','Samuel Gfeller','Masesselin');
 //		exit;
 //	}
-	$positionDaten = [0 => ["id" => "7",
-		"artikel_name" => "Apfelsaft",
-		"anzahl_paeckchen" => "1",
-		"gewicht" => "100000",
-		"kommentar" => "",
-		"stueck_gewicht" => "5000",],
-		1 => ["id" => "8",
-			"artikel_name" => "Äpfel",
-			"anzahl_paeckchen" => "2",
-			"gewicht" => "5",
-			"kommentar" => "",
-			"stueck_gewicht" => "1000",],
-		2 => ["id" => "9",
-			"artikel_name" => "Äpfel, Harasse 20kg",
-			"anzahl_paeckchen" => "10",
-			"gewicht" => "1000",
-			"kommentar" => "",
-			"stueck_gewicht" => "20000",],
-		3 => ["id" => "10",
-			"artikel_name" => "Faux Filet",
-			"anzahl_paeckchen" => "2",
-			"gewicht" => "500",
-			"kommentar" => "",
-			"stueck_gewicht" => "300",],
-		4 => ["id" => "11",
-			"artikel_name" => "Rump-Steak",
-			"anzahl_paeckchen" => "2",
-			"gewicht" => "100",
-			"kommentar" => "",
-			"stueck_gewicht" => "650",],
-		5 => ["id" => "12",
-			"artikel_name" => "Entrecote",
-			"anzahl_paeckchen" => "2",
-			"gewicht" => "1000",
-			"kommentar" => "",
-			"stueck_gewicht" => "180",],
-		6 => ["id" => "13",
-			"artikel_name" => "Steak",
-			"anzahl_paeckchen" => "2",
-			"gewicht" => "500",
-			"kommentar" => "",
-			"stueck_gewicht" => "180",],
-		7 => ["id" => "14",
-			"artikel_name" => "Saftplätzli",
-			"anzahl_paeckchen" => "1",
-			"gewicht" => "1000",
-			"kommentar" => "",
-			"stueck_gewicht" => "",],
-		8 => ["id" => "15",
-			"artikel_name" => "Roastbeef",
-			"anzahl_paeckchen" => "2",
-			"gewicht" => "500",
-			"kommentar" => "",
-			"stueck_gewicht" => "650",],
-		9 => ["id" => "16",
-			"artikel_name" => "Braten",
-			"anzahl_paeckchen" => "5",
-			"gewicht" => "200",
-			"kommentar" => "",
-			"stueck_gewicht" => "",],];
 	
 	ob_start();
 	include __DIR__ . '/templates/pages/test_page.html.php';

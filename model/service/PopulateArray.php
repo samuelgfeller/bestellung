@@ -14,62 +14,62 @@ class PopulateArray
 {
 	
 	/**
-	 * @param Article $artikel
+	 * @param Article $article
 	 * @return array
 	 */
-	public static function populateArtikelArray(Article $artikel): array {
-		return ['nummer' => $artikel->getNummer(),
-			'name' => $artikel->getName(),
-			'kg_price' => $artikel->getKgPrice(),
-			'stueck_gewicht' => $artikel->getStueckGewicht(),
-			'gewicht_1' => $artikel->getGewicht1(),
-			'gewicht_2' => $artikel->getGewicht2(),
-			'gewicht_3' => $artikel->getGewicht3(),
-			'gewicht_4' => $artikel->getGewicht4(),
-			'stueckzahl_1' => $artikel->getStueckzahl1(),
-			'stueckzahl_2' => $artikel->getStueckzahl2(),
-			'stueckzahl_3' => $artikel->getStueckzahl3(),
-			'stueckzahl_4' => $artikel->getStueckzahl4(),];
+	public static function populateArticleArray(Article $article): array {
+		return ['nr' => $article->getNr(),
+			'name' => $article->getName(),
+			'kg_price' => $article->getKgPrice(),
+			'piece_weight' => $article->getPieceWeight(),
+			'weight_1' => $article->getWeight1(),
+			'weight_2' => $article->getWeight2(),
+			'weight_3' => $article->getWeight3(),
+			'weight_4' => $article->getWeight4(),
+			'piece_amount_1' => $article->getPieceAmount1(),
+			'piece_amount_2' => $article->getPieceAmount2(),
+			'piece_amount_3' => $article->getPieceAmount3(),
+			'piece_amount_4' => $article->getPieceAmount4(),];
 	}
 	
 	public static function populateClientArray(Client $client): array {
-		return ['vorname' => $client->getVorname(),
+		return ['first_name' => $client->getFirstName(),
 			'name' => $client->getName(),
-			'adresse' => $client->getAdresse(),
-			'ort_id' => $client->getOrtId(),
-			'tel' => $client->getTel(),
-			'natel' => $client->getNatel(),
+			'address' => $client->getAddress(),
+			'place_id' => $client->getPlaceId(),
+			'phone' => $client->getPhone(),
+			'phone_mobile' => $client->getPhoneMobile(),
 			'email' => $client->getEmail(),
-			'personen' => $client->getPersonen(),
+			'person_amount' => $client->getPersonAmount(),
 			'siedfleisch' => $client->getSiedfleisch(),
-			'besonderes' => $client->getBesonderes(),
+			'remark' => $client->getRemark(),
 			'id' => $client->getId(),
 			'deleted_at' => $client->getDeletedAt(),];
 	}
 	
-	public static function populateTerminArray(Appointment $termin): array {
+	public static function populateAppointmentArray(Appointment $appointment): array {
 		return [
-			'id' => $termin->getId(),
-			'datum' => $termin->getDatum(),
+			'id' => $appointment->getId(),
+			'date' => $appointment->getDate(),
 		];
 	}
 	
-	public static function populateBestellungArray(Order $bestellung): array {
+	public static function populateOrderArray(Order $order): array {
 		return [
-			'id' => $bestellung->getId(),
-			'client_id' => $bestellung->getKundeId(),
-			'datum' => $bestellung->getDate(),
+			'id' => $order->getId(),
+			'client_id' => $order->getClientId(),
+			'date' => $order->getDate(),
 		];
 	}
 	
-	public static function populateBestellpositionArray(OrderPosition $position): array {
+	public static function populateOrderPositionArray(OrderPosition $position): array {
 		return [
 			'id' => $position->getId(),
-			'bestellung_id' => $position->getBestellungId(),
-			'bestell_artikel_id' => $position->getBestellArtikelId(),
-			'anzahl_paeckchen' => $position->getAnzahlPaeckchen(),
-			'gewicht' => $position->getGewicht(),
-			'kommentar' => $position->getKommentar(),
+			'order_id' => $position->getOrderId(),
+			'order_article_id' => $position->getOrderArticleId(),
+			'package_amount' => $position->getPackageAmount(),
+			'weight' => $position->getWeight(),
+			'comment' => $position->getComment(),
 		];
 	}
 	

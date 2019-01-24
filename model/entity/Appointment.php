@@ -5,14 +5,14 @@ require_once __DIR__ . '/../service/DataManagement.php';
 
 class Appointment {
     private $id;
-    private $datum;
+    private $date;
 
     public static function all() {
-	    $query = 'SELECT * FROM termin WHERE deleted_at is null order by id desc';
+	    $query = 'SELECT * FROM appointment WHERE deleted_at is null order by id desc';
 	    $result = DataManagement::selectAndFetchAssocMultipleData($query);
 	    $dataObjArr = [];
 	    foreach ($result as $dataArr) {
-		    $dataObjArr[] = PopulateObject::populateTermin($dataArr);
+		    $dataObjArr[] = PopulateObject::populateAppointment($dataArr);
 	    }
 	    return $dataObjArr;
     }
@@ -20,11 +20,11 @@ class Appointment {
     public static function getYearsAndDates() {
 	    $years = [];
 	    $dates = [];
-	    $query = 'SELECT datum FROM termin WHERE deleted_at is null order by datum desc';
+	    $query = 'SELECT date FROM appointment WHERE deleted_at is null order by date desc';
 	    $allData = DataManagement::selectAndFetchAssocMultipleData($query);
 	    foreach ($allData as $dateArr) {
-		    $years[] = date('Y', strtotime($dateArr['datum']));
-		    $dates[] = date('d.m.Y', strtotime($dateArr['datum']));
+		    $years[] = date('Y', strtotime($dateArr['date']));
+		    $dates[] = date('d.m.Y', strtotime($dateArr['date']));
 	    }
 	    return [
 		    'years' => $years,
@@ -74,15 +74,15 @@ class Appointment {
     /**
      * @return mixed
      */
-    public function getDatum() {
-        return $this->datum;
+    public function getDate() {
+        return $this->date;
     }
 
     /**
-     * @param mixed $datum
+     * @param mixed $date
      */
-    public function setDatum($datum) {
-        $this->datum = $datum;
+    public function setDate($date) {
+        $this->date = $date;
     }
 
 

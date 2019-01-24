@@ -8,11 +8,11 @@ if ($path == 'artikel/gewicht') {
     exit;
 }
 
-if ($path == 'bestellArtikel/checkAvailable'){
+if ($path == 'orderArticle/checkAvailable'){
     require_once 'model/entity/OrderArticle.php';
     require_once 'model/entity/Article.php';
     if($_POST['value'] === '1'){
-        if(Article::checkIfHasOrderPossibility($_POST['artikel_id'])){
+        if(Article::checkIfHasOrderPossibility($_POST['article_id'])){
             OrderArticle::toggleAvailable($_POST['id'], $_POST['value']);
         }else{
             echo 'false';
@@ -22,7 +22,7 @@ if ($path == 'bestellArtikel/checkAvailable'){
     }
     exit;
 }
-// @todo transform all dates into foreign keys from Termin
+// @todo transform all dates into foreign keys from Appointment
 
 if ($path == 'order/check_email') {
     require_once __DIR__ . '/model/entity/Order.php';

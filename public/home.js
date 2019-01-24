@@ -19,7 +19,7 @@ $(document).ready(function () {
         });
     });
 
-    $('#bestellForm').on('submit', function (e) {
+    $('#orderForm').on('submit', function (e) {
         if ($('.warningMsg').length > 0) {
             e.preventDefault();
             $('.modal-header h4').text('Es gibt noch Fehler');
@@ -30,7 +30,7 @@ $(document).ready(function () {
                 '1 stehen.</i>');
             $('#myModal').modal('toggle');
         } else {
-            // $('#bestellForm').submit();
+            // $('#orderForm').submit();
         }
     });
 
@@ -151,7 +151,7 @@ function calcWeight(id, singleWeight) {
     if (pAnzahl && (pAnzahl !== 0 || pAnzahl === '') && singleWeight) {
         // Es wird mit Stücke bestellt
         if (singleWeight <= maxAmount) {
-            var stueckGewicht = 500;
+            var pieceWeight = 500;
             $.ajax({
                 url: 'order/checkDefaultWeight',
                 type: 'post',
@@ -159,21 +159,21 @@ function calcWeight(id, singleWeight) {
                 data: {'id': id}
             }).done(function (output) {
                 if (output) {
-                    stueckGewicht = parseInt(output);
+                    pieceWeight = parseInt(output);
                 } else {
-                    stueckGewicht = 500;
+                    pieceWeight = 500;
                 }
             }).fail(function (output) {
                 alert('Fehler bitte melden Sie sich bei Nicolas');
             });
 
-            var totalWantedWeight = wantedWeight * stueckGewicht / 1000;
+            var totalWantedWeight = wantedWeight * pieceWeight / 1000;
             if (aWeight - totalWantedWeight >= 0) {
-                $('#outputWeight' + id).html(pAnzahl * singleWeight + ' Stk. à ' + stueckGewicht + 'g. = <b>' + totalWantedWeight * 1000 + 'g.</b>');
+                $('#outputWeight' + id).html(pAnzahl * singleWeight + ' Stk. à ' + pieceWeight + 'g. = <b>' + totalWantedWeight * 1000 + 'g.</b>');
             } else {
                 $('.modal-header h4').text('Es wurde zu viel eingegeben');
                 $('.modal-body p').html('Bitte einen kleineren Betrag eingeben / auswählen.<br><b>' +
-                    +pAnzahl + '</b> Päckchen <b>&times; ' + singleWeight + ' Stücke à ' + stueckGewicht + 'g</b> gibt <b>' + totalWantedWeight + 'kg</b>. ' +
+                    +pAnzahl + '</b> Päckchen <b>&times; ' + singleWeight + ' Stücke à ' + pieceWeight + 'g</b> gibt <b>' + totalWantedWeight + 'kg</b>. ' +
                     'Verfügbar sind: <b>' + aWeight + 'kg.</b><br><br>' +
                     '<i>Es wurde standardmässig 1 in der Anzahl Päckchen eingesetzt</i>');
                 $('#myModal').modal('toggle');

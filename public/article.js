@@ -19,7 +19,7 @@ function updWeight(id, value) {
     });
 }
 
-function checkUncheckAvailable(ba_id, artikel_id) {
+function checkUncheckAvailable(ba_id, article_id) {
     var checked = $('#box' + ba_id).is(":checked");
     if (checked) {
         checked = 1;
@@ -27,11 +27,11 @@ function checkUncheckAvailable(ba_id, artikel_id) {
         checked = 0;
     }
     $.ajax({
-        url: 'bestellArtikel/checkAvailable',
+        url: 'orderArticle/checkAvailable',
         type: 'post',
         data: {
             'id': ba_id,
-            'artikel_id': artikel_id,
+            'article_id': article_id,
             'value': checked
         }
     }).done(function (output) {

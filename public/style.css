@@ -230,10 +230,6 @@ label {
     z-index: 0;
 }
 
-.orte {
-    width: 100%;
-}
-
 /*Pagination*/
 .pagination {
     list-style-type: none;
@@ -280,18 +276,6 @@ label {
     box-shadow: 0 0 16px lightgrey;
 }
 
-/*
-.ortTr{
-    !*color:red;*!
-}
-.ortTr:hover{
-    background: #cccccc !important;
-    cursor: pointer;
-    color: red;
-}
-#ort1:hover{
-    color: red;
-}*/
 .noResults {
     display: none;
 }
@@ -365,7 +349,7 @@ label {
 }
 
 .clientTr:hover {
-    /*background-color: #888888 !important;*/
+    /*background-color: #888888 !impplaceant;*/
     box-shadow: 0 0 10px #888888 !important;
     position: relative;
     z-index: 2;
@@ -377,11 +361,11 @@ label {
 }
 
 /*Orte*/
-#ort-form {
+#place-form {
     text-align: left;
 }
 
-#ort-form input {
+#place-form input {
     width: 200px;
 }
 
@@ -531,11 +515,11 @@ label {
 
 /*Artikel*/
 
-#artikel-form {
+#article-form {
     text-align: left;
 }
 
-#artikel-form input {
+#article-form input {
     width: 200px;
 }
 
@@ -716,14 +700,14 @@ input[type="checkbox"]:checked + label:before {
     cursor: pointer;
 }
 
-#rechnungDiv {
+#billDiv {
     width: 70%;
     background: whitesmoke;
     box-shadow: rgba(0, 0, 0, 0.2) 0 0 10px;
     margin: auto;
 }
 
-#rechnung-table {
+#bill-table {
     border-collapse: collapse;
     width: 80%;
     margin: auto;
@@ -732,7 +716,7 @@ input[type="checkbox"]:checked + label:before {
     padding-bottom: 30px;
 }
 
-#rechnung-table th, #rechnung-table td {
+#bill-table th, #bill-table td {
     padding: 5px;
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -778,11 +762,11 @@ input[type="checkbox"]:checked + label:before {
     width: 10px;
 }
 
-#bestellForm {
+#orderForm {
     width: 100%;
 }
 
-/*#bestellForm input[type=submit]{*/
+/*#orderForm input[type=submit]{*/
 /*padding:15px;*/
 /*width:200px;*/
 /*float: right;*/
@@ -792,12 +776,12 @@ input[type="checkbox"]:checked + label:before {
 /*background: #a87bb7;*/
 /*color: white;*/
 /*}*/
-/*#bestellForm input[type=submit]:hover{*/
+/*#orderForm input[type=submit]:hover{*/
 /*box-shadow: 0 0 15px #ccc;*/
 /*!*background: ;*!*/
 /*}*/
 
-#bestellForm input[type=submit] {
+#orderForm input[type=submit] {
     /*position: absolute;*/
     /*top: 50%;*/
     /*left: 50%;*/
@@ -819,7 +803,7 @@ input[type="checkbox"]:checked + label:before {
     z-index: 1;
 }
 
-#bestellForm input[type=submit]:hover:hover {
+#orderForm input[type=submit]:hover:hover {
     animation: animate 5s linear infinite;
 }
 
@@ -832,7 +816,7 @@ input[type="checkbox"]:checked + label:before {
     }
 }
 
-#bestellForm input[type=submit]:hover:before {
+#orderForm input[type=submit]:hover:before {
     content: '';
     position: absolute;
     top: -5px;
@@ -847,18 +831,18 @@ input[type="checkbox"]:checked + label:before {
     transition: 0.5s;
 }
 
-#bestellForm input[type=submit]:hover:before {
+#orderForm input[type=submit]:hover:before {
     filter: blur(20px);
     opacity: 1;
     animation: animate 5s linear infinite;
 }
 
-.artikelTablePadding td {
+.articleTablePadding td {
     padding-top: 10px;
     padding-bottom: 10px;
 }
 
-form .artikelTable {
+form .articleTable {
     padding-top: 6px;
     padding-bottom: 6px;
 }

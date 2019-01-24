@@ -18,18 +18,17 @@ class Article {
     private $piece_amount_3;
     private $piece_amount_4;
 
-    public static function findArtikelByBestellArtikel($ba_id) {
-        $query = 'SELECT a.* FROM bestell_artikel bp left join article a on bp.artikel_id = a.id WHERE bp.id=? and a.deleted_at is null;';
+    public static function findArticleByOrderArticle($ba_id) {
+        $query = 'SELECT a.* FROM order_article bp left join article a on bp.article_id = a.id WHERE bp.id=? and a.deleted_at is null;';
         $dataArr = DataManagement::selectAndFetchSingleData($query, [$ba_id]);
-        return PopulateObject::populateArtikel($dataArr);
+        return PopulateObject::populateArticle($dataArr);
 
     }
 
-    public static function find($artikel_id) {
+    public static function find($article_id) {
         $query = 'SELECT * FROM article WHERE id=? and deleted_at is null;';
-        $dataArr = DataManagement::selectAndFetchSingleData($query, [$artikel_id]);
-        return PopulateObject::populateArtikel($dataArr);
-
+        $dataArr = DataManagement::selectAndFetchSingleData($query, [$article_id]);
+        return PopulateObject::populateArticle($dataArr);
     }
 
     public static function checkIfHasOrderPossibility($article_id) {

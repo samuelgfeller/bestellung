@@ -77,7 +77,7 @@
 
 <h1>Bestellbestätigung</h1>
 Vielen Dank für Ihre Bestellung. <br>
-<!--    <img style="width: 100%;" src="../../public/images/logovache.jpg" alt="">-->
+<!--    <img style="width: 100%;" src="../../public/images/logo_banner.jpg" alt="">-->
 Sie haben folgende Artikel bestellt: <br>
 <br>
 <table style=" border-collapse: collapse;
@@ -87,9 +87,9 @@ $totalPrice = 0;
 $totalWeight = 0;
 foreach ($positionDaten as $position) { ?>
     <tr style=""><td style="padding: 10px;">
-        <b><?= $position['anzahl_paeckchen'] ?></b> Päckchen <b><?= $position['artikel_name'] ?></b>
-    <?= $position['gewicht'] < 15 ? ' mit <b>'.$position['gewicht'] . '</b> Stücke pro Päckchen à <b>' . $position['stueck_gewicht'] . 'g.</b> (pro Stück)' : ' à <b>'.$position['gewicht'] . 'g.</b>' ?>
-    <?= !empty($position['kommentar']) ? ' | '.$position['kommentar'].'<br>' : '<br>' ?>
+        <b><?= $position['package_amount'] ?></b> Päckchen <b><?= $position['article_name'] ?></b>
+    <?= $position['weight'] < 15 ? ' mit <b>'.$position['weight'] . '</b> Stücke pro Päckchen à <b>' . $position['piece_weight'] . 'g.</b> (pro Stück)' : ' à <b>'.$position['weight'] . 'g.</b>' ?>
+    <?= !empty($position['comment']) ? ' | '.$position['comment'].'<br>' : '<br>' ?>
         </td></tr>
 <?php } ?>
 </table>
@@ -112,14 +112,14 @@ foreach ($positionDaten as $position) { ?>
         */?>
         <tr id="positionTr<?/*= $i */?>">
             <td style="text-align: left;padding: 16px;x"
-                id="position<?/*= $i */?>Artikel"><?/*= $position['artikel_name'] */?></td>
+                id="position<?/*= $i */?>Artikel"><?/*= $position['article_name'] */?></td>
             <td style="text-align: left;padding: 16px;" id="position<<?/*= $i */?>Amount">
-                <b><?/*= $position['anzahl_paeckchen'] */?></b></td>
+                <b><?/*= $position['package_amount'] */?></b></td>
             <td style="text-align: left; padding: 16px;" id="position<?/*= $i */?>Gewicht">
-                <b><?/*= $position['gewicht'] < 15 ? $position['gewicht'] . ' Stk. (' . $position['stueck_gewicht'] . 'g.)' : $position['gewicht'] . 'g.' */?></b>
+                <b><?/*= $position['weight'] < 15 ? $position['weight'] . ' Stk. (' . $position['piece_weight'] . 'g.)' : $position['weight'] . 'g.' */?></b>
             </td>
             <td style="text-align: left;padding: 16px;"
-                id="position<?/*= $i */?>Kommentar"><?/*= $position['kommentar'] */?></td>
+                id="position<?/*= $i */?>Comment"><?/*= $position['comment'] */?></td>
         </tr>
     <?php /*} */?>
 </table>-->

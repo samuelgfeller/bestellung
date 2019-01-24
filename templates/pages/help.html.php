@@ -23,7 +23,7 @@
         In diesem Feld können Sie eingeben, wie viele Päckchen von dem Artikel Sie gerne hätten.
         Es wird eine Zahl zwischen 1 und 15 erwartet.
     </p>
-    <img class="helpImg" src="images/anzahl_paeckchen.png" alt="">
+    <img class="helpImg" src="images/package_amount.png" alt="">
     <h3>Gewicht pro Päckchen oder Anzahl Stücke</h3>
     <p>
         Es gibt hier zwei Möglichkeiten. Einige Artikel können mit einer Stückzahl oder mit dem Gewicht bestellt werden.
@@ -32,20 +32,20 @@
         Die andere Möglichkeit ist, dass nur <b>g.</b> steht. Das heisst, dass das gewünschte Gewicht eingegeben
         werden muss. Die Einheit der Gewichteingabe ist Gramm.
     </p>
-    <img class="helpImg" src="images/gewicht_pro_paeckchen.png" alt="">
+    <img class="helpImg" src="images/package_weight.png" alt="">
     <h3>Besonderheiten</h3>
     <p>
-        Falls Sie etwas anderes oder einfach einen Kommentar hinterlassen möchten z. B., falls Sie mehr möchten
+        Falls Sie etwas anderes oder einfach einen Comment hinterlassen möchten z. B., falls Sie mehr möchten
         als verfügbar ist können Sie das in diesem Feld festhalten und wenn übrig bleibt, könnten wir es Ihnen evtl.
         reservieren.
     </p>
-    <img class="helpImg" src="images/besonderheiten.png" alt="">
+    <img class="helpImg" src="images/special.png" alt="">
     <h3>Gesamtgewicht(g)</h3>
     <p>
         Hier wird das Gesamtgewicht pro Artikel dargestellt. Wenn Sie jetzt zum Beispiel 3 Päckchen mit 3 Stücke pro
         Päckchen eingeben und das Stückgewicht 150g. ist, ist das Resultat 3 &times; 3 &times; 150g. was 1350g. gibt.
     </p>
-    <img class="helpImg" src="images/gesamtgewicht.png" alt="">
+    <img class="helpImg" src="images/totalweight.png" alt="">
     <h2>Bestellung abgeben</h2>
     <p>
         Wenn alles ausgefüllt ist, können Sie auf den Knopf <b>Bestellen</b> drücken.
