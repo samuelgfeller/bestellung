@@ -276,8 +276,9 @@ if ($path == 'success') {
 		ob_start();
 		include __DIR__ . '/templates/success/confirmation_mail.php';
 		$mailBody = ob_get_clean();
+		var_dump($mailBody);
 		$mail->prepare('Bestellbestätigung für den ' . date('d.m.Y', strtotime($_POST['date'])), $mailBody);
-		$mail->send($client->getEmail(), 'info@masesselin.ch', $client->getFirstName() . ' ' . $client->getName(), 'Masesselin');
+//		$mail->send($client->getEmail(), 'info@masesselin.ch', $client->getFirstName() . ' ' . $client->getName(), 'Masesselin');
 
 //        require_once __DIR__ . '/templates/success/order_success.php';
 		require_once __DIR__ . '/templates/pages/feedback.html.php';

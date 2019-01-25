@@ -1,9 +1,9 @@
 {
-    "require": {
-      "roave/security-advisories": "dev-master"
-      ,
-      "phpmailer/phpmailer": "^6.0",
-      "ext-json": "*",
-      "ext-pdo": "*"
-    }
+  "require": {
+    "roave/security-advisories": "dev-master",
+    "phpmailer/phpmailer": "^6.0",
+    "ext-json": "*",
+
+    "ext-pdo": "*"
+  }
 }
