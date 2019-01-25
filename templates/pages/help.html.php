@@ -26,11 +26,8 @@
     <img class="helpImg" src="images/package_amount.png" alt="">
     <h3>Gewicht pro Päckchen oder Anzahl Stücke</h3>
     <p>
-        Es gibt hier zwei Möglichkeiten. Einige Artikel können mit einer Stückzahl oder mit dem Gewicht bestellt werden.
-        Dort steht etwas wie <b>g. / Stk. à ca. X g.</b> In dem Textfeld können Sie angeben, wie viele Stücke
-        Sie <b>pro Päckchen</b> wollen. In dem Bild unten ist ein Beispiel. Eine Gewichtangabe ist auch möglich.<br>
-        Die andere Möglichkeit ist, dass nur <b>g.</b> steht. Das heisst, dass das gewünschte Gewicht eingegeben
-        werden muss. Die Einheit der Gewichteingabe ist Gramm.
+        Hier können Sie einen Knopf mit einer Anzahl Stücke oder einer Gewichtangabe andrücken.
+        Das Stückgewicht wird in Klammern nach dem Artikelnamen angezeigt.
     </p>
     <img class="helpImg" src="images/package_weight.png" alt="">
     <h3>Besonderheiten</h3>
@@ -42,8 +39,8 @@
     <img class="helpImg" src="images/special.png" alt="">
     <h3>Gesamtgewicht(g)</h3>
     <p>
-        Hier wird das Gesamtgewicht pro Artikel dargestellt. Wenn Sie jetzt zum Beispiel 3 Päckchen mit 3 Stücke pro
-        Päckchen eingeben und das Stückgewicht 150g. ist, ist das Resultat 3 &times; 3 &times; 150g. was 1350g. gibt.
+        Hier wird das Gesamtgewicht pro Artikel dargestellt. Wenn Sie jetzt zum Beispiel 3 Päckchen mit je 500g. pro
+        Päckchen auswählen ist das Resultat 3 &times; 500g = 1500g.
     </p>
     <img class="helpImg" src="images/totalweight.png" alt="">
     <h2>Bestellung abgeben</h2>
@@ -64,11 +61,6 @@
         Die Angaben sind <b>eine Schätzung</b> des verfügbaren Gewichts. Es variiert immer je nach Gewicht des Rinds.
         Daher kann es sein, dass es einmal mehr gibt als geschrieben aber auch weniger.
         <b>Wenn das verfügbare Gewicht tief ist (es wird Orange) ist die Bestellung nicht garantiert. </b>
-        <br>
-        Die Bestellungen werden so gut wie möglich vorbereitet <b>im Bereich des Möglichen</b>. Wenn in der Bestellung
-        z. B. 1 Päckchen mit 10 Stücke Cotelettes eingegeben wird, ist es nicht möglich und es wird angepasst in
-        vielleicht 2 oder 3 Päckchen.
-
     </p>
     <h2>Zusätzliche Infos</h2>
     <p>

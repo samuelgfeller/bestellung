@@ -14,21 +14,29 @@ if ($path == '') {
 	require_once __DIR__ . '/model/entity/Client.php';
 	require_once __DIR__ . '/model/entity/Appointment.php';
 	require_once __DIR__ . '/model/entity/Article.php';
+	require_once __DIR__ . '/model/dao/OrderPositionDAO.php';
+	require_once __DIR__ . '/model/dao/OrderArticleDAO.php';
+	require_once __DIR__ . '/model/dao/OrderDAO.php';
+	require_once __DIR__ . '/model/dao/ClientDAO.php';
+	require_once __DIR__ . '/model/dao/AppointmentDAO.php';
+	require_once __DIR__ . '/model/dao/ArticleDAO.php';
+	
+	
 	
 	if (!empty($_SESSION['client'])) {
 		if ($_GET && $_GET['datum']) {
-			$client = Client::find($_SESSION['client']);
+			$client = ClientDAO::find($_SESSION['client']);
 			$GETDateSQL = date('Y-m-d', strtotime($_GET['datum']));
 			$GETDateText = date('d.m.Y', strtotime($_GET['datum']));
 			
 			// Get all positions of the order if the client already did one for this date
-			$alreadyOrdered = OrderPosition::getIfAlreadyOrdered($client->getId(), $GETDateSQL);
+			$alreadyOrdered = OrderPositionDAO::getIfAlreadyOrdered($client->getId(), $GETDateSQL);
 			
 			// Initialise the variable with the order id for the html
 			$order_id = $alreadyOrdered ? $alreadyOrdered[0]->getOrderId() : '';
 			
 			// Get all bestell_article which are available (verfügbar=1)
-			$orderArticle = OrderArticle::allAvailableFrom($GETDateSQL);
+			$orderArticle = OrderArticleDAO::allAvailableFrom($GETDateSQL);
 			
 			$articleAndOrderPositions = false;
 			if ($orderArticle) {
@@ -48,7 +56,7 @@ if ($path == '') {
 								// Wenn das Gewicht kleiner als 15 ist heisst es, dass es Stückzahlen sind
 								if ($position->getWeight() <= 15) {
 									// Die Anzahl Stücke mit dem Stückweight (Standardweight) multiplizieren (Resultate ist in Gramm)
-									$alreadyOrderedWeight = $position->getWeight() * OrderArticle::getDefaultWeight($ba->getOrderArticleId());
+									$alreadyOrderedWeight = $position->getWeight() * OrderArticleDAO::getDefaultWeight($ba->getOrderArticleId());
 								} //Wenn höher als 15 ist es direkt ein Gewict in Gramm
 								else {
 									$alreadyOrderedWeight = $position->getWeight();
@@ -61,7 +69,7 @@ if ($path == '') {
 					}
 					
 					// Get all the ordered weight and amount for all orders for a date
-					$orderedWeightAndAmounts = OrderPosition::getTotalOrderedWeightForBa($ba->getOrderArticleId(), $GETDateSQL);
+					$orderedWeightAndAmounts = OrderPositionDAO::getTotalOrderedWeightForBa($ba->getOrderArticleId(), $GETDateSQL);
 					$totalOrderedWeight = 0;
 					if ($orderedWeightAndAmounts) {
 						// Loop over each ordered weight
@@ -70,7 +78,7 @@ if ($path == '') {
 							// Wenn das Gewicht kleiner als 15 ist heisst es, dass es Stückzahlen sind
 							if ($orderedWeightAndAmount['weight'] <= 15) {
 								// Die Anzahl Stücke mit dem Stückgewicht (Standardgewicht) multiplizieren (Resultate ist in Gramm)
-								$weight = $orderedWeightAndAmount['weight'] * OrderArticle::getDefaultWeight($ba->getOrderArticleId());
+								$weight = $orderedWeightAndAmount['weight'] * OrderArticleDAO::getDefaultWeight($ba->getOrderArticleId());
 							} //Wenn höher als 15 ist es direkt ein Gewict in Gramm
 							else {
 								$weight = $orderedWeightAndAmount['weight'];
@@ -96,11 +104,11 @@ if ($path == '') {
 						$ba->setAvailableWeight($availableWeight);
 					}
 					
-					$pieceWeight = OrderArticle::getDefaultWeight($ba->getOrderArticleId());
+					$pieceWeight = OrderArticleDAO::getDefaultWeight($ba->getOrderArticleId());
 					$ba->setPieceWeight($pieceWeight);
 					
 					$articleAndOrderPositions[$key]['order_article'] = $ba;
-					$article = Article::find($ba->getArticleId());
+					$article = ArticleDAO::find($ba->getArticleId());
 					$avag = $ba->getAvailableWeight() * 1000; // Available weight in gramm
 					$g1 = $article->getWeight1();
 					$g2 = $article->getWeight2();
@@ -135,7 +143,7 @@ if ($path == '') {
 			require_once __DIR__ . '/templates/order/order.html.php';
 			exit;
 		}
-		$date = Appointment::getNextDate()['text'];
+		$date = AppointmentDAO::getNextDate()['text'];
 		if ($date) {
 			$url = '?datum=' . $date;
 			header("Location: " . $url);
@@ -151,34 +159,37 @@ if ($path == '') {
 if ($path == 'artikel') {
 	require_once __DIR__ . '/model/entity/OrderArticle.php';
 	require_once __DIR__ . '/model/entity/Appointment.php';
+	require_once __DIR__ . '/model/dao/OrderArticleDAO.php';
+	require_once __DIR__ . '/model/dao/AppointmentDAO.php';
+	
 	
 	if ($_POST) {
 		if (isset($_POST['password'])) {
 			// The post parameter is set and the password got typed in
-			$is_admin = OrderArticle::checkPassword($_POST['password']);
+			$is_admin = OrderArticleDAO::checkPassword($_POST['password']);
 			if ($is_admin) {
 				$_SESSION['is_admin'] = 1;
 			}
 		} else if (isset($_POST['newPassword'])) {
 			// A new Password was typed in
 			$password = password_hash($_POST['newPassword'], PASSWORD_DEFAULT);
-			OrderArticle::updPassword($password);
+			OrderArticleDAO::updPassword($password);
 		}
 	}
 	
 	if (!empty($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1) {
-		$datesYears = Appointment::getYearsAndDates();
+		$datesYears = AppointmentDAO::getYearsAndDates();
 		$dates = $datesYears['dates'];
 		$years = $datesYears['years'];
 		
-		OrderArticle::checkAndRefresh();
+		OrderArticleDAO::checkAndRefresh();
 		
 		// If a dated is in the GET request, it shows the bills for this date
 		if ($_GET && $_GET['datum']) {
 			$dateGET = strtotime($_GET['datum']);
 			$date = date('d.m.Y', $dateGET);
 			$dateSQL = date('Y-m-d', $dateGET);
-			$allBa = OrderArticle::allFrom($dateSQL);
+			$allBa = OrderArticleDAO::allFrom($dateSQL);
 			require_once __DIR__ . '/templates/article/article_all.html.php';
 			exit;
 		}
@@ -188,7 +199,7 @@ if ($path == 'artikel') {
 		exit;
 	}
 	
-	if (!OrderArticle::checkIfPasswordExists()) {
+	if (!OrderArticleDAO::checkIfPasswordExists()) {
 		require_once __DIR__ . '/templates/article/update_password.html.php';
 		exit;
 	}
@@ -215,9 +226,17 @@ if ($path == 'success') {
 	require_once __DIR__ . '/model/service/Helper.php';
 	require_once __DIR__ . '/model/service/Email.php';
 	
+	require_once __DIR__ . '/model/dao/OrderDAO.php';
+	require_once __DIR__ . '/model/dao/ClientDAO.php';
+	require_once __DIR__ . '/model/dao/OrderPositionDAO.php';
+	require_once __DIR__ . '/model/dao/OrderArticleDAO.php';
+	require_once __DIR__ . '/model/dao/ArticleDAO.php';
+	
+	
+	
 	if ($_POST && isset($_POST['pAmount'])) {
-		$client = Client::find($_SESSION['client']);
-		$orderId = Order::create($client->getId(), htmlspecialchars($_POST['date']));
+		$client = ClientDAO::find($_SESSION['client']);
+		$orderId = OrderDAO::create($client->getId(), htmlspecialchars($_POST['date']));
 		$valuesArr = [];
 		for ($i = 0, $iMax = count($_POST['pAmount']); $i < $iMax; $i++) {
 			if (!empty($_POST['pAmount'][$i]) || !empty($_POST['comment'][$i])) {
@@ -232,18 +251,18 @@ if ($path == 'success') {
 		
 		foreach ($valuesArr as $values) {
 			$orderPosition = PopulateObject::populateOrderPosition($values);
-			OrderPosition::add($orderPosition);
+			OrderPositionDAO::add($orderPosition);
 		}
 		
 		// Delete old order
-		if ($minId = Order::checkMultipleOrdersAndGetOlder($_SESSION['client'], $_POST['date'])) {
-			$minId ? Order::del($minId) : Order::del($_POST['order_id']);
+		if ($minId = OrderDAO::checkMultipleOrdersAndGetOlder($_SESSION['client'], $_POST['date'])) {
+			$minId ? OrderDAO::del($minId) : OrderDAO::del($_POST['order_id']);
 		}
 		
 		// Send confirmation email
 		$positionDaten = [];
 		foreach ($valuesArr as $values) {
-			$article = Article::findArticleByOrderArticle($values['order_article_id']);
+			$article = ArticleDAO::findArticleByOrderArticle($values['order_article_id']);
 			if (!empty($article)) {
 				$positionDaten[] = ['article_name' => $article->getName(),
 					'package_amount' => $values['package_amount'],
@@ -270,7 +289,8 @@ if ($path == 'success') {
 
 if ($path == 'artikel/dates') {
 	require_once __DIR__ . '/model/entity/Appointment.php';
-	$datesYears = Appointment::getYearsAndDates();
+	require_once __DIR__ . '/model/dao/AppointmentDAO.php';
+	$datesYears = AppointmentDAO::getYearsAndDates();
 	$dates = $datesYears['dates'];
 	$years = $datesYears['years'];
 	$url = 'artikel';
@@ -280,7 +300,9 @@ if ($path == 'artikel/dates') {
 
 if ($path == 'order/dates') {
 	require_once __DIR__ . '/model/entity/Appointment.php';
-	$datesYears = Appointment::getYearsAndDates();
+	require_once __DIR__ . '/model/dao/AppointmentDAO.php';
+	
+	$datesYears = AppointmentDAO::getYearsAndDates();
 	foreach ($datesYears['dates'] as $key => $date) {
 		if (strtotime($date) < time()) {
 			unset($datesYears['dates'][$key]);
@@ -305,10 +327,13 @@ if ($path == 'feedback') {
 if ($path == 'feedback/success') {
 	require_once __DIR__ . '/model/entity/Feedback.php';
 	require_once __DIR__ . '/model/entity/Client.php';
+	require_once __DIR__ . '/model/dao/FeedbackDAO.php';
+	require_once __DIR__ . '/model/dao/ClientDAO.php';
 	require_once __DIR__ . '/model/service/Email.php';
+	
 	if ($_POST && !empty($_POST['feedback'])) {
-		$client = Client::find($_SESSION['client']);
-		Feedback::add($_POST['feedback'], $client->getId());
+		$client = ClientDAO::find($_SESSION['client']);
+		FeedbackDAO::add($_POST['feedback'], $client->getId());
 		$mail = new Email();
 		$mailBody = nl2br($_POST['feedback']);
 		$fullName = $client->getFirstName() . ' ' . $client->getName();
@@ -320,6 +345,7 @@ if ($path == 'feedback/success') {
 	exit;
 }
 
+//Sandbox mail
 if ($path == 'mail') {
 	require_once __DIR__ . '/model/service/Email.php';
 	require_once __DIR__ . '/model/service/Helper.php';

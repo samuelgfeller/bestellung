@@ -4,21 +4,25 @@ require_once __DIR__ . "/Local.php";
 
 if ($path == 'artikel/gewicht') {
     require_once 'model/entity/OrderArticle.php';
-    OrderArticle::updWeight($_POST['id'], $_POST['value']);
+    require_once 'model/dao/OrderArticleDAO.php';
+    OrderArticleDAO::updWeight($_POST['id'], $_POST['value']);
     exit;
 }
 
 if ($path == 'orderArticle/checkAvailable'){
     require_once 'model/entity/OrderArticle.php';
     require_once 'model/entity/Article.php';
+    require_once 'model/dao/OrderArticleDAO.php';
+    require_once 'model/dao/ArticleDAO.php';
+    
     if($_POST['value'] === '1'){
-        if(Article::checkIfHasOrderPossibility($_POST['article_id'])){
-            OrderArticle::toggleAvailable($_POST['id'], $_POST['value']);
+        if(ArticleDAO::checkIfHasOrderPossibility($_POST['article_id'])){
+            OrderArticleDAO::toggleAvailable($_POST['id'], $_POST['value']);
         }else{
             echo 'false';
         }
     }else{
-        OrderArticle::toggleAvailable($_POST['id'], $_POST['value']);
+        OrderArticleDAO::toggleAvailable($_POST['id'], $_POST['value']);
     }
     exit;
 }
@@ -26,9 +30,10 @@ if ($path == 'orderArticle/checkAvailable'){
 
 if ($path == 'order/check_email') {
     require_once __DIR__ . '/model/entity/Order.php';
+    require_once __DIR__ . '/model/dao/OrderDAO.php';
     $clientId = false;
     if ($_POST['email'] != '') {
-        $clientId = Order::checkEmail($_POST['email']);
+        $clientId = OrderDAO::checkEmail($_POST['email']);
         if ($clientId) {
             $_SESSION['client'] = $clientId;
             echo 'true';
@@ -41,12 +46,14 @@ if ($path == 'order/check_email') {
 
 if ($path == 'order/checkDefaultWeight') {
     require_once 'model/entity/OrderArticle.php';
-    echo OrderArticle::getDefaultWeight($_POST['id']);
+    require_once 'model/dao/OrderArticleDAO.php';
+    echo OrderArticleDAO::getDefaultWeight($_POST['id']);
     exit;
 }
 if ($path == 'order/getNextDate') {
     require_once 'model/entity/Appointment.php';
-    echo json_encode(Appointment::getNextDate()['text']);
+    require_once 'model/dao/AppointmentDAO.php';
+    echo json_encode(AppointmentDAO::getNextDate()['text']);
     exit;
 }
 

@@ -26,17 +26,6 @@ class Client
 	
 	
 	/**
-	 * @param $id id des Clientn
-	 * @return Client Client-Objekt
-	 */
-	public static function find($id) {
-		$query = 'SELECT * FROM client WHERE deleted_at is null and id =?;';
-		$dataArr = DataManagement::selectAndFetchSingleData($query, [$id]);
-		return PopulateObject::populateClient($dataArr);
-		
-	}
-	
-	/**
 	 * @return int
 	 */
 	public function getId(): int {

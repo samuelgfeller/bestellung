@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `artikel` (
 ) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Daten Export vom Benutzer nicht ausgewählt
--- Exportiere Struktur von Tabelle fleisch1_mitglieder.bestellung
+-- Exportiere Struktur von Tabelle fleisch1_mitglieder.order
 CREATE TABLE IF NOT EXISTS `bestellung` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `kunde_id` int(11) NOT NULL,
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `kunde` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `vorname` varchar(50) NOT NULL,
-  `tel` varchar(25) DEFAULT NULL,
+  `phone` varchar(25) DEFAULT NULL,
   `natel` varchar(25) DEFAULT NULL,
   `adresse` varchar(60) DEFAULT NULL,
   `email` varchar(40) DEFAULT NULL,
