@@ -20,7 +20,7 @@ class OrderArticle
 	private $date;
 	private $avgWeight;
 	
-	
+
 	/**
 	 * @return mixed
 	 */

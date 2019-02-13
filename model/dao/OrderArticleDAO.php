@@ -70,7 +70,7 @@ where a.deleted_at is null and ba.deleted_at is null and ba.available = 1 and ba
 	}
 	
 	public static function toggleAvailable($id, $value) {
-		$restoreQuery = 'UPDATE order_article SET weight=? WHERE id=?';
+		$restoreQuery = 'UPDATE order_article SET available=? WHERE id=?';
 		DataManagement::run($restoreQuery, [$value,$id]);
 	}
 	
