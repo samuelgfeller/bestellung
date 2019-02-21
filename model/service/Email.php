@@ -1,56 +1,45 @@
 <?php
 // Import PHPMailer classes into the global namespace
 // These must be at the top of your script, not inside a function
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use Mailgun\Mailgun;
 
 //Load Composer's autoloader
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/Local.php';
 
-class Email
-{
-	protected $mail;
-	
-	public function __construct() {
-		$this->mail = new PHPMailer(true);                // Passing `true` enables exceptions
-		//Server settings
-		$this->mail->SMTPDebug = 0;                                 // Enable verbose debug output
-		$this->mail->isSMTP();                                      // Set mailer to use SMTP
-		$this->mail->Host = 'srv125.tophost.ch';                    // Specify main and backup SMTP servers
-		$this->mail->SMTPAuth = true;                               // Enable SMTP authentication
-		$this->mail->Username = 'no-reply@masesselin.ch';           // SMTP username
-		$this->mail->Password = 'AehhPyaHs7S4M$';                   // SMTP password
-		$this->mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-		$this->mail->Port = 587;
-		$this->mail->CharSet = 'UTF-8';
-		$this->mail->Encoding = 'base64';
-	}
-	
-	/**
-	 * @param $subject
-	 * @param $message
-	 */
-	public function prepare($subject, $message) {
-		//Content
-		$this->mail->isHTML(true);                                  // Set email format to HTML
-		$this->mail->Subject = $subject;
-		$this->mail->Body = $message;
-		$this->mail->AltBody = strip_tags($message);
-//		$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
-	}
-	
-	public function send($to, $replyTo, $toName = false, $replyToName = false) {
-		try {
-			//Recipients
-			$this->mail->setFrom('no-reply@masesselin.ch', 'Masesselin');
-			$this->mail->addReplyTo($replyTo, $replyToName ?? $replyTo);
-			$this->mail->addAddress($to, $toName ?? $to);
-			$this->mail->send();
-		} catch
-		(Exception $e) {
-			echo 'Message could not be sent. Mailer Error: ', $this->mail->ErrorInfo;
-		}
-	}
-	
+class Email {
+    protected $mail;
+    protected $params;
 
+    public function __construct() {
+//        var_dump(Local::mailgunkey);
+//        $client = new \Http\Adapter\Guzzle6\Client();
+//        'https://api.mailgun.net/v3/sandbox54f77f1c5d2c4ffc93e509a5b935ff89.mailgun.org'
+//        $this->mail = Mailgun::create(Local::mailgunkey);
+        $this->mail = Mailgun::create(Local::mailgunkey,'https://api.eu.mailgun.net/v3/mg.masesselin.ch');
+
+    }
+
+    public function prepareMessage($subject, $message) {
+        $this->params = ['subject' => $subject,
+            'html' => $message,];
+    }
+
+    public function addAttachment($attachmentPath, $name) {
+        $this->params['attachment'] = [['filePath' => $attachmentPath,
+            'filename' => $name]];
+//        \Mailgun\Api\Message::prepareFile();
+    }
+
+    public function sendEmail($toName, $to, $replyToName, $replyTo) {
+        # Issue the call to the client.
+
+        # is_valid is 0 or 1
+//        $isValid = $result->http_response_body->is_valid;
+
+        $this->params['from'] = 'Masesselin <no-reply@masesselin.ch>';
+        $this->params['to'] = $toName . ' <' . $to . '>';
+        $this->params['h:Reply-To'] = $replyToName . ' <' . $replyTo . '>';
+        $this->mail->messages()->send('mg.masesselin.ch', $this->params);
+    }
 }

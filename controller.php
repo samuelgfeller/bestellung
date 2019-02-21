@@ -276,9 +276,10 @@ if ($path == 'success') {
 		ob_start();
 		include __DIR__ . '/templates/success/confirmation_mail.php';
 		$mailBody = ob_get_clean();
-		var_dump($mailBody);
-		$mail->prepare('Bestellbestätigung für den ' . date('d.m.Y', strtotime($_POST['date'])), $mailBody);
-//		$mail->send($client->getEmail(), 'info@masesselin.ch', $client->getFirstName() . ' ' . $client->getName(), 'Masesselin');
+//		var_dump($mailBody);
+		$mail->prepareMessage('Bestellbestätigung für den ' . date('d.m.Y', strtotime($_POST['date'])), $mailBody);
+		$mail->sendEmail($client->getFirstName() . ' ' . $client->getName(),$client->getEmail(), 'Masesselin','info@masesselin.ch');
+//        $mail->sendEmail('Samuel Gfeller','samuelgfeller@bluewin.ch','Masesselin','info@masesselin.ch');
 
 //        require_once __DIR__ . '/templates/success/order_success.php';
 		require_once __DIR__ . '/templates/pages/feedback.html.php';
@@ -336,10 +337,10 @@ if ($path == 'feedback/success') {
 		$client = ClientDAO::find($_SESSION['client']);
 		FeedbackDAO::add($_POST['feedback'], $client->getId());
 		$mail = new Email();
-		$mailBody = nl2br($_POST['feedback']);
+		$mailBody = nl2br($_POST['feedback']); // replacing \n with <br>
 		$fullName = $client->getFirstName() . ' ' . $client->getName();
-		$mail->prepare('Feedback von ' . $fullName, $mailBody);
-		$mail->send('info@masesselin.ch' . '', $client->getEmail(), 'Masesselin', $fullName);
+        $mail->prepareMessage('Feedback von ' . $fullName, $mailBody);
+        $mail->sendEmail('Masesselin','info@masesselin.ch',$fullName,$client->getEmail());
 	}
 	// @todo change feedback / Make own button and redirect to specific success
 	require_once __DIR__ . '/templates/success/order_success.php';

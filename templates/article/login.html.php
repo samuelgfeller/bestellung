@@ -7,7 +7,7 @@
     </div>
     <div class="centeredInfo">
         <form action="artikel" method="post">
-            <input type="text" name="password" placeholder="Passwort"><br><br>
+            <input type="password" name="password" placeholder="Passwort"><br><br>
             <button type="submit" class="submitBtn">Einloggen</button>
         </form>
     </div>

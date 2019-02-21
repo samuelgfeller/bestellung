@@ -2,6 +2,8 @@
 $num = filter_var($path, FILTER_SANITIZE_NUMBER_INT);
 require_once __DIR__ . "/Local.php";
 
+//@todo change article order and display
+
 if ($path == 'artikel/gewicht') {
     require_once 'model/entity/OrderArticle.php';
     require_once 'model/dao/OrderArticleDAO.php';

@@ -183,7 +183,7 @@ function calcWeight(id, singleWeight) {
                 calcWeight(id, singleWeight);
             }
 
-        } else if ((singleWeight >= minWeight) || singleWeight == 0) {
+        } else if (singleWeight || singleWeight == 0) {
             if ((aWeight - (wantedWeight / 1000)).toFixed(3) >= 0) {
                 $('#outputWeight' + id).html(pAnzahl + ' &times ' + singleWeight + ' = <b>' + wantedWeight + 'g.</b>');
 

@@ -425,7 +425,7 @@ label {
     width: 100%;;
 }
 
-.centeredInfo input[type=text] {
+.centeredInfo input[type=text], .centeredInfo input[type=password] {
     font-size: 1.3em;
     width: 30%;
     padding: 15px;
@@ -435,7 +435,7 @@ label {
     min-width: 300px;
 }
 
-.centeredInfo input[type=text]:focus {
+.centeredInfo input[type=text]:focus, .centeredInfo input[type=password]:focus {
     box-shadow: 0 0 16px lightgrey;
     border: 1px solid #cccccc;
 }
@@ -748,6 +748,10 @@ input[type="checkbox"]:checked + label:before {
 
 .weightText {
     width: 60px;
+}
+
+.weightText::placeholder{
+    color:purple;
 }
 
 .amountNumber {
