@@ -8,7 +8,8 @@ class OrderArticleDAO
 	
 	public static function allFrom($date) {
 		$query = 'SELECT ba.*, ba.id order_article_id, a.*, a.id article_id FROM order_article ba left join
- article a on ba.article_id=a.id where ba.date = ? and a.deleted_at is null and ba.deleted_at is null order by ba.article_id asc;';
+ article a on ba.article_id=a.id where ba.date = ? and a.deleted_at is null and ba.deleted_at is null 
+order by a.position ASC, position IS NULL;';
 		$result = DataManagement::selectAndFetchAssocMultipleData($query, [$date]);
 		$dataObjArr = [];
 		foreach ($result as $dataArr) {
@@ -21,7 +22,8 @@ class OrderArticleDAO
 	public static function allAvailableFrom($date) {
 		$query = 'SELECT ba.*,ba.id order_article_id, a.*, a.id article_id FROM order_article ba
 left join article a on ba.article_id=a.id
-where a.deleted_at is null and ba.deleted_at is null and ba.available = 1 and ba.date=?;';
+where a.deleted_at is null and ba.deleted_at is null and ba.available = 1 and ba.date=? 
+order by a.position ASC, position IS NULL;';
 		$result = DataManagement::selectAndFetchAssocMultipleData($query, [$date]);
 		$dataObjArr = [];
 		foreach ($result as $dataArr) {
@@ -140,5 +142,6 @@ group by r.date ';
 		}
 		return false;
 	}
-	
+
+
 }

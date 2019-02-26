@@ -132,13 +132,16 @@ if ($path == '') {
 			}
 //            https://stackoverflow.com/questions/1597736/how-to-sort-an-array-of-associative-arrays-by-value-of-a-given-key-in-php
 			// Sort that the article with most weight is at the top and those with 0 bottom
-			if ($articleAndOrderPositions) {
-				$aWeight = [];
+
+            if ($articleAndOrderPositions) {
 				foreach ($articleAndOrderPositions as $key => $row) {
-//                var_dump($key,$row);
-					$aWeight[$key]['order_article'] = $row['order_article']->getAvailableWeight();
+//				    var_dump((float)$row['order_article']->getAvailableWeight());
+                    if (empty($row['order_article']->getAvailableWeight())){
+                        // Put element at the end
+                        unset($articleAndOrderPositions[$key]);
+                        $articleAndOrderPositions[] = $row;
+                    }
 				}
-				array_multisort($aWeight, SORT_DESC, $articleAndOrderPositions);
 			}
 			require_once __DIR__ . '/templates/order/order.html.php';
 			exit;

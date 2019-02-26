@@ -23,3 +23,4 @@ function filter(table,row) {
     $("tr").css({"background-color": "#FFF"});
     $("tr:visible:odd").css({"background-color": "#f2f2f2"});
 }
+

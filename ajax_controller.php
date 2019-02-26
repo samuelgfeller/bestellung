@@ -67,3 +67,4 @@ if ($path == 'logout') {
     header('Location: /');
     exit;
 }
+

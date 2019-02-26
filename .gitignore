@@ -87,3 +87,4 @@ fabric.properties
 composer.lock
 vendor/
 /.gtm/
+Local.php

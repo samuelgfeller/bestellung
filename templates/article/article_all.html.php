@@ -8,7 +8,6 @@
     <button class='ownBtn add' id='myBtn'>Add</button>
 </a>
 <button class="ownBtn otherDateBtn" id="changeArticleDateBtn">Datum ändern</button>
-
 <table class="items article articleTablePadding" id="articleTable">
     <tr>
         <th>Nummer</th>
