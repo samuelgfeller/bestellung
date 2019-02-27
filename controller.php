@@ -128,11 +128,9 @@ if ($path == '') {
 						!empty($s3) && $s3 * $pieceWeight <= $avag ? $s3 : null,
 						!empty($s4) && $s4 * $pieceWeight <= $avag ? $s4 : null,];
 //                    var_dump($articleAndOrderPositions[$key]['order_possibilities']);
-				}
+				} //@todo implement case when weight too low but still not 0
 			}
-//            https://stackoverflow.com/questions/1597736/how-to-sort-an-array-of-associative-arrays-by-value-of-a-given-key-in-php
-			// Sort that the article with most weight is at the top and those with 0 bottom
-
+			// Sort that the article that those with 0 are on the bottom
             if ($articleAndOrderPositions) {
 				foreach ($articleAndOrderPositions as $key => $row) {
 //				    var_dump((float)$row['order_article']->getAvailableWeight());
@@ -242,13 +240,15 @@ if ($path == 'success') {
 		$orderId = OrderDAO::create($client->getId(), htmlspecialchars($_POST['date']));
 		$valuesArr = [];
 		for ($i = 0, $iMax = count($_POST['pAmount']); $i < $iMax; $i++) {
-			if (!empty($_POST['pAmount'][$i]) || !empty($_POST['comment'][$i])) {
+            $package_amount = (int)$_POST['pAmount'][$i];
+            // Set 0 if no weight
+            if (empty($_POST['singleWeight'][$i])){ $package_amount = 0; }
+            if (!empty($package_amount) || !empty($_POST['comment'][$i])) {
 				$valuesArr[] = ['order_article_id' => (int)$_POST['ba_id'][$i],
 					'order_id' => $orderId,
-					'package_amount' => (int)$_POST['pAmount'][$i],
+					'package_amount' => $package_amount,
 					'weight' => (int)$_POST['singleWeight'][$i],
 					'comment' => htmlspecialchars($_POST['comment'][$i]),];
-				
 			}
 		}
 		
@@ -263,11 +263,11 @@ if ($path == 'success') {
 		}
 		
 		// Send confirmation email
-		$positionDaten = [];
+		$positionData = [];
 		foreach ($valuesArr as $values) {
 			$article = ArticleDAO::findArticleByOrderArticle($values['order_article_id']);
-			if (!empty($article)) {
-				$positionDaten[] = ['article_name' => $article->getName(),
+            if (!empty($arcticle)) {
+                $positionData[] = ['article_name' => $article->getName(),
 					'package_amount' => $values['package_amount'],
 					'weight' => $values['weight'],
 					'comment' => $values['comment'],
@@ -284,8 +284,8 @@ if ($path == 'success') {
 		$mail->sendEmail($client->getFirstName() . ' ' . $client->getName(),$client->getEmail(), 'Masesselin','info@masesselin.ch');
 //        $mail->sendEmail('Samuel Gfeller','samuelgfeller@bluewin.ch','Masesselin','info@masesselin.ch');
 
-//        require_once __DIR__ . '/templates/success/order_success.php';
-		require_once __DIR__ . '/templates/pages/feedback.html.php';
+        require_once __DIR__ . '/templates/success/order_success.php';
+//		require_once __DIR__ . '/templates/pages/feedback.html.php';
 		exit;
 	}
 	require_once __DIR__ . '/templates/success/order_success.php';
