@@ -35,6 +35,14 @@
         <?php } ?>
         <tr>
             <td>
+                <?php
+                if ($remark = $order->getRemark()){ ?>
+                    Mit folgender Bemerkung: <b><?= $remark ?></b>
+                <?php } ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <br>Sie können Ihre bestellung jederzeit anpassen: <a href="https://bestellung.masesselin.ch/">https://bestellung.masesselin.ch/</a>
                 <br>Nachdem Sie Änderungen vorgenommen haben, können Sie einfach wieder auf "Bestellen" drücken und die alte Bestellung wird überschrieben.
             </td>
