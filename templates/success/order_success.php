@@ -5,6 +5,7 @@
     <div class="centeredInfo">
         <a href="/"><button>Zurück zur Bestellung</button></a>
         <a href="/order/dates"><button>Bestelldatum ändern</button></a>
+        <a href="/feedback"><button>Feedback schreiben</button></a>
     </div>
 
 </div>

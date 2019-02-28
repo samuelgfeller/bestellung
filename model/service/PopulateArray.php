@@ -59,6 +59,8 @@ class PopulateArray
 			'id' => $order->getId(),
 			'client_id' => $order->getClientId(),
 			'date' => $order->getDate(),
+			'target_date' => $order->getTargetDate(),
+			'remark' => $order->getRemark(),
 		];
 	}
 	

@@ -71,6 +71,8 @@ class PopulateObject {
         $order->setId(Helper::ckVal($data['id'] ?? null));
         $order->setClientId(Helper::ckVal($data['date'] ?? null));
         $order->setDate(Helper::ckVal($data['client_id'] ?? null));
+        $order->setRemark(Helper::ckVal($data['remark'] ?? null));
+        $order->setTargetDate(Helper::ckVal($data['target_date'] ?? null));
         return $order;
     }
 

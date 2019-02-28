@@ -11,11 +11,9 @@ class OrderDAO
 		return DataManagement::selectAndFetchSingleData($query, [$email])['id'];
 	}
 	
-	public static function create($client_id, $targetDate) {
-		// Cannot use the function insert here, because the date has to be set with now()
-		$query = 'INSERT INTO `order` (client_id,date,target_date) VALUES (?, now(),?)';
-		$conn = DataManagement::run($query, [$client_id,$targetDate]);
-		return $conn->lastInsertId();
+	public static function create($order) {
+        $data = PopulateArray::populateOrderArray($order);
+        return DataManagement::insert('`order`', $data);
 	}
 	
 	public static function find($id) {

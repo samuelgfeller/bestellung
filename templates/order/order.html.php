@@ -100,11 +100,12 @@
             echo '<h3><b style="color:red">Es sind keine Daten vorhanden für dieses Datum.</b></h3>';
         } ?>
     </table>
-    <a class="btn" href="help" style="margin-top:10px"><i class="glyphicon glyphicon-question-sign"></i> Anleitung</a>
-
+    <a class="btn helpBtn" href="help" style="text-align: left;"><i class="glyphicon glyphicon-question-sign"></i> Anleitung</a>
+    <textarea name="remark" class="remarkInput" cols="60" rows="1" placeholder="Bemerkung zur Bestellung"><?= $order->getRemark(); ?></textarea>
     <input type="submit" value="Bestellen">
 </form>
-
+<div class="emptyFooter">
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" role="dialog">

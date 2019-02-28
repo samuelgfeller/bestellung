@@ -7,6 +7,8 @@ class Order {
     private $id;
     private $client_id;
     private $date;
+    private $target_date;
+    private $remark;
 
     
 	
@@ -51,6 +53,34 @@ class Order {
 	public function setDate($date): void {
 		$this->date = $date;
 	}
+
+    /**
+     * @return mixed
+     */
+    public function getTargetDate() {
+        return $this->target_date;
+    }
+
+    /**
+     * @param mixed $target_date
+     */
+    public function setTargetDate($target_date): void {
+        $this->target_date = $target_date;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRemark() {
+        return $this->remark;
+    }
+
+    /**
+     * @param mixed $remark
+     */
+    public function setRemark($remark): void {
+        $this->remark = $remark;
+    }
 
 
 }

@@ -20,21 +20,22 @@ if ($path == '') {
 	require_once __DIR__ . '/model/dao/ClientDAO.php';
 	require_once __DIR__ . '/model/dao/AppointmentDAO.php';
 	require_once __DIR__ . '/model/dao/ArticleDAO.php';
-	
-	
-	
+
 	if (!empty($_SESSION['client'])) {
 		if ($_GET && $_GET['datum']) {
 			$client = ClientDAO::find($_SESSION['client']);
 			$GETDateSQL = date('Y-m-d', strtotime($_GET['datum']));
 			$GETDateText = date('d.m.Y', strtotime($_GET['datum']));
+
+			$order =
 			
 			// Get all positions of the order if the client already did one for this date
 			$alreadyOrdered = OrderPositionDAO::getIfAlreadyOrdered($client->getId(), $GETDateSQL);
 			
 			// Initialise the variable with the order id for the html
 			$order_id = $alreadyOrdered ? $alreadyOrdered[0]->getOrderId() : '';
-			
+			$order = OrderDAO::find($order_id);
+
 			// Get all bestell_article which are available (verfügbar=1)
 			$orderArticle = OrderArticleDAO::allAvailableFrom($GETDateSQL);
 			
@@ -232,12 +233,16 @@ if ($path == 'success') {
 	require_once __DIR__ . '/model/dao/OrderPositionDAO.php';
 	require_once __DIR__ . '/model/dao/OrderArticleDAO.php';
 	require_once __DIR__ . '/model/dao/ArticleDAO.php';
-	
-	
+
 	
 	if ($_POST && isset($_POST['pAmount'])) {
 		$client = ClientDAO::find($_SESSION['client']);
-		$orderId = OrderDAO::create($client->getId(), htmlspecialchars($_POST['date']));
+        $order = new Order();
+        $order->setClientId($client->getId());
+        $order->setDate(date('Y-m-d H:i:s'));
+        $order->setTargetDate(htmlspecialchars($_POST['date']));
+        $order->setRemark(htmlspecialchars($_POST['remark']));
+		$orderId = OrderDAO::create($order);
 		$valuesArr = [];
 		for ($i = 0, $iMax = count($_POST['pAmount']); $i < $iMax; $i++) {
             $package_amount = (int)$_POST['pAmount'][$i];
@@ -261,12 +266,12 @@ if ($path == 'success') {
 		if ($minId = OrderDAO::checkMultipleOrdersAndGetOlder($_SESSION['client'], $_POST['date'])) {
 			$minId ? OrderDAO::del($minId) : OrderDAO::del($_POST['order_id']);
 		}
-		
+
 		// Send confirmation email
 		$positionData = [];
 		foreach ($valuesArr as $values) {
 			$article = ArticleDAO::findArticleByOrderArticle($values['order_article_id']);
-            if (!empty($arcticle)) {
+            if (!empty($article)) {
                 $positionData[] = ['article_name' => $article->getName(),
 					'package_amount' => $values['package_amount'],
 					'weight' => $values['weight'],
@@ -274,7 +279,6 @@ if ($path == 'success') {
 					'piece_weight' => $article->getPieceWeight(),];
 			}
 		}
-		
 		$mail = new Email();
 		ob_start();
 		include __DIR__ . '/templates/success/confirmation_mail.php';

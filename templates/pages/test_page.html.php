@@ -85,7 +85,7 @@ Sie haben folgende Artikel bestellt: <br>
 <?php $i = 1;
 $totalPrice = 0;
 $totalWeight = 0;
-foreach ($positionDaten as $position) { ?>
+foreach ($positionData as $position) { ?>
     <tr style=""><td style="padding: 10px;">
         <b><?= $position['package_amount'] ?></b> Päckchen <b><?= $position['article_name'] ?></b>
     <?= $position['weight'] < 15 ? ' mit <b>'.$position['weight'] . '</b> Stücke pro Päckchen à <b>' . $position['piece_weight'] . 'g.</b> (pro Stück)' : ' à <b>'.$position['weight'] . 'g.</b>' ?>
@@ -108,7 +108,7 @@ foreach ($positionDaten as $position) { ?>
     <?php /*$i = 1;
     $totalPrice = 0;
     $totalWeight = 0;
-    foreach ($positionDaten as $position) {
+    foreach ($positionData as $position) {
         */?>
         <tr id="positionTr<?/*= $i */?>">
             <td style="text-align: left;padding: 16px;x"

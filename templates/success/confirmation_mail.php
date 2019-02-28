@@ -17,7 +17,7 @@
         width: 100%;" align="center">
         <?php $i = 1;
         $totalWeight = 0;
-        foreach ($positionDaten as $position) { ?>
+        foreach ($positionData as $position) { ?>
             <tr style="">
                 <td style="padding: 7px;">
                     <b><?= (int)$position['package_amount'] ?></b> Päckchen <b><?= $position['article_name'] ?></b>
