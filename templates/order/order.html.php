@@ -101,7 +101,7 @@
         } ?>
     </table>
     <a class="btn helpBtn" href="help" style="text-align: left;"><i class="glyphicon glyphicon-question-sign"></i> Anleitung</a>
-    <textarea name="remark" class="remarkInput" cols="60" rows="1" placeholder="Bemerkung zur Bestellung"><?= $order->getRemark(); ?></textarea>
+    <textarea name="remark" class="remarkInput" cols="60" rows="2" placeholder="Bemerkung zur Bestellung"><?= $order->getRemark(); ?></textarea>
     <input type="submit" value="Bestellen">
 </form>
 <div class="emptyFooter">

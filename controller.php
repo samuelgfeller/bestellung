@@ -27,8 +27,6 @@ if ($path == '') {
 			$GETDateSQL = date('Y-m-d', strtotime($_GET['datum']));
 			$GETDateText = date('d.m.Y', strtotime($_GET['datum']));
 
-			$order =
-			
 			// Get all positions of the order if the client already did one for this date
 			$alreadyOrdered = OrderPositionDAO::getIfAlreadyOrdered($client->getId(), $GETDateSQL);
 			
@@ -110,7 +108,8 @@ if ($path == '') {
 					
 					$articleAndOrderPositions[$key]['order_article'] = $ba;
 					$article = ArticleDAO::find($ba->getArticleId());
-					$avag = $ba->getAvailableWeight() * 1000; // Available weight in gramm
+                    // Available weight in gram
+					$avag = $ba->getAvailableWeight() * 1000;
 					$g1 = $article->getWeight1();
 					$g2 = $article->getWeight2();
 					$g3 = $article->getWeight3();
@@ -120,7 +119,8 @@ if ($path == '') {
 					$s3 = $article->getPieceAmount3();
 					$s4 = $article->getPieceAmount4();
 //                    var_dump($s3.' * '.$pieceWeight,$s3*$pieceWeight,$avag);
-					$articleAndOrderPositions[$key]['order_possibilities'] = [!empty($g1) && $g1 <= $avag ? $g1 : null,
+					$articleAndOrderPositions[$key]['order_possibilities'] = [
+					    !empty($g1) && $g1 <= $avag ? $g1 : null,
 						!empty($g2) && $g2 <= $avag ? $g2 : null,
 						!empty($g3) && $g3 <= $avag ? $g3 : null,
 						!empty($g4) && $g4 <= $avag ? $g4 : null,
@@ -128,8 +128,23 @@ if ($path == '') {
 						!empty($s2) && $s2 * $pieceWeight <= $avag ? $s2 : null,
 						!empty($s3) && $s3 * $pieceWeight <= $avag ? $s3 : null,
 						!empty($s4) && $s4 * $pieceWeight <= $avag ? $s4 : null,];
-//                    var_dump($articleAndOrderPositions[$key]['order_possibilities']);
-				} //@todo implement case when weight too low but still not 0
+//                    var_dump(!empty($articleAndOrderPositions[$key]['order_possibilities']) ? 'not empty' : 'empty');
+
+                    // Set the available value to 0 if it is too low but still not 0
+                    $belowMin = true;
+                    // foreach over the 8 possible order possibilities
+                    foreach ($articleAndOrderPositions[$key]['order_possibilities'] as $orderPossibility){
+                        // check if the possibility is not empty
+                        if(!empty($orderPossibility)){
+                            // on the first occurrence at least one possibility is available so it is set to false
+                            $belowMin= false;
+                        }
+                    }
+                    // set the available weight to 0 if it is below the minimum possibility
+                    if($belowMin) {
+                        $articleAndOrderPositions[$key]['order_article']->setAvailableWeight(0);
+                    }
+				}
 			}
 			// Sort that the article that those with 0 are on the bottom
             if ($articleAndOrderPositions) {
@@ -349,7 +364,6 @@ if ($path == 'feedback/success') {
         $mail->prepareMessage('Feedback von ' . $fullName, $mailBody);
         $mail->sendEmail('Masesselin','info@masesselin.ch',$fullName,$client->getEmail());
 	}
-	// @todo change feedback / Make own button and redirect to specific success
 	require_once __DIR__ . '/templates/success/order_success.php';
 	exit;
 }
