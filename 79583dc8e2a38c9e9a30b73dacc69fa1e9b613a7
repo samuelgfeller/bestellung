@@ -1,0 +1,16 @@
+[ver:1,total:7620]
+controller.php:4398,1551949200:380,1551967200:40,1551970800:2340,1552053600:180,1552129200:1458,m
+templates/success/confirmation_mail.php:1620,1551376800:1080,1551474000:180,1551477600:180,1551517200:60,1551520800:120,r
+public/index.php:730,1551949200:350,1551967200:380,r
+composer.json:272,1551376800:264,1552129200:8,m
+templates/order/order.html.php:227,1552129200:227,m
+public/.htaccess:150,1551949200:150,r
+ajax_controller.php:99,1551376800:12,1551949200:40,1552129200:47,m
+model/service/Helper.php:24,1551949200:24,r
+model/dao/OrderArticleDAO.php:20,1551949200:20,r
+templates/article/article_all.html.php:20,1551949200:20,r
+composer.lock:12,1551376800:12,r
+model/dao/ArticleDAO.php:12,1551949200:12,r
+model/service/Email.php:12,1551376800:12,r
+model/Populate.php:12,1551949200:12,r
+model/service/PopulateArray.php:12,1551949200:12,r
