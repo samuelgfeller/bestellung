@@ -328,10 +328,17 @@ if ($path == 'order/dates') {
 	
 	$datesYears = AppointmentDAO::getYearsAndDates();
 	foreach ($datesYears['dates'] as $key => $date) {
-		if (strtotime($date) < time()) {
+        // Remove dates in past
+        if (strtotime($date) < time()) {
 			unset($datesYears['dates'][$key]);
 		}
-	}
+//        var_dump(isset($datesYears['dates'][$key]) ? $datesYears['dates'][$key] : null);
+		// Remove dates without entries
+        if (!AppointmentDAO::checkIfDateHasEntries(date('Y-m-d', strtotime($date)))){
+            unset($datesYears['dates'][$key]);
+        }
+    }
+
 	$url = '';
 	require_once __DIR__ . '/templates/pages/dates.html.php';
 	exit;
