@@ -108,6 +108,29 @@ group by r.date ';
 		}
 		return null;
 	}
+
+/*    public static function upd(OrderArticle $orderArticle) {
+        $data = PopulateArray::populateOrderArticleArray($orderArticle);
+        // Unset id and position because we dont want them to change
+        unset($data['id']);
+        $updData = Helper::getUpdateStringAndValues($data);
+        $query = 'UPDATE article SET ' . implode(', ', $updData['updString']) . ' WHERE id = ?';
+        $updData['values'][] = $orderArticle->getOrderArticleId();
+        DataManagement::run($query, $updData['values']);
+    }*/
+
+    public static function importPreviousData($dateSQL) {
+        require_once $_SERVER['DOCUMENT_ROOT'] . '/model/dao/AppointmentDAO.php';
+        $previousDate = AppointmentDAO::getDateBeforeDate($dateSQL);
+        $query = 'SELECT * FROM order_article where date=? and deleted_at is null';
+        $previousData = DataManagement::selectAndFetchAssocMultipleData($query,[$previousDate]);
+        foreach ($previousData as $data){
+//            var_dump($data);
+            $query = 'UPDATE order_article SET weight = ?, available = ? WHERE article_id = ? and `date`=?;';
+            DataManagement::run($query, [$data['weight'],$data['available'],$data['article_id'],$dateSQL]);
+        }
+
+    }
 	
 	public static function register($password) {
 	
@@ -142,6 +165,8 @@ group by r.date ';
 		}
 		return false;
 	}
+
+
 
 
 }

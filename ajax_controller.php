@@ -66,3 +66,13 @@ if ($path == 'logout') {
     exit;
 }
 
+if ($path == 'artikel/import') {
+    require_once 'model/dao/OrderArticleDAO.php';
+    if(isset($_POST['dateSQL'])){
+        OrderArticleDAO::importPreviousData($_POST['dateSQL']);
+    }else{
+        echo 'no_date';
+    }
+    exit;
+}
+

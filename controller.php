@@ -86,7 +86,7 @@ if ($path == '') {
 							$totalOrderedWeight += $orderedWeightAndAmount['anz'] * ($weight / 1000);
 						}
 					}
-					
+					// @todo implement unit text and logic
 					// Add the already ordered weight of this customer to the global available weight
 //                    var_dump('befire: '.$totalOrderedWeight,$weightToSubstrate);
 					$totalOrderedWeight -= $weightToSubstrate;

@@ -29,6 +29,12 @@ h6 {
     src: url("fonts/DancingScript-Bold.ttf");
 }
 
+::placeholder{
+    color: #cccccc;
+    font-style: italic;
+}
+
+
 .content{
     margin: 3%;
 }
@@ -601,6 +607,7 @@ label {
     color: black;
 }
 
+
 /*Page styles*/
 
 .boxes {
@@ -764,9 +771,6 @@ input[type="checkbox"]:checked + label:before {
     width: 60px;
 }
 
-.weightText::placeholder{
-    color:purple;
-}
 
 .amountNumber {
     width: 40px;
@@ -870,6 +874,11 @@ form .articleTable {
 .weightCheckTd, .amountCheckTd {
     width: 50px;
 
+}
+
+#importBtn{
+    float: right;
+    margin-right: 5%;
 }
 
 .dateBox {

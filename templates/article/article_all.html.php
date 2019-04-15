@@ -4,15 +4,16 @@
     <input type="text" id="searchInput" autocomplete="off" placeholder="Artikel suchen"
     onkeyup="filter('articleTable',1)">
 </div>
-<a href="https://fleisch.masesselin.ch/artikel" target="_blank">
-    <button class='ownBtn add' id='myBtn'>Add</button>
-</a>
+<!--<a href="https://fleisch.masesselin.ch/artikel" target="_blank">-->
+    <button class='ownBtn add' id='myBtn' onclick="window.open('https://fleisch.masesselin.ch/artikel')">Add</button>
+<!--</a>-->
 <button class="ownBtn otherDateBtn" id="changeArticleDateBtn">Datum ändern</button>
-<table class="items article articleTablePadding" id="articleTable">
+<button class="ownBtn" id="importBtn">Importieren</button>
+<table class="items article articleTablePadding" id="articleTable" data-datesql="<?= $dateSQL ?>">
     <tr>
         <th>Nummer</th>
         <th>Name</th>
-        <th>Kg Preis</th>
+        <th>Kg / l Preis</th>
         <th>Verfügbar</th>
         <th>Menge</th>
     </tr>

@@ -2,6 +2,24 @@ $(document).ready(function () {
     $('#changeArticleDateBtn').click(function () {
         location.replace('/artikel');
     });
+
+    $('#importBtn').click(function () {
+        if (confirm('Alle Daten mit den Daten der Letzten Bestellung ersetzten?')) {
+            $.ajax({
+                url: 'artikel/import',
+                type: 'post',
+                data: {
+                    'dateSQL': $('#articleTable').data('datesql'),
+                }
+            }).done(function (output) {
+                // $('#articleTable').html(output);
+                // alert(" Importiert");
+                location.reload();
+            }).fail(function (output) {
+                alert('Fehler beim Importieren !');
+            });
+        }
+    });
 });
 
 function updWeight(id, value) {
