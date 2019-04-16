@@ -11,8 +11,8 @@
 <body>
 <?php require_once __DIR__ . "/../controller.php"; ?>
 
-<script type="text/javascript" src="main.js"></script>
-<script type="text/javascript" src="article.js"></script>
-<script type="text/javascript" src="home.js"></script>
+<script type="text/javascript" src="main.js?v=1"></script>
+<script type="text/javascript" src="article.js?v=1"></script>
+<script type="text/javascript" src="home.js?v=1"></script>
 <!--</body>-->
 <!--</html>-->

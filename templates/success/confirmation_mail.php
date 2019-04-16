@@ -17,15 +17,17 @@
         width: 100%;" align="center">
         <?php $i = 1;
         $totalWeight = 0;
-        foreach ($positionData as $position) { ?>
+        foreach ($positionData as $position) {
+            $short_unit = $position['unit']->getShortName() ?>
             <tr style="">
                 <td style="padding: 7px;">
                     <b><?= (int)$position['package_amount'] ?></b> Päckchen <b><?= $position['article_name'] ?></b>
                     <?php if (!empty($position['package_amount'])) {
                         if($position['weight'] < 15){
-	                        echo ' à <b>'.$position['weight']*$position['piece_weight'].'g.</b> (' . $position['weight'] . ' Stk. à ' . $position['piece_weight'] . 'g.)';
+	                        echo ' à <b>'.$position['weight']*$position['piece_weight'].$short_unit.
+                                '.</b> (' . $position['weight'] . ' Stk. à ' . $position['piece_weight'] . $short_unit.'.)';
                         }else{
-	                        echo ' à <b>' . $position['weight'] . 'g.</b>';
+	                        echo ' à <b>' . $position['weight'] . $short_unit.'.</b>';
                         }
                     }
                     ?>

@@ -122,14 +122,14 @@ if ($path == '') {
 					$s4 = $article->getPieceAmount4();
 //                    var_dump($s3.' * '.$pieceWeight,$s3*$pieceWeight,$avag);
 					$articleAndOrderPositions[$key]['order_possibilities'] = [
-					    !empty($g1) && $g1 <= $avag ? $g1 : null,
-						!empty($g2) && $g2 <= $avag ? $g2 : null,
-						!empty($g3) && $g3 <= $avag ? $g3 : null,
-						!empty($g4) && $g4 <= $avag ? $g4 : null,
-						!empty($s1) && $s1 * $pieceWeight <= $avag ? $s1 : null,
-						!empty($s2) && $s2 * $pieceWeight <= $avag ? $s2 : null,
-						!empty($s3) && $s3 * $pieceWeight <= $avag ? $s3 : null,
-						!empty($s4) && $s4 * $pieceWeight <= $avag ? $s4 : null,];
+					    !empty($g1) && $g1 <= $avag ? ['val' => $g1, 'type' => 'weight'] : null,
+						!empty($g2) && $g2 <= $avag ? ['val' => $g2, 'type' => 'weight'] : null,
+						!empty($g3) && $g3 <= $avag ? ['val' => $g3, 'type' => 'weight'] : null,
+						!empty($g4) && $g4 <= $avag ? ['val' => $g4, 'type' => 'weight'] : null,
+						!empty($s1) && $s1 * $pieceWeight <= $avag ? ['val' => $s1, 'type' => 'piece'] : null,
+						!empty($s2) && $s2 * $pieceWeight <= $avag ? ['val' => $s2, 'type' => 'piece'] : null,
+						!empty($s3) && $s3 * $pieceWeight <= $avag ? ['val' => $s3, 'type' => 'piece'] : null,
+						!empty($s4) && $s4 * $pieceWeight <= $avag ? ['val' => $s4, 'type' => 'piece'] : null,];
 //                    var_dump(!empty($articleAndOrderPositions[$key]['order_possibilities']) ? 'not empty' : 'empty');
 
                     // Set the available value to 0 if it is too low but still not 0
@@ -252,6 +252,7 @@ if ($path == 'success') {
 	require_once __DIR__ . '/model/dao/OrderPositionDAO.php';
 	require_once __DIR__ . '/model/dao/OrderArticleDAO.php';
 	require_once __DIR__ . '/model/dao/ArticleDAO.php';
+	require_once __DIR__ . '/model/dao/UnitDAO.php';
 
 	
 	if ($_POST && isset($_POST['pAmount'])) {
@@ -290,12 +291,13 @@ if ($path == 'success') {
 		$positionData = [];
 		foreach ($valuesArr as $values) {
 			$article = ArticleDAO::findArticleByOrderArticle($values['order_article_id']);
-            if (!empty($article)) {
+            if ($article) {
                 $positionData[] = ['article_name' => $article->getName(),
 					'package_amount' => $values['package_amount'],
 					'weight' => $values['weight'],
 					'comment' => $values['comment'],
-					'piece_weight' => $article->getPieceWeight(),];
+					'piece_weight' => $article->getPieceWeight(),
+					'unit' => UnitDAO::find($article->getUnitId()),];
 			}
 		}
 		$mail = new Email();

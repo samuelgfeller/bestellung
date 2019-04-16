@@ -47,6 +47,7 @@ $(document).ready(function () {
 
     $(document).on('change', ".weightCheckbox", function () {
         let baid = $(this).data('baid');
+        let type = $(this).data('type');
         let pAmount = $('#pAmount' + baid);
         // Getting the id from the changed attribute
         let value = $(this).val();
@@ -62,7 +63,7 @@ $(document).ready(function () {
             }
             storageInput.val(value);
             // Getting the bool info from div "calcInfo"
-            calcWeight(baid, value);
+            calcWeight(baid, value,type);
         } else {
             storageInput.val('');
             pAmount.val('');
@@ -105,9 +106,11 @@ $(document).ready(function () {
 
 function findCheckedAndCalc(parent) {
     let value = false;
+    let type = 'weight';
     $(parent).find('input[type=checkbox]').each(function (key, input) {
         if ($(input).is(":checked")) {
             value = $(input).val();
+            type = $(input).data('type')
         }
     });
     // Getting the id info from div "calcInfo"
@@ -115,9 +118,8 @@ function findCheckedAndCalc(parent) {
     let storageInput = $('#singleWeight' + baId);
 
     if (value) {
-        console.log(value);
         storageInput.val(value);
-        calcWeight(baId, value);
+        calcWeight(baId, value,type);
     } else {
         storageInput.val('');
     }
@@ -131,8 +133,7 @@ function uncheckAll(id) {
     });
 }
 
-function calcWeight(id, singleWeight) {
-
+function calcWeight(id, singleWeight, type) {
     // Available weight as text
     var aWeightTxt = $('#availableWeight' + id).text();
     // available weight parsed as float
@@ -143,6 +144,7 @@ function calcWeight(id, singleWeight) {
     // var singleWeight = parseInt($('#weightInput' + id).val());
     var wantedWeight = pAnzahl * singleWeight;
     var maxAmount = 15;
+    // initialize with default values
     let unit = {short_name: 'g', equal_1000_gram: 1000};
     $.ajax({ url:"unit/find",type: 'post', async: false, data: { id: $('#order_article'+id).data('unitid') }})
         .done(function( data ) {
@@ -155,7 +157,7 @@ function calcWeight(id, singleWeight) {
 
     if (pAnzahl && (pAnzahl !== 0 || pAnzahl === '') && singleWeight) {
         // Es wird mit Stücke bestellt
-        if (singleWeight <= maxAmount) {
+        if (type === 'piece') {
             var pieceWeight = 500;
             $.ajax({
                 url: 'order/checkDefaultWeight',
@@ -173,7 +175,6 @@ function calcWeight(id, singleWeight) {
             });
             // var totalWantedWeight = wantedWeight * pieceWeight / 1000;
             var totalWantedWeight = wantedWeight * pieceWeight / unit.equal_1000_gram;
-            alert(totalWantedWeight);
             if (aWeight - totalWantedWeight >= 0) {
                 $('#outputWeight' + id).html(pAnzahl * singleWeight + ' Stk. à ' + pieceWeight + unit.short_name+'. = <b>' + totalWantedWeight * unit.equal_1000_gram + unit.short_name+'.</b>');
             } else {
@@ -186,7 +187,7 @@ function calcWeight(id, singleWeight) {
                 console.log(totalWantedWeight);
                 cleanOrder(id);
                 $('#pAmount' + id).val(1).focus();
-                calcWeight(id, singleWeight);
+                calcWeight(id, singleWeight,type);
             }
 
         } else if (singleWeight || singleWeight == 0) {
@@ -201,7 +202,7 @@ function calcWeight(id, singleWeight) {
                 $('#myModal').modal('toggle');
                 cleanOrder(id);
                 $('#pAmount' + id).val(1).focus();
-                calcWeight(id, singleWeight);
+                calcWeight(id, singleWeight,type);
             }
 
         } else {
@@ -229,7 +230,7 @@ function calcWeight(id, singleWeight) {
         uncheckAll(id);
         cleanOrder(id)
     }
-    console.log('pAnzahl ' + pAnzahl, 'singleWeight ' + singleWeight, 'stueck ');
+    // console.log('pAnzahl ' + pAnzahl, 'singleWeight ' + singleWeight, 'stueck ');
 
     // checkFilledInputs(stueck,id);
 

@@ -67,16 +67,24 @@
                         <div id="calcInfo<?= $baId ?>" class="calcInfoClass" data-baid="<?= $baId ?>">
                             <?php
                             foreach ($possibilities as $possibility) {
-                                if (!empty($possibility)) { ?>
+                                if (!empty($possibility)) {?>
                                     <div class="check-button">
                                         <label>
                                             <input class="weightCheckbox weightInput<?= $baId ?>"
                                                    type="checkbox"
-                                                   value="<?= $possibility ?>"
+                                                   value="<?= $possibility['val'] ?>"
                                                    data-baid="<?= $baId ?>"
-                                                <?= $weight == $possibility ? 'checked' : '' ?>
+                                                   data-type="<?= $possibility['type'] ?>"
+                                                <?= /* If the position weight is the same as the possibility, it should be checked*/
+                                                $weight == $possibility['val'] ? 'checked' : '' ?>
                                             >
-                                            <span><?= $possibility > 15 ? $possibility . 'g.' : $possibility . ' Stk. ' ?></span>
+                                            <span>
+                                                <?php if($possibility['type'] === 'piece'){
+                                                    echo $possibility['val'] . ' Stk. ';
+                                                } else if($possibility['type'] === 'weight'){
+                                                    echo $possibility['val'] . $unit_short.'.';
+                                                } ?>
+                                            </span>
                                         </label>
                                     </div>
                                 <?php }
