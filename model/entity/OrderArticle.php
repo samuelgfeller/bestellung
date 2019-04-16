@@ -19,7 +19,8 @@ class OrderArticle
 	private $pieceWeight;
 	private $date;
 	private $avgWeight;
-	
+	private $unit;
+
 
 	/**
 	 * @return mixed
@@ -174,5 +175,19 @@ class OrderArticle
 	public function setAvgWeight($avgWeight): void {
 		$this->avgWeight = $avgWeight;
 	}
+
+    /**
+     * @return mixed
+     */
+    public function getUnit() {
+        return $this->unit;
+    }
+
+    /**
+     * @param mixed $unit
+     */
+    public function setUnit($unit): void {
+        $this->unit = $unit;
+    }
 	
 }

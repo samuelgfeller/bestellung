@@ -36,6 +36,7 @@
                 $ba = $articleAndOrderPosition['order_article'];
                 $position = $articleAndOrderPosition['already_ordered'];
                 $possibilities = $articleAndOrderPosition['order_possibilities'];
+                $unit_short = $ba->getUnit()->getShortName();
                 // Set order_article_id
                 $baId = $ba->getOrderArticleId();
                 $pieceWeight = $ba->getPieceWeight();
@@ -51,11 +52,11 @@
 
                 ?>
 
-                <tr id="order_article<?= $baId ?>">
-                    <td><?= !empty($pieceWeight) ? $ba->getName() . ' (Stk. <b>ca.</b> ' . $pieceWeight . 'g.)' : $ba->getName() ?></td>
+                <tr id="order_article<?= $baId ?>" data-unitid="<?= $ba->getUnit()->getId(); ?>">
+                    <td><?= !empty($pieceWeight) ? $ba->getName() . ' (Stk. <b>ca.</b> ' . $pieceWeight . $unit_short .'.)' : $ba->getName() ?></td>
                     <td><?= $ba->getKgPrice() ?></td>
                     <td id="availableWeight<?= $baId ?>" class="availableWeight">
-                        <span><?= $ba->getAvailableWeight(); ?></span> kg
+                        <span><?= $ba->getAvailableWeight(); ?></span> <?= $ba->getUnit()->getShortName()=== 'l' ? 'l' : 'kg' ?>
                     </td>
                     <td class="amountNumber"><input id="pAmount<?= $baId ?>" class="comment pAmount" type="number"
                                                     placeholder="0" min="0" value="<?= $pAnz ?>"

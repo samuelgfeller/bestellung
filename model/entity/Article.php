@@ -17,6 +17,7 @@ class Article {
     private $piece_amount_2;
     private $piece_amount_3;
     private $piece_amount_4;
+    private $unit_id;
 
 	/**
 	 * @return mixed
@@ -199,6 +200,20 @@ class Article {
 	public function setPieceAmount4($piece_amount_4): void {
 		$this->piece_amount_4 = $piece_amount_4;
 	}
+
+    /**
+     * @return mixed
+     */
+    public function     getUnitId() {
+        return $this->unit_id;
+    }
+
+    /**
+     * @param mixed $unit_id
+     */
+    public function setUnitId($unit_id): void {
+        $this->unit_id = $unit_id;
+    }
 
 
 }

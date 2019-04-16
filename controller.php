@@ -20,6 +20,7 @@ if ($path == '') {
 	require_once __DIR__ . '/model/dao/ClientDAO.php';
 	require_once __DIR__ . '/model/dao/AppointmentDAO.php';
 	require_once __DIR__ . '/model/dao/ArticleDAO.php';
+	require_once __DIR__ . '/model/dao/UnitDAO.php';
 
 	if (!empty($_SESSION['client'])) {
 		if ($_GET && $_GET['datum']) {
@@ -35,12 +36,12 @@ if ($path == '') {
 			$order = OrderDAO::find($order_id);
 
 			// Get all bestell_article which are available (verfügbar=1)
-			$orderArticle = OrderArticleDAO::allAvailableFrom($GETDateSQL);
+			$orderArticles = OrderArticleDAO::allAvailableFrom($GETDateSQL);
 			
 			$articleAndOrderPositions = false;
-			if ($orderArticle) {
+			if ($orderArticles) {
 				$articleAndOrderPositions = [];
-				foreach ($orderArticle as $key => $ba) {
+				foreach ($orderArticles as $key => $ba) {
 					// Initialising array with default values
 					$articleAndOrderPositions[$key] = ['already_ordered' => false,
 						'order_article' => false,
@@ -108,6 +109,7 @@ if ($path == '') {
 					
 					$articleAndOrderPositions[$key]['order_article'] = $ba;
 					$article = ArticleDAO::find($ba->getArticleId());
+                    $articleAndOrderPositions[$key]['order_article']->setUnit(UnitDAO::find($article->getUnitId()));
                     // Available weight in gram
 					$avag = $ba->getAvailableWeight() * 1000;
 					$g1 = $article->getWeight1();
@@ -144,8 +146,9 @@ if ($path == '') {
                     if($belowMin) {
                         $articleAndOrderPositions[$key]['order_article']->setAvailableWeight(0);
                     }
-				}
-			}
+                }
+//                var_dump($articleAndOrderPositions);
+            }
 			// Sort that the article that those with 0 are on the bottom
             if ($articleAndOrderPositions) {
 				foreach ($articleAndOrderPositions as $key => $row) {
@@ -157,6 +160,7 @@ if ($path == '') {
                     }
 				}
 			}
+
 			require_once __DIR__ . '/templates/order/order.html.php';
 			exit;
 		}

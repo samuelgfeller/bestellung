@@ -8,6 +8,7 @@ require_once __DIR__ . '/../entity/Order.php';
 require_once __DIR__ . '/../entity/Client.php';
 require_once __DIR__ . '/../entity/Feedback.php';
 require_once __DIR__ . '/../entity/Appointment.php';
+require_once __DIR__ . '/../entity/Unit.php';
 
 
 class PopulateArray {
@@ -28,7 +29,8 @@ class PopulateArray {
             'piece_amount_1' => $article->getPieceAmount1(),
             'piece_amount_2' => $article->getPieceAmount2(),
             'piece_amount_3' => $article->getPieceAmount3(),
-            'piece_amount_4' => $article->getPieceAmount4(),];
+            'piece_amount_4' => $article->getPieceAmount4(),
+            'unit_id' => $article->getUnitId(),];
     }
 
     public static function populateClientArray(Client $client): array {
@@ -76,6 +78,16 @@ class PopulateArray {
             'available' => $orderArticle->getAvailable(),
             'date' => $orderArticle->getDate(),
             ];
+    }
+
+    public static function populateUnitArray(Unit $unit): array {
+        return [
+            'id' => $unit->getId(),
+            'name' => $unit->getName(),
+            'short_name' => $unit->getShortName(),
+            'equal_1000_gram' => $unit->getEqual1000Gram(),
+            'is_default' => $unit->getisDefault(),
+        ];
     }
 
 

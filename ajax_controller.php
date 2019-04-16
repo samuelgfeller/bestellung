@@ -75,4 +75,15 @@ if ($path == 'artikel/import') {
     }
     exit;
 }
+if ($path == 'unit/find') {
+    require_once 'model/dao/UnitDAO.php';
+    if(isset($_POST['id'])){
+        $unit = UnitDAO::find($_POST['id']);
+        echo json_encode($unit->jsonSerialize());
+    }else{
+        echo 'no_param';
+    }
+    exit;
+}
+
 

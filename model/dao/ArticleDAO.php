@@ -29,4 +29,10 @@ class ArticleDAO
 		}
 		return false;
 	}
+
+    public static function findUnit($unit_id) {
+        $query = 'SELECT * FROM unit WHERE id=? and deleted_at is null;';
+        $dataArr = DataManagement::selectAndFetchSingleData($query, [$unit_id])[''];
+        return PopulateObject::populateArticle($dataArr);
+    }
 }

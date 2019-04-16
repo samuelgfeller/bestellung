@@ -143,6 +143,11 @@ function calcWeight(id, singleWeight) {
     // var singleWeight = parseInt($('#weightInput' + id).val());
     var wantedWeight = pAnzahl * singleWeight;
     var maxAmount = 15;
+    let unit = {short_name: 'g', equal_1000_gram: 1000};
+    $.ajax({ url:"unit/find",type: 'post', async: false, data: { id: $('#order_article'+id).data('unitid') }})
+        .done(function( data ) {
+            unit = JSON.parse(data);
+        });
     var minWeight = 50;
 
     // console.log('singleWeigth: ' + singleWeight);
@@ -166,15 +171,16 @@ function calcWeight(id, singleWeight) {
             }).fail(function (output) {
                 alert('Fehler bitte melden Sie sich bei Nicolas');
             });
-
-            var totalWantedWeight = wantedWeight * pieceWeight / 1000;
+            // var totalWantedWeight = wantedWeight * pieceWeight / 1000;
+            var totalWantedWeight = wantedWeight * pieceWeight / unit.equal_1000_gram;
+            alert(totalWantedWeight);
             if (aWeight - totalWantedWeight >= 0) {
-                $('#outputWeight' + id).html(pAnzahl * singleWeight + ' Stk. à ' + pieceWeight + 'g. = <b>' + totalWantedWeight * 1000 + 'g.</b>');
+                $('#outputWeight' + id).html(pAnzahl * singleWeight + ' Stk. à ' + pieceWeight + unit.short_name+'. = <b>' + totalWantedWeight * unit.equal_1000_gram + unit.short_name+'.</b>');
             } else {
                 $('.modal-header h4').text('Es wurde zu viel eingegeben');
                 $('.modal-body p').html('Bitte einen kleineren Betrag eingeben / auswählen.<br><b>' +
-                    +pAnzahl + '</b> Päckchen <b>&times; ' + singleWeight + ' Stücke à ' + pieceWeight + 'g</b> gibt <b>' + totalWantedWeight + 'kg</b>. ' +
-                    'Verfügbar sind: <b>' + aWeight + 'kg.</b><br><br>' +
+                    +pAnzahl + '</b> Päckchen <b>&times; ' + singleWeight + ' Stücke à ' + pieceWeight + unit.short_name+'</b> gibt <b>' + totalWantedWeight + 'kg / l</b>. ' +
+                    'Verfügbar sind: <b>' + aWeight + 'kg / l.</b><br><br>' +
                     '<i>Es wurde standardmässig 1 in der Anzahl Päckchen eingesetzt</i>');
                 $('#myModal').modal('toggle');
                 console.log(totalWantedWeight);
@@ -184,13 +190,13 @@ function calcWeight(id, singleWeight) {
             }
 
         } else if (singleWeight || singleWeight == 0) {
-            if ((aWeight - (wantedWeight / 1000)).toFixed(3) >= 0) {
-                $('#outputWeight' + id).html(pAnzahl + ' &times ' + singleWeight + ' = <b>' + wantedWeight + 'g.</b>');
+            if ((aWeight - (wantedWeight / unit.equal_1000_gram)).toFixed(3) >= 0) {
+                $('#outputWeight' + id).html(pAnzahl + ' &times ' + singleWeight + ' = <b>' + wantedWeight + unit.short_name+'.</b>');
 
             } else {
                 $('.modal-header h4').text('Es wurde zu viel eingegeben');
                 $('.modal-body p').html('Bitte einen kleineren Betrag eingeben / auswählen.<br><b>' +
-                    +pAnzahl + ' &times; ' + singleWeight + 'g</b> gibt <b>' + wantedWeight / 1000 + 'kg</b>. Verfügbar sind: <b>' + aWeight + 'kg.</b>'
+                    +pAnzahl + ' &times; ' + singleWeight + unit.short_name+'</b> gibt <b>' + wantedWeight / unit.equal_1000_gram + 'kg / l</b>. Verfügbar sind: <b>' + aWeight + 'kg / l.</b>'
                     + '<br><br><i>Es wurde standardmässig 1 in der Anzahl Päckchen eingesetzt</i>');
                 $('#myModal').modal('toggle');
                 cleanOrder(id);

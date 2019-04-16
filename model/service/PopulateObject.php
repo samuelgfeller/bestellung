@@ -7,6 +7,7 @@ require_once __DIR__ . '/../entity/Order.php';
 require_once __DIR__ . '/../entity/Client.php';
 require_once __DIR__ . '/../entity/Appointment.php';
 require_once __DIR__ . '/../entity/Feedback.php';
+require_once __DIR__ . '/../entity/Unit.php';
 require_once __DIR__ . '/../service/Helper.php';
 
 class PopulateObject {
@@ -102,6 +103,21 @@ class PopulateObject {
         $article->setPieceAmount2(Helper::ckVal($data['piece_amount_2'] ?? null));
         $article->setPieceAmount3(Helper::ckVal($data['piece_amount_3'] ?? null));
         $article->setPieceAmount4(Helper::ckVal($data['piece_amount_4'] ?? null));
+        $article->setUnitId(Helper::ckVal($data['unit_id'] ?? null));
         return $article;
     }
+
+    public static function populateUnit($data) {
+        if ($data) {
+            $unit = new Unit();
+            $unit->setId(Helper::ckVal($data['id']));
+            $unit->setName(Helper::ckVal($data['name'] ?? null));
+            $unit->setShortName(Helper::ckVal($data['short_name'] ?? null));
+            $unit->setEqual1000Gram(Helper::ckVal($data['equal_1000_gram'] ?? null));
+            $unit->setIsDefault(Helper::ckVal($data['is_default'] ?? null));
+            return $unit;
+        }
+        return false;
+    }
+
 }
