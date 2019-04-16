@@ -1,0 +1,14 @@
+[ver:1,total:5640]
+public/home.js:2397,1555394400:1659,1555398000:738,m
+controller.php:1311,1555354800:300,1555390800:817,1555394400:194,m
+templates/order/order.html.php:701,1555394400:701,m
+ajax_controller.php:347,1555398000:347,m
+model/dao/ArticleDAO.php:230,1555390800:170,1555398000:60,m
+model/service/PopulateArray.php:152,1555390800:60,1555394400:92,m
+model/service/PopulateObject.php:129,1555390800:45,1555394400:54,1555398000:30,m
+model/dao/UnitDAO.php:113,1555394400:90,1555398000:23,m
+model/entity/Unit.php:92,1555394400:30,1555398000:62,m
+model/entity/Article.php:77,1555390800:77,m
+model/entity/OrderArticle.php:67,1555390800:67,m
+model/dao/OrderArticleDAO.php:12,1555390800:12,r
+model/dao/OrderPositionDAO.php:12,1555390800:12,r
