@@ -6,7 +6,7 @@
         Auf <a class="helpLink" href="/">dieser</a> Seite können Sie sich einloggen. Dafür ist nur Ihre E-Mail-Adresse gefragt.
         Als Kunde sind Sie normalerweise bereits im System erfasst
         <br>
-        Wenn Sie sich nicht einloggen können, geben Sie uns bitte <a class="helpLink" href="mailto:info@masesselin.ch">Bescheid</a>
+        Wenn Sie sich nicht einloggen können, geben Sie uns bitte <a class="helpLink" href="mailto:info@masesselin.ch">bescheid</a>
         und wir erstellen Ihnen einen Zugang. Eventuell wird dies bei Ihrem ersten Besuch der Fall sein.
         <br>
         Nach dem erfolgreichen Login können Sie alle Bestellartikel sehen. Sie sind so lange eingeloggt, bis der Browser

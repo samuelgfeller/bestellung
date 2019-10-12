@@ -16,6 +16,8 @@
         <th>Kg / l Preis</th>
         <th>Verfügbar</th>
         <th>Menge</th>
+        <th>Durchschnitt</th>
+        <th>Letzter Termin</th>
     </tr>
     <?php
     foreach ($allBa as $ba) {
@@ -33,6 +35,12 @@
             </td>
             <td><input class="comment weightText" type="text" value="<?= $weight == 0.00 ? '' : $weight ?>"
                        placeholder="<?= $ba->getAvgWeight() ?>" onkeyup="updWeight(<?= $baId ?>,this.value)"> kg
+            </td>
+            <td>
+                <?= $ba->getAvgWeight() ?>
+            </td>
+            <td>
+
             </td>
         </tr>
         <?php

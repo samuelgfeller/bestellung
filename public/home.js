@@ -41,6 +41,7 @@ $(document).ready(function () {
         location.replace('/order/dates');
     });
 
+    // Calc all total on page load
     $('.calcInfoClass').each(function (index, div) {
         findCheckedAndCalc(div);
     });
@@ -63,7 +64,7 @@ $(document).ready(function () {
             }
             storageInput.val(value);
             // Getting the bool info from div "calcInfo"
-            calcWeight(baid, value,type);
+            calcWeight(baid, value, type);
         } else {
             storageInput.val('');
             pAmount.val('');
@@ -73,7 +74,11 @@ $(document).ready(function () {
 
     $(document).on('change', ".pAmount", function () {
         let id = $(this).data('baid');
-        findCheckedAndCalc($('#calcInfo' + id));
+        if ($(this).val() !== '0') {
+            findCheckedAndCalc($('#calcInfo' + id));
+        }else {
+            uncheckAllAndClean(id);
+        }
     });
 
     $('.availableWeight').each(function (index, value) {
@@ -107,7 +112,18 @@ $(document).ready(function () {
 function findCheckedAndCalc(parent) {
     let value = false;
     let type = 'weight';
-    $(parent).find('input[type=checkbox]').each(function (key, input) {
+    let checkboxes = $(parent).find('input[type=checkbox]');
+
+    // Check if there is only one available choice
+    let singleCheckbox = false;
+    if (checkboxes.length === 1) {
+        singleCheckbox = true;
+    }
+    checkboxes.each(function (key, input) {
+        // if findCheckedAndCalc is called it means pAmount has changed and if there is only one available checkbox customer don't always click on it so it is checked here
+        if (singleCheckbox) {
+            $(input).prop('checked', true);
+        }
         if ($(input).is(":checked")) {
             value = $(input).val();
             type = $(input).data('type')
@@ -119,25 +135,17 @@ function findCheckedAndCalc(parent) {
 
     if (value) {
         storageInput.val(value);
-        calcWeight(baId, value,type);
+        calcWeight(baId, value, type);
     } else {
         storageInput.val('');
     }
-}
-
-function uncheckAll(id) {
-    // Loop over all input type checkbox
-    $('#calcInfo' + id).find('input[type=checkbox]').each(function (key, input) {
-        // Uncheck all buttons
-        $(input).prop('checked', false);
-    });
 }
 
 function calcWeight(id, singleWeight, type) {
     // Available weight as text
     var aWeightTxt = $('#availableWeight' + id).text();
     // available weight parsed as float
-    var aWeight = parseFloat(aWeightTxt, 10);
+    var aWeight = parseFloat(aWeightTxt);
     // Amount packages
     var pAnzahl = $('#pAmount' + id).val();
     // Weight or amount pieces in package
@@ -146,8 +154,8 @@ function calcWeight(id, singleWeight, type) {
     var maxAmount = 15;
     // initialize with default values
     let unit = {short_name: 'g', equal_1000_gram: 1000};
-    $.ajax({ url:"unit/find",type: 'post', async: false, data: { id: $('#order_article'+id).data('unitid') }})
-        .done(function( data ) {
+    $.ajax({url: "unit/find", type: 'post', async: false, data: {id: $('#order_article' + id).data('unitid')}})
+        .done(function (data) {
             unit = JSON.parse(data);
         });
     var minWeight = 50;
@@ -176,33 +184,33 @@ function calcWeight(id, singleWeight, type) {
             // var totalWantedWeight = wantedWeight * pieceWeight / 1000;
             var totalWantedWeight = wantedWeight * pieceWeight / unit.equal_1000_gram;
             if (aWeight - totalWantedWeight >= 0) {
-                $('#outputWeight' + id).html(pAnzahl * singleWeight + ' Stk. à ' + pieceWeight + unit.short_name+'. = <b>' + totalWantedWeight * unit.equal_1000_gram + unit.short_name+'.</b>');
+                $('#outputWeight' + id).html(pAnzahl * singleWeight + ' Stk. à ' + pieceWeight + unit.short_name + '. = <b>' + totalWantedWeight * unit.equal_1000_gram + unit.short_name + '.</b>');
             } else {
                 $('.modal-header h4').text('Es wurde zu viel eingegeben');
                 $('.modal-body p').html('Bitte einen kleineren Betrag eingeben / auswählen.<br><b>' +
-                    +pAnzahl + '</b> Päckchen <b>&times; ' + singleWeight + ' Stücke à ' + pieceWeight + unit.short_name+'</b> gibt <b>' + totalWantedWeight + 'kg / l</b>. ' +
+                    +pAnzahl + '</b> Päckchen <b>&times; ' + singleWeight + ' Stücke à ' + pieceWeight + unit.short_name + '</b> gibt <b>' + totalWantedWeight + 'kg / l</b>. ' +
                     'Verfügbar sind: <b>' + aWeight + 'kg / l.</b><br><br>' +
                     '<i>Es wurde standardmässig 1 in der Anzahl Päckchen eingesetzt</i>');
                 $('#myModal').modal('toggle');
-                console.log(totalWantedWeight);
+                // console.log(totalWantedWeight);
                 cleanOrder(id);
                 $('#pAmount' + id).val(1).focus();
-                calcWeight(id, singleWeight,type);
+                calcWeight(id, singleWeight, type);
             }
 
         } else if (singleWeight || singleWeight == 0) {
             if ((aWeight - (wantedWeight / unit.equal_1000_gram)).toFixed(3) >= 0) {
-                $('#outputWeight' + id).html(pAnzahl + ' &times ' + singleWeight + ' = <b>' + wantedWeight + unit.short_name+'.</b>');
+                $('#outputWeight' + id).html(pAnzahl + ' &times ' + singleWeight + ' = <b>' + wantedWeight + unit.short_name + '.</b>');
 
             } else {
                 $('.modal-header h4').text('Es wurde zu viel eingegeben');
                 $('.modal-body p').html('Bitte einen kleineren Betrag eingeben / auswählen.<br><b>' +
-                    +pAnzahl + ' &times; ' + singleWeight + unit.short_name+'</b> gibt <b>' + wantedWeight / unit.equal_1000_gram + 'kg / l</b>. Verfügbar sind: <b>' + aWeight + 'kg / l.</b>'
+                    +pAnzahl + ' &times; ' + singleWeight + unit.short_name + '</b> gibt <b>' + wantedWeight / unit.equal_1000_gram + 'kg / l</b>. Verfügbar sind: <b>' + aWeight + 'kg / l.</b>'
                     + '<br><br><i>Es wurde standardmässig 1 in der Anzahl Päckchen eingesetzt</i>');
                 $('#myModal').modal('toggle');
                 cleanOrder(id);
                 $('#pAmount' + id).val(1).focus();
-                calcWeight(id, singleWeight,type);
+                calcWeight(id, singleWeight, type);
             }
 
         } else {
@@ -227,8 +235,7 @@ function calcWeight(id, singleWeight, type) {
             }*/
         }
     } else {
-        uncheckAll(id);
-        cleanOrder(id)
+        uncheckAllAndClean(id);
     }
     // console.log('pAnzahl ' + pAnzahl, 'singleWeight ' + singleWeight, 'stueck ');
 
@@ -268,8 +275,21 @@ function updComment(id, value) {
     });
 }
 
+function uncheckAllAndClean(id){
+    cleanOrder(id);
+    uncheckAll(id);
+}
+
 function cleanOrder(id) {
     // $('#weightInput' + id).focus();
     $('#outputWeight' + id).text('');
 
+}
+
+function uncheckAll(id) {
+    // Loop over all input type checkbox
+    $('#calcInfo' + id).find('input[type=checkbox]').each(function (key, input) {
+        // Uncheck all buttons
+        $(input).prop('checked', false);
+    });
 }
