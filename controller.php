@@ -191,13 +191,13 @@ if ($path == 'artikel') {
 			if ($is_admin) {
 				$_SESSION['is_admin'] = 1;
 			}
-		} else if (isset($_POST['newPassword'])) {
-			// A new Password was typed in
-			$password = password_hash($_POST['newPassword'], PASSWORD_DEFAULT);
-			OrderArticleDAO::updPassword($password);
-		}
+		} else if (isset($_POST['newPassword']) && !empty($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1) {
+            // A new Password was typed in
+            $password = password_hash($_POST['newPassword'], PASSWORD_DEFAULT);
+            OrderArticleDAO::updPassword($password);
+        }
 	}
-	
+
 	if (!empty($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1) {
 		$datesYears = AppointmentDAO::getYearsAndDates();
 		$dates = $datesYears['dates'];
@@ -210,7 +210,9 @@ if ($path == 'artikel') {
 			$dateGET = strtotime($_GET['datum']);
 			$date = date('d.m.Y', $dateGET);
 			$dateSQL = date('Y-m-d', $dateGET);
-			$allBa = OrderArticleDAO::allFrom($dateSQL);
+
+            $allBa = OrderArticleDAO::allFrom($dateSQL);
+//            var_dump($allBa);
 			require_once __DIR__ . '/templates/article/article_all.html.php';
 			exit;
 		}

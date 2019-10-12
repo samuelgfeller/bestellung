@@ -49,6 +49,7 @@ class PopulateObject {
         $article->setAvailable(Helper::ckVal($data['available'] ?? null));
         $article->setDate(Helper::ckVal($data['date'] ?? null));
         $article->setAvgWeight(Helper::ckVal($data['avgWeight'] ?? null));
+        $article->setSoldWeightLastDate(Helper::ckVal($data['soldWeightLastDate'] ?? null));
         return $article;
     }
 

@@ -40,7 +40,7 @@
                 <?= $ba->getAvgWeight() ?>
             </td>
             <td>
-
+                <?= $ba->getSoldWeightLastDate() ?>
             </td>
         </tr>
         <?php

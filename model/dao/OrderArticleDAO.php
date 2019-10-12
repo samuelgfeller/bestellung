@@ -7,13 +7,16 @@ class OrderArticleDAO
 {
 	
 	public static function allFrom($date) {
-		$query = 'SELECT ba.*, ba.id order_article_id, a.*, a.id article_id FROM order_article ba left join
+        $previousDate = AppointmentDAO::getDateBeforeDate($date);
+
+        $query = 'SELECT ba.*, ba.id order_article_id, a.*, a.id article_id FROM order_article ba left join
  article a on ba.article_id=a.id where ba.date = ? and a.deleted_at is null and ba.deleted_at is null 
 order by a.position ASC, position IS NULL;';
 		$result = DataManagement::selectAndFetchAssocMultipleData($query, [$date]);
 		$dataObjArr = [];
 		foreach ($result as $dataArr) {
 			$dataArr['avgWeight'] = self::getAverage($dataArr['article_id']);
+			$dataArr['soldWeightLastDate'] = self::getSoldWeightFor($dataArr['article_id'],$previousDate);
 			$dataObjArr[] = PopulateObject::populateOrderArticle($dataArr);
 		}
 		return $dataObjArr;
@@ -87,6 +90,7 @@ ba.article_id = a.id WHERE a.deleted_at is null and ba.deleted_at is null and ba
 	}
 	
 	public static function getAverage($article_id) {
+	    // Get averages per date
 		$query = 'select p.*,sum(weight) average,count(*),r.date from position p left join bill r on r.id = p.bill_id
 where article_id = ? and p.deleted_at is null and r.deleted_at is null
 group by r.date ';
@@ -107,6 +111,14 @@ group by r.date ';
 			return round($average, 2);
 		}
 		return null;
+	}
+
+    public static function getSoldWeightFor($article_id,$date)
+    {
+        $query = 'select p.*,sum(weight) average,count(*),r.date from position p left join bill r on r.id = p.bill_id
+where article_id = ? AND `date` = ? and p.deleted_at is null and r.deleted_at is null
+group by r.date ';
+        return DataManagement::selectAndFetchSingleData($query, [$article_id,$date])['average'];
 	}
 
 /*    public static function upd(OrderArticle $orderArticle) {

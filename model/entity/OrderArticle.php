@@ -20,6 +20,7 @@ class OrderArticle
 	private $date;
 	private $avgWeight;
 	private $unit;
+	private $soldWeightLastDate;
 
 
 	/**
@@ -188,6 +189,22 @@ class OrderArticle
      */
     public function setUnit($unit): void {
         $this->unit = $unit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSoldWeightLastDate()
+    {
+        return $this->soldWeightLastDate;
+    }
+
+    /**
+     * @param mixed $soldWeightLastDate
+     */
+    public function setSoldWeightLastDate($soldWeightLastDate): void
+    {
+        $this->soldWeightLastDate = $soldWeightLastDate;
     }
 	
 }
