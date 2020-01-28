@@ -12,9 +12,9 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 
--- Exportiere Datenbank Struktur für fleisch1_mitglieder
-CREATE DATABASE IF NOT EXISTS `fleisch1_mitglieder` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `fleisch1_mitglieder`;
+-- Exportiere Datenbank Struktur für samuelgfeller_mitglieder
+CREATE DATABASE IF NOT EXISTS `samuelgfeller_mitglieder` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `samuelgfeller_mitglieder`;
 
 -- Exportiere Struktur von Tabelle fleisch1_mitglieder.admin
 CREATE TABLE IF NOT EXISTS `admin` (
