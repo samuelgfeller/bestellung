@@ -1,0 +1,17 @@
+[ver:1,total:1860]
+templates/pages/dates.html.php:1227,1580227200:647,1580230800:580,m
+Local.php:300,1580212800:180,1580227200:120,r
+controller.php:75,1580227200:75,r
+templates/pages/home.html.php:43,1580230800:43,r
+templates/article/update_password.html.php:30,1580227200:30,r
+public/jquery-3.2.1.min.js:30,1580227200:24,1580230800:6,r
+templates/pages/noEntries.html.php:29,1580230800:29,r
+templates/pages/test_page.html.php:21,1580230800:21,r
+model/database/structure.sql:20,1580227200:20,r
+.gtm/1580230049.event:20,1580227200:20,d
+templates/pages/error.html.php:13,1580230800:13,r
+public/images/del.svg:12,1580227200:12,r
+templates/pages/help.html.php:12,1580230800:12,r
+model/entity/OrderArticle.php:12,1580227200:12,r
+templates/success/order_success.php:8,1580230800:8,r
+.gtm/1580230792.event:8,1580230800:8,d
