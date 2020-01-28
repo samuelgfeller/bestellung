@@ -76,7 +76,7 @@ $(document).ready(function () {
         let id = $(this).data('baid');
         if ($(this).val() !== '0') {
             findCheckedAndCalc($('#calcInfo' + id));
-        }else {
+        } else {
             uncheckAllAndClean(id);
         }
     });
@@ -154,6 +154,7 @@ function calcWeight(id, singleWeight, type) {
     var maxAmount = 15;
     // initialize with default values
     let unit = {short_name: 'g', equal_1000_gram: 1000};
+    console.log(id);
     $.ajax({url: "unit/find", type: 'post', async: false, data: {id: $('#order_article' + id).data('unitid')}})
         .done(function (data) {
             unit = JSON.parse(data);
@@ -161,8 +162,8 @@ function calcWeight(id, singleWeight, type) {
     var minWeight = 50;
 
     // console.log('singleWeigth: ' + singleWeight);
-    // Check if value is between authorised values
 
+    // Check if value is between authorised values
     if (pAnzahl && (pAnzahl !== 0 || pAnzahl === '') && singleWeight) {
         // Es wird mit Stücke bestellt
         if (type === 'piece') {
@@ -195,7 +196,7 @@ function calcWeight(id, singleWeight, type) {
                 // console.log(totalWantedWeight);
                 cleanOrder(id);
                 $('#pAmount' + id).val(1).focus();
-                calcWeight(id, singleWeight, type);
+                // calcWeight(id, singleWeight, type);
             }
 
         } else if (singleWeight || singleWeight == 0) {
@@ -275,7 +276,7 @@ function updComment(id, value) {
     });
 }
 
-function uncheckAllAndClean(id){
+function uncheckAllAndClean(id) {
     cleanOrder(id);
     uncheckAll(id);
 }
