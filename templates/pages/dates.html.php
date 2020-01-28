@@ -40,9 +40,10 @@
             </div>
         <?php }
     }
-    if (!$datesYears['years']){?>
-        <div class="noDates">
-            <p>Keine Daten gefunden <br>
+    if (!$datesYears['years'] || empty($datesYears['dates'])){?>
+        <div class="noDates centeredInfo">
+            <p>Keine Daten gefunden</p>
+                <button onclick="window.history.back()">Zurück</button>
         </div>
     <?php }?>
 </div>
