@@ -60,7 +60,7 @@ class AppointmentDAO {
     }
 
     public static function getDateBeforeDate($dateSQL) {
-        $query = 'SELECT * FROM appointment WHERE `date` < ? order BY `date` DESC LIMIT 1;';
+        $query = 'SELECT * FROM appointment WHERE `date` < ? and appointment.deleted_at is null order BY `date` DESC LIMIT 1;';
         $dataArr = DataManagement::selectAndFetchSingleData($query, [$dateSQL]);
         return $dataArr['date'];
 
