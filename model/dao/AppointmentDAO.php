@@ -37,8 +37,7 @@ class AppointmentDAO {
         $intervals = [];
         foreach ($dateArr as $key => $date) {
             // orders are possible until 12am. strtotime($date) is the time for midnight and adding 43200 makes it 12am of that date
-            $dateAt12Am = strtotime($date) + 54000;
-//            $dateAt12Am = strtotime($date) + 43200;
+            $dateAt12Am = strtotime($date) + 43200;
             $interval = $today - $dateAt12Am;
 //            var_dump($interval,$date);
             if ($interval <= 0) {
