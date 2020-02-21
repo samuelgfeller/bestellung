@@ -5,6 +5,7 @@
     <link rel="shortcut icon" href="images/favicon.ico"/>
     <title>Masesselin</title>
     <base href="<?php echo baseurl('/', true) ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="jquery-3.2.1.min.js"></script>
 </head>

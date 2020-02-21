@@ -205,7 +205,7 @@ if ($path == 'artikel') {
 		
 		OrderArticleDAO::checkAndRefresh();
 		
-		// If a dated is in the GET request, it shows the bills for this date
+		// If a date is in the GET request, it shows the bills for this date
 		if ($_GET && $_GET['datum']) {
 			$dateGET = strtotime($_GET['datum']);
 			$date = date('d.m.Y', $dateGET);
