@@ -337,7 +337,8 @@ if ($path == 'order/dates') {
 	$datesYears = AppointmentDAO::getYearsAndDates();
 	foreach ($datesYears['dates'] as $key => $date) {
         // Remove dates in past
-        if (strtotime($date) < time()) {
+        // orders are possible until 12am. strtotime($date) is the time for midnight and adding 43200 makes it 12am of that date
+        if (strtotime($date) + 43200 < time()) {
 			unset($datesYears['dates'][$key]);
 		}
 //        var_dump(isset($datesYears['dates'][$key]) ? $datesYears['dates'][$key] : null);
