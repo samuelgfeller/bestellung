@@ -118,7 +118,11 @@ group by r.date ';
         $query = 'select p.*,sum(weight) average,count(*),r.date from position p left join bill r on r.id = p.bill_id
 where article_id = ? AND `date` = ? and p.deleted_at is null and r.deleted_at is null
 group by r.date ';
-        return round(DataManagement::selectAndFetchSingleData($query, [$article_id,$date])['average'], 3);
+        $sellingInfos = DataManagement::selectAndFetchSingleData($query, [$article_id,$date]);
+        if ($sellingInfos){
+            return round($sellingInfos['average'], 3);
+        }
+        return null;
 	}
 
 /*    public static function upd(OrderArticle $orderArticle) {
