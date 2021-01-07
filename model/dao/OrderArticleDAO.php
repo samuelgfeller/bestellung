@@ -48,19 +48,20 @@ order by a.position ASC, position IS NULL;';
 				// If an entry with the article_id and on the date exists, it has to be checked if it is deleted.
 				// If not, then an new entry is made
 				if (!$ba) {
-				    // If article is not deleted but $ba is deleted then it has to be restored
-				    if ($article['deleted_at'] === null && $ba['deleted_at'] !== null) {
-                        // Restore an already deleted order article
-                        $restoreQuery = 'UPDATE order_article SET deleted_at=NULL WHERE id=?;';
-                        DataManagement::run($restoreQuery, [$ba['id']]);
-                    } else if ($article['deleted_at'] === null) {
+				    if ($article['deleted_at'] === null) {
 						// Make the new inserts
 						$baData = ['article_id' => $article['id'],
 							'date' => $sqlDate,
 						];
 						DataManagement::insert('order_article', $baData);
 					}
-				} else if ($article['deleted_at'] !== null && $ba['deleted_at'] === null) {
+				}
+                // If article is not deleted but $ba is deleted then it has to be restored
+                else if ($article['deleted_at'] === null && $ba['deleted_at'] !== null) {
+                    // Restore an already deleted order article
+                    $restoreQuery = 'UPDATE order_article SET deleted_at=NULL WHERE id=?;';
+                    DataManagement::run($restoreQuery, [$ba['id']]);
+                } else if ($article['deleted_at'] !== null && $ba['deleted_at'] === null) {
 					$delQuery = 'UPDATE order_article SET deleted_at=now() WHERE id=?;';
 					DataManagement::run($delQuery, [$ba['id']]);
 				}
