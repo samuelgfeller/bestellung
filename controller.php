@@ -286,6 +286,8 @@ if ($path == 'success') {
 		
 		// Delete old order
 		if ($minId = OrderDAO::checkMultipleOrdersAndGetOlder($_SESSION['client'], $_POST['date'])) {
+		    // If $minId is set that means that there were 2 orders for the same date (var is smaller id)
+            // There seems to be a useless double check but it's working and I don't want to risk breaking something rn
 			$minId ? OrderDAO::del($minId) : OrderDAO::del($_POST['order_id']);
 		}
 
@@ -306,8 +308,9 @@ if ($path == 'success') {
 		ob_start();
 		include __DIR__ . '/templates/success/confirmation_mail.php';
 		$mailBody = ob_get_clean();
-//		var_dump($mailBody);
-		$mail->prepareMessage('Bestellbestätigung für den ' . date('d.m.Y', strtotime($_POST['date'])), $mailBody);
+//		If there was an older order, title has to show that
+        $title = $minId === false ? 'Bestellbestätigung' : 'Bestelländerung';
+		$mail->prepareMessage($title . ' für den ' . date('d.m.Y', strtotime($_POST['date'])), $mailBody);
 		$mail->sendEmail($client->getFirstName() . ' ' . $client->getName(),$client->getEmail(), 'Masesselin','info@masesselin.ch');
 //        $mail->sendEmail('Samuel Gfeller','samuelgfeller@bluewin.ch','Masesselin','info@masesselin.ch');
 
