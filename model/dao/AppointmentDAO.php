@@ -18,7 +18,7 @@ class AppointmentDAO {
     public static function getYearsAndDates() {
         $years = [];
         $dates = [];
-        $query = 'SELECT date FROM appointment WHERE deleted_at is null order by date desc';
+        $query = 'SELECT `date` FROM appointment WHERE deleted_at is null order by date desc';
         $allData = DataManagement::selectAndFetchAssocMultipleData($query);
         foreach ($allData as $dateArr) {
             $years[] = date('Y', strtotime($dateArr['date']));
@@ -55,10 +55,12 @@ class AppointmentDAO {
     }
 
     public static function checkIfDateHasEntries($date) {
-        $query = 'SELECT id from order_article where date=? and available=1;';
+        $query = 'SELECT oa.id from order_article oa
+LEFT JOIN appointment a ON a.id = oa.appointment_id 
+where a.date=? and oa.available=1
+AND a.deleted_at IS NULL;';
         $dataArr = DataManagement::selectAndFetchSingleData($query, [$date]);
         return $dataArr;
-
     }
 
     public static function getDateBeforeDate($dateSQL) {
@@ -68,5 +70,12 @@ class AppointmentDAO {
 
     }
 
+    public static function findDateId($date) {
+        $sqlDate = date('Y-m-d', strtotime($date));
+        $query = 'SELECT id FROM appointment WHERE `date` = ? AND deleted_at IS NULL;';
+        $dataArr = DataManagement::selectAndFetchSingleData($query, [$sqlDate]);
+        return $dataArr['id'];
+
+    }
 
 }

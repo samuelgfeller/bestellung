@@ -24,15 +24,17 @@ class OrderPositionDAO
 		$query = 'SELECT bp.package_amount anz, bp.weight weight FROM order_position bp
         left join `order` b on bp.order_id=b.id
         left join order_article ba on ba.id = bp.order_article_id
+        LEFT JOIN appointment ap on b.appointment_id = ap.id 
         where b.deleted_at is null and ba.deleted_at is null and bp.deleted_at is null
-        and ba.id = ? and b.target_date = ?;';
+        and ba.id = ? and ap.date = ?;';
 		return DataManagement::selectAndFetchAssocMultipleData($query, [$orderArticleId, $nextDate]);
 	}
 	
 	public static function getIfAlreadyOrdered($client_id, $date) {
 		$query = 'SELECT bp.* FROM order_position bp
 left join `order` b on bp.order_id = b.id
-where b.deleted_at is null and bp.deleted_at is null and b.client_id=? and b.target_date=?;';
+LEFT JOIN appointment ap on b.appointment_id = ap.id 
+where b.deleted_at is null and bp.deleted_at is null and b.client_id=? and ap.date=?;';
 		$allData = DataManagement::selectAndFetchAssocMultipleData($query, [$client_id, $date]);
 		$allDataObj = [];
 		foreach ($allData as $allDataArr) {

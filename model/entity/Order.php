@@ -6,12 +6,10 @@ require_once __DIR__ . '/../service/DataManagement.php';
 class Order {
     private $id;
     private $client_id;
-    private $date;
-    private $target_date;
+    private $created_at;
+    private $appointmentId;
     private $remark;
 
-    
-	
 	/**
 	 * @return mixed
 	 */
@@ -39,34 +37,6 @@ class Order {
 	public function setClientId($client_id): void {
 		$this->client_id = $client_id;
 	}
-	
-	/**
-	 * @return mixed
-	 */
-	public function getDate() {
-		return $this->date;
-	}
-	
-	/**
-	 * @param mixed $date
-	 */
-	public function setDate($date): void {
-		$this->date = $date;
-	}
-
-    /**
-     * @return mixed
-     */
-    public function getTargetDate() {
-        return $this->target_date;
-    }
-
-    /**
-     * @param mixed $target_date
-     */
-    public function setTargetDate($target_date): void {
-        $this->target_date = $target_date;
-    }
 
     /**
      * @return mixed
@@ -80,6 +50,38 @@ class Order {
      */
     public function setRemark($remark): void {
         $this->remark = $remark;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * @param mixed $created_at
+     */
+    public function setCreatedAt($created_at): void
+    {
+        $this->created_at = $created_at;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAppointmentId()
+    {
+        return $this->appointmentId;
+    }
+
+    /**
+     * @param mixed $appointmentId
+     */
+    public function setAppointmentId($appointmentId): void
+    {
+        $this->appointmentId = $appointmentId;
     }
 
 

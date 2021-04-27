@@ -1,6 +1,6 @@
 <?php require_once __DIR__ . '/../base.html.php'; ?>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="bootstrap.min.css">
+<script src="bootstrap.min.js"></script>
 <h2 style="font-weight: normal;"><b><?php echo $client->getFirstName() . ' ' . $client->getName() ?></b><br>Bestellung für
     den <b> <?= $GETDateText ?> </b>
 </h2>

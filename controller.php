@@ -255,14 +255,19 @@ if ($path == 'success') {
 	require_once __DIR__ . '/model/dao/OrderArticleDAO.php';
 	require_once __DIR__ . '/model/dao/ArticleDAO.php';
 	require_once __DIR__ . '/model/dao/UnitDAO.php';
+	require_once __DIR__ . '/model/dao/AppointmentDAO.php';
 
 	
 	if ($_POST && isset($_POST['pAmount'])) {
+	    if (empty($appointmentId = AppointmentDAO::findDateId(htmlspecialchars($_POST['date'])))){
+            require_once __DIR__ . '/templates/pages/noEntries.html.php';
+            exit;
+        }
 		$client = ClientDAO::find($_SESSION['client']);
         $order = new Order();
         $order->setClientId($client->getId());
-        $order->setDate(date('Y-m-d H:i:s'));
-        $order->setTargetDate(htmlspecialchars($_POST['date']));
+        $order->setCreatedAt(date('Y-m-d H:i:s'));
+        $order->setAppointmentId($appointmentId);
         $order->setRemark(htmlspecialchars($_POST['remark']));
 		$orderId = OrderDAO::create($order);
 		$valuesArr = [];

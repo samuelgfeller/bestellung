@@ -56,8 +56,8 @@ class PopulateArray {
     public static function populateOrderArray(Order $order): array {
         return ['id' => $order->getId(),
             'client_id' => $order->getClientId(),
-            'date' => $order->getDate(),
-            'target_date' => $order->getTargetDate(),
+            'created_at' => $order->getCreatedAt(),
+            'appointment_id' => $order->getAppointmentId(),
             'remark' => $order->getRemark(),];
     }
 

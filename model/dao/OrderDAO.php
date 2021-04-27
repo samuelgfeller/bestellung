@@ -17,7 +17,10 @@ class OrderDAO
 	}
 	
 	public static function find($id) {
-		$query = 'SELECT * FROM `order` WHERE deleted_at is null and id=?;';
+		$query = 'SELECT o.*, a.date FROM `order` o 
+LEFT JOIN appointment a ON a.id = o.appointment_id 
+WHERE o.deleted_at is null and o.id=? and a.deleted_at is null
+;';
 		$dataArr = DataManagement::selectAndFetchSingleData($query, [$id]);
 		return PopulateObject::populateOrder($dataArr);
 	}
@@ -37,7 +40,9 @@ class OrderDAO
 	 * @return bool|mixed
 	 */
 	public static function checkMultipleOrdersAndGetOlder($client_id, $date) {
-		$query = 'select id from `order` where client_id=? and target_date=? and deleted_at is null;';
+		$query = 'select o.id from `order` o
+LEFT JOIN appointment a ON a.id = o.appointment_id 
+where client_id=? and a.date=? and o.deleted_at is null and a.deleted_at is null;';
 		$result = DataManagement::selectAndFetchAssocMultipleData($query,[$client_id,$date]);
 		$ids=[];
 		foreach ($result as $dataArr) {

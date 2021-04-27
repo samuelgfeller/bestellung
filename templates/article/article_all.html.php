@@ -17,7 +17,7 @@
         <th>Verfügbar</th>
         <th>Menge</th>
         <th>Durchschnitt</th>
-        <th>Letzter Termin</th>
+        <th>Verkauft letzter Termin</th>
     </tr>
     <?php
     foreach ($allBa as $ba) {

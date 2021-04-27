@@ -3,6 +3,9 @@
     <h1 class="title">Keine Daten gefunden.</h1>
     <img class="homeImg" src="images/logo_banner.jpg" alt="logo">
     <div class="centeredInfo">
+        <strong style="color: red"><?= $errorMsg ?? '' ?></strong>
+    </div>
+    <div class="centeredInfo">
         <a href="mailto:info@masesselin.ch"><button class="centeredInfoButton">info@masesselin.ch</button></a>
         <a href="/"><button class="centeredInfoButton">Seite neu laden</button></a>
     </div>
