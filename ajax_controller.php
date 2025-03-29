@@ -81,7 +81,7 @@ if ($path == 'unit/find') {
         $unit = UnitDAO::find($_POST['id']);
         echo json_encode($unit->jsonSerialize());
     }else{
-        echo 'no_param';
+        echo 'no param';
     }
     exit;
 }

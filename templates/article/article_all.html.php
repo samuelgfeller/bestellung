@@ -34,7 +34,7 @@
                 <label for="box<?= $baId ?>">&nbsp;</label>
             </td>
             <td><input class="comment weightText" type="text" value="<?= $weight == 0.00 ? '' : $weight ?>"
-                       placeholder="<?= $ba->getAvgWeight() ?>" onkeyup="updWeight(<?= $baId ?>,this.value)"> kg
+                       placeholder="<?= $ba->getAvgWeight() ?>" onchange="updWeight(<?= $baId ?>,this.value)"> kg
             </td>
             <td>
                 <?= $ba->getAvgWeight() ?>

@@ -23,18 +23,20 @@ $(document).ready(function () {
 });
 
 function updWeight(id, value) {
-    $.ajax({
-        url: 'artikel/gewicht',
-        type: 'post',
-        data: {
-            'id': id,
-            'value': value
-        }
-    }).done(function (output) {
+    if (confirm('Gewichtänderung speichern?')) {
+        $.ajax({
+            url: 'artikel/gewicht',
+            type: 'post',
+            data: {
+                'id': id,
+                'value': value
+            }
+        }).done(function (output) {
 // console.log(output);
-    }).fail(function (output) {
-        alert('Fehler !');
-    });
+        }).fail(function (output) {
+            alert('Fehler !');
+        });
+    }
 }
 
 function checkUncheckAvailable(ba_id, article_id) {

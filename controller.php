@@ -316,8 +316,14 @@ if ($path == 'success') {
 //		If there was an older order, title has to show that
         $title = $minId === false ? 'Bestellbestätigung' : 'Bestelländerung';
 		$mail->prepareMessage($title . ' für den ' . date('d.m.Y', strtotime($_POST['date'])), $mailBody);
+        try {
 		$mail->sendEmail($client->getFirstName() . ' ' . $client->getName(),$client->getEmail(), 'Masesselin','info@masesselin.ch');
-//        $mail->sendEmail('Samuel Gfeller','samuelgfeller@bluewin.ch','Masesselin','info@masesselin.ch');
+        } catch (Throwable $exception){
+            echo '<h3>Die Bestellung wurde aufgenommen. Im moment kann das Bestätigungsmail jedoch nicht versendet werden.
+    Der Fehler wird so bald wie möglich behoben.</h3>';
+        }
+
+        //        $mail->sendEmail('Samuel Gfeller','samuelgfeller@bluewin.ch','Masesselin','info@masesselin.ch');
 
         require_once __DIR__ . '/templates/success/order_success.php';
 //		require_once __DIR__ . '/templates/pages/feedback.html.php';

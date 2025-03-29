@@ -31,7 +31,8 @@ class Email {
 //        \Mailgun\Api\Message::prepareFile();
     }
 
-    public function sendEmail($toName, $to, $replyToName, $replyTo) {
+    public function sendEmail($toName, $to, $replyToName, $replyTo): void
+    {
         # Issue the call to the client.
 
         # is_valid is 0 or 1

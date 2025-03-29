@@ -19,8 +19,8 @@
         <?php
     } else { ?>
         <h1>Bestelländerung</h1>
-        Die Bestellung wurde geändert.<br>
-        Die neue Bestellung beinhaltet folgendes: <br>
+        Die Bestellung wurde aktualisiert und die alte Bestellung gelöscht.<br>
+        Die neue Bestellung beinhaltet Folgendes: <br>
     <?php
     } ?>
 
@@ -66,8 +66,7 @@
         </tr>
         <tr>
             <td>
-                <br>Falls Sie diese Bestellung / Anpassung <b>nicht</b> gemacht haben, geben Sie uns bitte bescheid
-                indem
+                <br>Falls Sie diese Bestellung / Anpassung <b>nicht</b> gemacht haben, geben Sie uns bitte bescheid, indem
                 Sie auf dieses Mail antworten.
             </td>
         </tr>
